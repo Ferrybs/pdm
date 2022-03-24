@@ -6,7 +6,7 @@ mobile/*.swp
 mobile/.DS_Store
 mobile/.atom/
 mobile/.buildlog/
-mobile/.history
+.history
 mobile/.svn/
 
 # IntelliJ related
