@@ -31,11 +31,20 @@ dev_dependencies:
 
 flutter:
 
-  uses-material-design: true
-  
   assets:
     - lib/assets/
     - lib/assets/i18n/
     - lib/assets/images/
+
+  fonts:
+     - family: Poppins
+       fonts:
+         - asset: lib/assets/fonts/Poppins-Regular.ttf
+         - asset: lib/assets/fonts/Poppins-SemiBold.ttf
+         - asset: lib/assets/fonts/Poppins-Bold.ttf
+
+  uses-material-design: true
+  
+  
 
 
