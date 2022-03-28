@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/auth/presentation/view/page/create_account.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'data/repository/login_repository.dart';
@@ -17,5 +18,7 @@ class AuthModule extends Module {
   @override
   List<ModularRoute> get routes => [
         ChildRoute('/', child: (_, __) => const LoginPage(), children: []),
+        ChildRoute('/signup',
+            child: (_, __) => const CreateAccount(), children: []),
       ];
 }

@@ -6,5 +6,11 @@
     "password" : "Senha",
     "forgot-pass" : "Esqueceu a Senha?",
     "no-account" : "Não tem uma conta?",
-    "sign-up" : "Entre"
+    "sign-up" : "Entre",
+    "sign-in" : "Acesse",
+    "create-account" : "Criar Conta",
+    "fill-input" : "Por favor preencha os campos abaixo.",
+    "name": "Nome",
+    "last-name": "Sobrenome",
+    "have-account" : "Já tem uma conta?"
 }

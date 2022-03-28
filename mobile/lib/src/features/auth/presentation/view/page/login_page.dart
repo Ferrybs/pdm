@@ -174,7 +174,9 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.w400),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Modular.to.navigate('/signup');
+                        },
                         child: Text('sign-up'.i18n(),
                             style: const TextStyle(
                               color: Color(0xff14DAE2),
