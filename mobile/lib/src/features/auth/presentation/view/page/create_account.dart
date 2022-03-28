@@ -202,7 +202,7 @@ class _CreateAccount extends State<CreateAccount> {
                 ),
               ),
               const SizedBox(
-                height: 100,
+                height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -222,7 +222,7 @@ class _CreateAccount extends State<CreateAccount> {
                         )),
                   )
                 ],
-              )
+              ),
             ],
           )),
         ));
