@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../viewmodel/login_viewmodel.dart';
+import 'package:localization/localization.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'login-scren'.i18n(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -38,11 +39,11 @@ class _LoginPageState extends State<LoginPage> {
                         child:
                             SvgPicture.asset('lib/assets/images/flutter.svg')),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(20, 15, 20, 8),
                     child: Text(
-                      'Login',
-                      style: TextStyle(
+                      'login'.i18n(),
+                      style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 20),
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
-                      'Please sign in to continue.',
+                      'signin'.i18n(),
                       style: TextStyle(
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w400,
@@ -107,9 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const Text(
-                          'Password',
-                          style: TextStyle(
+                        Text(
+                          'password'.i18n(),
+                          style: const TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 13,
                               color: Colors.white),
@@ -145,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: RoundedButton(
-                        btnText: 'LOGIN',
+                        btnText: 'login'.i18n().toUpperCase(),
                         color: Color(0xff14DAE2),
                         onPressed: () {},
                       ),
@@ -153,9 +154,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Center(
                     child: TextButton(
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Color(0xff14DAE2)),
+                      child: Text(
+                        'forgot-pass'.i18n(),
+                        style: const TextStyle(color: Color(0xff14DAE2)),
                       ),
                       onPressed: () {},
                     ),
@@ -167,15 +168,15 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Dont have an account?',
+                        'no-account'.i18n(),
                         style: TextStyle(
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w400),
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: const Text('Sign up',
-                            style: TextStyle(
+                        child: Text('sign-up'.i18n(),
+                            style: const TextStyle(
                               color: Color(0xff14DAE2),
                             )),
                       )

@@ -1,3 +1,10 @@
 {
-    "app_name" : "Example App"
+    "app_name" : "Example App",
+    "login-scren" : "Login",
+    "login" : "Login",
+    "signin" : "Please sign in to continue.",
+    "password" : "Password",
+    "forgot-pass" : "Forgot Password?",
+    "no-account" : "Dont have an account?",
+    "sign-up" : "Sign Up"
 }
