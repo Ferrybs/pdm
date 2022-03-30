@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     return MaterialApp(
       title: 'login-scren'.i18n(),
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: material_color(),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Poppins',
       ),
@@ -29,22 +29,22 @@ class _LoginPageState extends State<LoginPage> {
           inAsyncCall: showSpinner,
           child: SafeArea(
             child: Scaffold(
-              backgroundColor: Color(0xff251F34),
+              backgroundColor: Color(0xffF4FCD9),
               body: SingleChildScrollView(
                 child: Column(children: [
                   Center(
                     child: SizedBox(
-                        width: 175,
-                        height: 175,
-                        child:
-                            SvgPicture.asset('lib/assets/images/flutter.svg')),
+                        width: 200,
+                        height: 200,
+                        child: SvgPicture.asset(
+                            'lib/assets/images/v968-10-ps.svg')),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 15, 20, 8),
                     child: Text(
                       'login'.i18n(),
                       style: const TextStyle(
-                          color: Colors.white,
+                          color: Color(0xff534340),
                           fontWeight: FontWeight.w600,
                           fontSize: 20),
                     ),
@@ -71,27 +71,27 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 13,
-                                color: Colors.white),
+                                color: Color(0xff534340)),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
                           TextField(
                             style: (const TextStyle(
-                                color: Colors.white,
+                                color: Color(0xffC5D8A4),
                                 fontWeight: FontWeight.w400)),
                             keyboardType: TextInputType.emailAddress,
-                            cursorColor: Colors.white,
+                            cursorColor: Color(0xffC5D8A4),
                             obscureText: false,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              fillColor: Color(0xfff3B324E),
+                              fillColor: Color(0xff534340),
                               filled: true,
                               prefixIcon: Icon(IconData(0xe780,
                                   fontFamily: 'MaterialIcons')),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Color(0xff14DAE2), width: 2.0),
+                                    color: Color(0xffC5D8A4), width: 2.0),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20.0)),
                               ),
@@ -113,26 +113,26 @@ class _LoginPageState extends State<LoginPage> {
                           style: const TextStyle(
                               fontWeight: FontWeight.w300,
                               fontSize: 13,
-                              color: Colors.white),
+                              color: Color(0xff534340)),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         TextField(
                           style: (const TextStyle(
-                              color: Colors.white,
+                              color: Color(0xffC5D8A4),
                               fontWeight: FontWeight.w400)),
                           obscureText: true,
-                          cursorColor: Colors.white,
+                          cursorColor: Color(0xffC5D8A4),
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            fillColor: Color(0xfff3B324E),
+                            fillColor: Color(0xff534340),
                             filled: true,
                             prefixIcon: Icon(
                                 IconData(0xeb71, fontFamily: 'MaterialIcons')),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(0xff14DAE2), width: 2.0),
+                                  color: Color(0xffC5D8A4), width: 2.0),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20.0)),
                             ),
@@ -147,8 +147,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: Center(
                       child: RoundedButton(
                         btnText: 'login'.i18n().toUpperCase(),
-                        color: Color(0xff14DAE2),
+                        color: Color(0xff534340),
                         onPressed: () {},
+                        textColor: Color(0xffC5D8A4),
                       ),
                     ),
                   ),
@@ -156,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextButton(
                       child: Text(
                         'forgot-pass'.i18n(),
-                        style: const TextStyle(color: Color(0xff14DAE2)),
+                        style: const TextStyle(color: Color(0xff534340)),
                       ),
                       onPressed: () {},
                     ),
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text('sign-up'.i18n(),
                             style: const TextStyle(
-                              color: Color(0xff14DAE2),
+                              color: Color(0xff534340),
                             )),
                       )
                     ],
@@ -191,5 +192,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  todo() {}
+  MaterialColor material_color() {
+    return const MaterialColor(
+      0xffc5d8a4, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
+      <int, Color>{
+        50: Color(0xffcbdcad), //10%
+        100: Color(0xffd1e0b6), //20%
+        200: Color(0xffd6e4bf), //30%
+        300: Color(0xffdce8c8), //40%
+        400: Color(0xffe2ecd2), //50%
+        500: Color(0xffe8efdb), //60%
+        600: Color(0xffeef3e4), //70%
+        700: Color(0xfff3f7ed), //80%
+        800: Color(0xfff9fbf6), //90%
+        900: Color(0xffffffff), //100%
+      },
+    );
+  }
 }

@@ -198,6 +198,7 @@ class _CreateAccount extends State<CreateAccount> {
                     btnText: 'sign-up'.i18n().toUpperCase(),
                     color: Color(0xff14DAE2),
                     onPressed: () {},
+                    textColor: Color(0xffC5D8A4),
                   ),
                 ),
               ),
