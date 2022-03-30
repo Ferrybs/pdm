@@ -1,5 +1,5 @@
-import 'package:basearch/components/modal_progress_hud/modal_progress_hud.dart';
-import 'package:basearch/components/rounded_btn/rounded_btn.dart';
+import 'package:basearch/components/hud/modal_progress_hud.dart';
+import 'package:basearch/components/button/rounded_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
