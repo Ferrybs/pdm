@@ -141,7 +141,6 @@ api/out
 
 # Nuxt.js build / generate output
 api/.nuxt
-api/dist
 
 # Gatsby files
 api/.cache/
