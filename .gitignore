@@ -102,10 +102,10 @@ api/*.tsbuildinfo
 
 # Optional npm cache directory
 api/.npm
-
+api/.gitignore
 # Optional eslint cache
 api/.eslintcache
-
+api/.git
 # Optional stylelint cache
 api/.stylelintcache
 
@@ -149,7 +149,7 @@ api/.cache/
 # public
 
 # vuepress build output
-api/.vuepress/dist
+#api/.vuepress/dist
 
 # vuepress v2.x temp and cache directory
 api/.temp
