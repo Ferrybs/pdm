@@ -1,8 +1,8 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, EntitySchema, OneToOne, PrimaryColumn } from "typeorm";
 import User from "./user.entity";
 
 @Entity()
-export default class Credentials {
+export default class Credentials extends EntitySchema{
     @PrimaryColumn()
     public email: string;
 

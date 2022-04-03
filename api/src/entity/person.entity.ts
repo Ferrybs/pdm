@@ -1,8 +1,8 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, EntitySchema, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import User from './user.entity';
 
 @Entity()
-export default class Person {    
+export default class Person extends EntitySchema {    
     @PrimaryGeneratedColumn("uuid")
     public idPerson: string;
 
