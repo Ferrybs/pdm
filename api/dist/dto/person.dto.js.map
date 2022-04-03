@@ -1,1 +1,0 @@
-{"version":3,"file":"person.dto.js","sourceRoot":"","sources":["../../src/dto/person.dto.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,qDAA4C;AAE5C,MAAqB,MAAM;CAU1B;AANG;IAHC,IAAA,2BAAS,EAAC,CAAC,EAAE;QACV,OAAO,EAAE,sCAAsC;KAChD,CAAC;;oCACgB;AAKpB;IAHC,IAAA,2BAAS,EAAC,CAAC,EAAE;QACV,OAAO,EAAE,2CAA2C;KACrD,CAAC;;wCACoB;AAT5B,yBAUC"}
