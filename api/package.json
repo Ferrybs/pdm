@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node ./src/server.ts",
-    "start": "tsc"
+    "dev": "ts-node",
+    "start": "node build/index.js",
+    "build": "tsc",
+    "postinstall": "npm run build"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,7 @@
     "express": "^4.17.3",
     "helmet": "^5.0.2",
     "pg": "^8.7.3",
+    "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.4"
   },
   "devDependencies": {
