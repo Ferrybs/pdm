@@ -1,17 +1,18 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import Controller from './interfaces/controller.interface';
+import routes from './interfaces/routes.interface';
+import Routes from 'interfaces/routes.interface';
  
 class App {
   public app: express.Application;
   public port: number;
  
-  constructor(port: number, controllers: Controller[]) {
+  constructor(port: number, routes: Routes[]) {
     this.app = express();
     this.port = port;
  
     this.initializeMiddlewares();
-    this.initializeControllers(controllers);
+    this.initializeroutes(routes);
   }
  
   private initializeMiddlewares() {
@@ -24,9 +25,9 @@ class App {
       console.log(`App listening on the port ${this.port}`);
     });
   }
-  private initializeControllers(controllers: Controller[]) {
-    controllers.forEach((controller) => {
-      this.app.use('/', controller.router);
+  private initializeroutes(routes: routes[]) {
+    routes.forEach((routes) => {
+      this.app.use('/', routes.router);
     });
   }
 }

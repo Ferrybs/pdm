@@ -1,13 +1,14 @@
-import HomeController from "controllers/home.controller";
+import HomeController from "../controllers/home.controller";
 import express, { Router } from "express";
 
 
 export default class HomeRoutes {
     public path : string = '/';
     public router : Router = express.Router();
-    private controller: HomeController = new HomeController();
+    private controller: HomeController;
 
     constructor(){
+        this.controller = new HomeController();
         this.initializeRoutes();
     }
     

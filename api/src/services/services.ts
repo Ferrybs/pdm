@@ -1,14 +1,15 @@
-import PostgresDataSource from "configs/data.source.postgres";
+import PostgresDataSource from "../configs/data.source.postgres";
 import Credentials from "../entity/credentials.entity";
-import Person from "entity/person.entity";
-import User from "entity/user.entity";
+import Person from "../entity/person.entity";
+import User from "../entity/user.entity";
 import { EntitySchemaOptions } from "typeorm";
 import DataSourceDB from "../interfaces/data.source.interface";
+import UserDTO from "../dto/user.dto";
 export default class Services {
-    database: DataSourceDB
+    dataSource: DataSourceDB
     constructor() {
         const entityOp = new EntitySchemaOptions
-        this.database = new PostgresDataSource(
+        this.dataSource = new PostgresDataSource(
             [
                 new User(entityOp),
                 new Person(entityOp),
@@ -18,6 +19,13 @@ export default class Services {
     }
 
     getDatabase(){
-        return this.database.AppDataSource
+        return this.dataSource.appDataSource
+    }
+    createUser(userData: UserDTO){
+        const userRepository = this.getDatabase().getRepository(User);
+        return userRepository.create({
+            person: userData.personDTO,
+            credentials: userData.credentialsDTO
+        })
     }
 }

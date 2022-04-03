@@ -3,9 +3,9 @@ import validateEnv from "../utils/validateEnv";
 import DataSourceDB from "../interfaces/data.source.interface";
 
 export default class PostgresDataSource implements DataSourceDB {
-    AppDataSource: DataSource
+    appDataSource: DataSource
     constructor(entities: EntitySchema[]) {
-        this.AppDataSource= new DataSource({
+        this.appDataSource= new DataSource({
             type: "postgres",
             host: validateEnv.DATABASE_HOST,
             port: validateEnv.DATABASE_PORT,
