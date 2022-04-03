@@ -1,5 +1,5 @@
-import CredentialsDTO from './CredentialsDTO';
-import PersonDTO from "./PersonDTO"
+import CredentialsDTO from './credentials.dto';
+import PersonDTO from "./person.dto"
 
 export default class UserDTO {    
     public personDTO: PersonDTO;

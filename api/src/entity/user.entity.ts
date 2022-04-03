@@ -1,6 +1,6 @@
 import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import Credentials from './Credentials';
-import Person from "./Person"
+import Credentials from './credentials.entity';
+import Person from "./person.entity"
 
 @Entity()
 export default class User {    

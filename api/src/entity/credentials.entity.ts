@@ -1,5 +1,5 @@
 import { Column, Entity, OneToOne, PrimaryColumn } from "typeorm";
-import User from "./User";
+import User from "./user.entity";
 
 @Entity()
 export default class Credentials {

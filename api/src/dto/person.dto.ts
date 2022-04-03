@@ -1,4 +1,4 @@
-import { Length, MinLength } from "class-validator";
+import { MinLength } from "class-validator";
 
 export default class Person {
     @MinLength(3, {
