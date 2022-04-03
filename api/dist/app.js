@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 class App {
     constructor(port) {
-        this.app = (0, express_1.default)();
+        this.app = express_1.default();
         this.port = port;
         this.initializeMiddlewares();
     }

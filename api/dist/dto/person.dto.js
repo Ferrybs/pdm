@@ -13,13 +13,13 @@ const class_validator_1 = require("class-validator");
 class Person {
 }
 __decorate([
-    (0, class_validator_1.MinLength)(3, {
+    class_validator_1.MinLength(3, {
         message: 'Name need to have at least 3 letters',
     }),
     __metadata("design:type", String)
 ], Person.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(3, {
+    class_validator_1.MinLength(3, {
         message: 'Last Name need to have at least 3 letters',
     }),
     __metadata("design:type", String)

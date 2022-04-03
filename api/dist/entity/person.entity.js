@@ -17,23 +17,23 @@ const user_entity_1 = __importDefault(require("./user.entity"));
 let Person = class Person {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    typeorm_1.PrimaryGeneratedColumn("uuid"),
     __metadata("design:type", String)
 ], Person.prototype, "idPerson", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Person.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Person.prototype, "lastName", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => user_entity_1.default, (user) => user.idUser),
+    typeorm_1.OneToOne(() => user_entity_1.default, (user) => user.idUser),
     __metadata("design:type", user_entity_1.default)
 ], Person.prototype, "user", void 0);
 Person = __decorate([
-    (0, typeorm_1.Entity)()
+    typeorm_1.Entity()
 ], Person);
 exports.default = Person;
 //# sourceMappingURL=person.entity.js.map

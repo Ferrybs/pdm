@@ -13,11 +13,11 @@ const class_validator_1 = require("class-validator");
 class CredentialsDTO {
 }
 __decorate([
-    (0, class_validator_1.IsEmail)(),
+    class_validator_1.IsEmail(),
     __metadata("design:type", String)
 ], CredentialsDTO.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.MinLength)(6, {
+    class_validator_1.MinLength(6, {
         message: 'Password is shorter than 6 letters',
     }),
     __metadata("design:type", String)

@@ -148,8 +148,7 @@ api/.cache/
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
-# vuepress build output
-#api/.vuepress/dist
+api/dist/
 
 # vuepress v2.x temp and cache directory
 api/.temp

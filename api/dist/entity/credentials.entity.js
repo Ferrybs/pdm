@@ -17,19 +17,19 @@ const user_entity_1 = __importDefault(require("./user.entity"));
 let Credentials = class Credentials {
 };
 __decorate([
-    (0, typeorm_1.PrimaryColumn)(),
+    typeorm_1.PrimaryColumn(),
     __metadata("design:type", String)
 ], Credentials.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    typeorm_1.Column(),
     __metadata("design:type", String)
 ], Credentials.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => user_entity_1.default, (user) => user.idUser),
+    typeorm_1.OneToOne(() => user_entity_1.default, (user) => user.idUser),
     __metadata("design:type", user_entity_1.default)
 ], Credentials.prototype, "user", void 0);
 Credentials = __decorate([
-    (0, typeorm_1.Entity)()
+    typeorm_1.Entity()
 ], Credentials);
 exports.default = Credentials;
 //# sourceMappingURL=credentials.entity.js.map
