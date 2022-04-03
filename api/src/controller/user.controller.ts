@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import Controller from "../../interfaces/Controller";
+import Controller from "../interfaces/Controller";
 
 export default class UserController implements Controller{
     public path : string = '/user';
