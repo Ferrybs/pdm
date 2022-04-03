@@ -1,0 +1,6 @@
+class Authentication {
+    
+    constructor() {
+        
+    }
+}
