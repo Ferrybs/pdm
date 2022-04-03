@@ -1,19 +1,12 @@
-import express, { Router } from "express";
+import { Request, Response } from "express";
 import Controller from "../interfaces/controller.interface";
 import HomeService from "../services/home.service"
 
 export default class HomeController implements Controller{
-    public path : string = '/';
-    public router : Router = express.Router();
     private service: HomeService = new HomeService();
 
-    constructor(){
-        this.initializeRoutes();
+    public async get(request: Request, response: Response){
+        response.send(this.service.getHome());
     }
-
-    private initializeRoutes() {
-        this.router.get(this.path,this.service.getHome);
-    }
-
     
 }
