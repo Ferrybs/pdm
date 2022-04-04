@@ -13,7 +13,7 @@ export default class UserService extends Services{
         try {
             const database = this.getAppDataSource();
             const userRepository = database.getRepository(User);
-            const user_response =  await userRepository.findOneBy({idUser: id});
+            const user_response =  await userRepository.findOneBy({id: id});
             return user_response;
         } catch (error) {
             

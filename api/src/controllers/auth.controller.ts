@@ -6,6 +6,7 @@ import DataStoreToken from "interfaces/data.store.token.interface";
 import ClientDTO from "../dto/client.dto";
 import HttpException from "../exceptions/http.exceptions";
 import console from "console";
+import CredentialsDTO from "dto/credentials.dto";
 
 export default class AuthController extends Controller{
 
@@ -18,6 +19,24 @@ export default class AuthController extends Controller{
       } = await this.authService.register(clientData);
       response.setHeader('Set-Cookie', [cookie]);
       response.send(client);
+    } catch (error) {
+      if(error instanceof HttpException){
+        response.status(error.status).send(error.data);
+      }else{
+        response.status(error.status).send({ ok: false, message: error.message});
+      }
+    }
+  }
+
+  public async login(request: Request, response: Response, next: NextFunction) {
+    const credentialsData: CredentialsDTO = request.body;
+    try {
+      const {
+        cookie,
+        result
+      } = await this.authService.login(credentialsData);
+      response.setHeader('Set-Cookie', [cookie]);
+      response.send(result);
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);

@@ -1,5 +1,5 @@
 import { Column, Entity, OneToOne, PrimaryColumn } from "typeorm";
-import User from "./client.entity";
+import Client from "./client.entity";
 
 @Entity()
 export default class Credentials{
@@ -9,6 +9,6 @@ export default class Credentials{
     @Column()
     public password?: string;
 
-    @OneToOne(() => User, user => user.idUser)
-    public user: User;
+    @OneToOne(() => Client, client => client.id)
+    public client: Client;
 }

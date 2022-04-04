@@ -5,27 +5,46 @@ import PersonDTO from '../dto/person.dto';
 import { RequestHandler } from 'express';
 import HttpException from '../exceptions/http.exceptions';
 
-function validationMiddleware<T>(type: any): RequestHandler {
-  return async (req, res, next) => {
-      let message: string
-    try {
-        const aux = req.body as ClientDTO;
-        const credentialsDTO = aux.credentialsDTO;
-        const personDTO = aux.personDTO;
-        const credDto = await transformAndValidate(CredentialsDTO, credentialsDTO);
-        console.log(credDto);
-        const perDTO = await transformAndValidate(PersonDTO, personDTO);
-        console.log(perDTO);
-      } catch (err) {
-        message = err.map((err) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        res.status(400).send(new HttpException(400,message).data);
-      }else{
-          next();
-      }
+export default class ValidationMiddleware {
 
-  };
+  public client(): RequestHandler{
+    return async (req, res, next) => {
+        let message: string
+      try {
+          const aux = req.body as ClientDTO;
+          const credentialsDTO = aux.credentialsDTO;
+          const personDTO = aux.personDTO;
+          await transformAndValidate(CredentialsDTO, credentialsDTO);
+          await transformAndValidate(PersonDTO, personDTO);
+        } catch (err) {
+          message = err.map((err) => Object.values(err.constraints)).join(', ');
+        }
+        if(message){
+          res.status(400).send(new HttpException(400,message).data);
+        }else{
+            next();
+        }
+  
+    };
+  }
+  public credentials(): RequestHandler {
+    return async (req, res, next) => {
+        let message: string
+      try {
+          const aux = req.body as CredentialsDTO;
+          const credentialsDTO = new CredentialsDTO();
+          credentialsDTO.email = aux.email;
+          credentialsDTO.password = aux.password;
+          await transformAndValidate(CredentialsDTO, credentialsDTO);
+        } catch (err) {
+          message = err.map((err) => Object.values(err.constraints)).join(', ');
+        }
+        if(message){
+          res.status(400).send(new HttpException(400,message).data);
+        }else{
+            next();
+        }
+  
+    };
+  }
 }
-
-export default validationMiddleware;

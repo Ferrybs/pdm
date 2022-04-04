@@ -1,5 +1,4 @@
 import Credentials from "../entity/credentials.entity";
-import User from "../entity/client.entity";
 import Services from "./services";
 import bcrypt from "bcrypt"
 import DataStoreToken from "../interfaces/data.store.token.interface";
@@ -10,7 +9,9 @@ import Person from "../entity/person.entity";
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
 import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.emaill.exist";
-import HttpException from "exceptions/http.exceptions";
+import HttpException from "../exceptions/http.exceptions";
+import CredentialsDTO from "../dto/credentials.dto";
+import PersonDTO from "../dto/person.dto";
 
 export default class AuthService extends Services{
   private appDataSource = this.getAppDataSource()
@@ -44,6 +45,7 @@ export default class AuthService extends Services{
           client
       }
       } catch (error) {
+        await this.appDataSource.destroy()
         throw (new HttpException(400,error.message))
       }
 
@@ -52,15 +54,52 @@ export default class AuthService extends Services{
     public createCookie(tokenData: TokenData) {
         return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
       }
-    public createToken(user: User): TokenData {
+    public createToken(client: Client): TokenData {
         const expiresIn = 60 * 60; // an hour
         const secret = validateEnv.JWT_SECRET;
         const dataStoredInToken: DataStoreToken = {
-          id: user.idUser,
+          id: client.id,
         };
         return {
           expiresIn,
           token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
         };
       }
+    public async login(credentialsDTO: CredentialsDTO) {
+      try {
+        await this.appDataSource.initialize()
+        const credentialsUser = await this.appDataSource.manager.findOne(Credentials,
+          {where: 
+            {
+              email: credentialsDTO.email
+            }
+          })
+        if(credentialsUser){
+          const isMatch = await bcrypt.compare(
+            credentialsDTO.password,
+            credentialsUser.password
+          );
+          if(isMatch){
+            const client = await this.appDataSource.manager.findOne(
+              Client,{where:{credentials: credentialsUser}, relations: ['credentials', 'person']});
+            const result = new ClientDTO();
+            result.idUser = client.id;
+            result.personDTO = client.person as PersonDTO
+            result.credentialsDTO = client.credentials as CredentialsDTO;
+            result.credentialsDTO.password = null;
+            const tokenData = this.createToken(client);
+            const cookie = this.createCookie(tokenData);
+            await this.appDataSource.destroy()
+        return {
+          cookie,
+          result
+      }
+          }
+          throw( new HttpException(404,"Not Found"));
+        }
+      } catch (error) {
+        await this.appDataSource.destroy()
+        throw( new HttpException(404,error.message));
+      }
+    }
 }

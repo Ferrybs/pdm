@@ -1,10 +1,10 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import User from './client.entity';
+import Client from './client.entity';
 
 @Entity()
 export default class Person{    
     @PrimaryGeneratedColumn("uuid")
-    public idPerson: string;
+    public id: string;
 
     @Column()
     public name: string;
@@ -12,6 +12,6 @@ export default class Person{
     @Column()
     public lastName: string;
 
-    @OneToOne(() => User, user => user.idUser)
-    public user: User;
+    @OneToOne(() => Client, client => client.id)
+    public client: Client;
 }

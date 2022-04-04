@@ -10,7 +10,7 @@ export default class PostgresDataSource implements DataSourceDB {
     constructor() {
         this.appDataSource= new DataSource({
             type: "postgres",
-            url: validateEnv.DATABASE_URI,
+            url: validateEnv.DATABASE_URL,
             synchronize: true,
             logging: true,
             entities: [

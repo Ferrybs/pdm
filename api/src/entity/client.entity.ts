@@ -5,13 +5,13 @@ import Person from "./person.entity"
 @Entity()
 export default class Client{    
     @PrimaryGeneratedColumn("uuid")
-    public idUser?: string;
+    public id?: string;
 
-    @OneToOne(() => Person)
+    @OneToOne(() => Person, (person: Person) => person.client)
     @JoinColumn()
     public person: Person;
 
-    @OneToOne(() => Credentials)
+    @OneToOne(() => Credentials, (credentials: Credentials) => credentials.client)
     @JoinColumn()
     public credentials: Credentials;
 }
