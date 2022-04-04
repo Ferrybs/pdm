@@ -1,6 +1,9 @@
-import { DataSource, EntitySchema } from "typeorm";
-import validateEnv from "../utils/validateEnv";
-import DataSourceDB from "../interfaces/data.source.interface";
+import { DataSource } from "typeorm";
+import validateEnv from "./utils/validateEnv";
+import DataSourceDB from "./interfaces/data.source.interface";
+import Person from "./entity/person.entity";
+import Credentials from "./entity/credentials.entity";
+import Client from "./entity/client.entity";
 
 export default class PostgresDataSource implements DataSourceDB {
     appDataSource: DataSource
@@ -15,11 +18,17 @@ export default class PostgresDataSource implements DataSourceDB {
             synchronize: true,
             logging: true,
             entities: [
-                __dirname + '/../**/*.entity{.ts,.js}',
+                Credentials,Client,Person,
               ],
             subscribers: [],
             migrations: [],
+            extra: {
+                ssl: {
+                  rejectUnauthorized: false
+                }
+            }
         })
     }
-
 }
+
+//__dirname + '../**/*.entity{.ts,.js}'

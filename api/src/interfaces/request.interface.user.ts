@@ -1,6 +1,6 @@
-import UserDTO from "dto/user.dto";
+import ClientDTO from "dto/client.dto";
 import { Request } from "express";
 
 export default interface RequestUser extends Request{
-    user: UserDTO
+    client: ClientDTO
 }

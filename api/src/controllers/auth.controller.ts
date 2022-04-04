@@ -3,19 +3,19 @@ import RequestUser from "interfaces/request.interface.user";
 import Controller from "./controller";
 import jwt from "jsonwebtoken";
 import DataStoreToken from "interfaces/data.store.token.interface";
-import UserDTO from "dto/user.dto";
+import ClientDTO from "dto/client.dto";
 
 export default class AuthController extends Controller{
 
   public async register(request: Request, response: Response, next: NextFunction){
-    const userData: UserDTO = request.body;
+    const clientData: ClientDTO = request.body;
     try {
       const {
         cookie,
-        user
-      } = await this.authService.register(userData);
+        client
+      } = await this.authService.register(clientData);
       response.setHeader('Set-Cookie', [cookie]);
-      response.send(user);
+      response.send(client);
     } catch (error) {
       next(error);
     }

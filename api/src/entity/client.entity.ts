@@ -3,15 +3,15 @@ import Credentials from './credentials.entity';
 import Person from "./person.entity"
 
 @Entity()
-export default class User{    
+export default class Client{    
     @PrimaryGeneratedColumn("uuid")
-    public idUser: string;
+    public idUser?: string;
 
-    @OneToOne(() => Person, (person: Person) => person.idPerson)
+    @OneToOne(() => Person)
     @JoinColumn()
     public person: Person;
 
-    @OneToOne(() => Credentials, (credentials: Credentials) => credentials.email)
+    @OneToOne(() => Credentials)
     @JoinColumn()
     public credentials: Credentials;
 }

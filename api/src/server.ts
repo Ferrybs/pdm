@@ -10,4 +10,5 @@ const app = new App(
         new AuthRoutes()
     ]
     );
+    
 app.listen();

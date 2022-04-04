@@ -11,7 +11,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "data.source.postgres.ts"  ],
   "exclude": [
     "node_modules"
   ]

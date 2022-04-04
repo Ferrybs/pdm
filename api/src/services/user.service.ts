@@ -1,4 +1,4 @@
-import User from "../entity/user.entity";
+import User from "../entity/client.entity";
 import Services from "./services";
 
 export default class UserService extends Services{
@@ -11,7 +11,7 @@ export default class UserService extends Services{
     //toEntity
     async getUser(id: string){
         try {
-            const database = this.getDatabase();
+            const database = this.getAppDataSource();
             const userRepository = database.getRepository(User);
             const user_response =  await userRepository.findOneBy({idUser: id});
             return user_response;
