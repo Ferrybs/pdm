@@ -5,11 +5,7 @@ dotenv.config();
 
 const validateEnv = cleanEnv(process.env, {
     PORT:port(),
-    DATABASE_HOST: str(),
-    DATABASE: str(),
-    DATABASE_USER: str(),
-    DATABASE_PORT: port(),
-    DATABASE_PASS: str(),
+    DATABASE_URI: str(),
     JWT_SECRET: str()
   })
 

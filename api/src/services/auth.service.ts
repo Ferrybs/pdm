@@ -9,17 +9,21 @@ import validateEnv from "../utils/validateEnv";
 import Person from "../entity/person.entity";
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
+import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.emaill.exist";
+import HttpException from "exceptions/http.exceptions";
 
 export default class AuthService extends Services{
   private appDataSource = this.getAppDataSource()
 
     public async register(clienteData: ClientDTO){
-      return this.appDataSource.initialize().then(async () => {
-        if(
-          await this.appDataSource.manager.findOneBy(Credentials,{email: clienteData.credentialsDTO.email})
-        ){
-          throw Error("FUDEU");
-        }
+      await this.appDataSource.initialize()
+      if(
+        await this.appDataSource.manager.findOneBy(Credentials,{email: clienteData.credentialsDTO.email})
+      ){
+        this.appDataSource.destroy()
+        throw new ClientWithThatEmailAlreadyExistsException(clienteData.credentialsDTO.email);
+      }
+      try {
         const hashedPassword = await bcrypt.hash(clienteData.credentialsDTO.password, 10);
         clienteData.credentialsDTO.password = hashedPassword;
         const person = this.appDataSource.manager.create(Person,clienteData.personDTO);
@@ -33,11 +37,16 @@ export default class AuthService extends Services{
         client.credentials.password = null;
         const tokenData = this.createToken(client);
         const cookie = this.createCookie(tokenData);
-          return {
-              cookie,
-              client
-          }
-      })
+        await this.appDataSource.destroy()
+
+        return {
+          cookie,
+          client
+      }
+      } catch (error) {
+        throw (new HttpException(400,error.message))
+      }
+
     }
 
     public createCookie(tokenData: TokenData) {

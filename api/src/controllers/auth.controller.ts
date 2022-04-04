@@ -3,7 +3,9 @@ import RequestUser from "interfaces/request.interface.user";
 import Controller from "./controller";
 import jwt from "jsonwebtoken";
 import DataStoreToken from "interfaces/data.store.token.interface";
-import ClientDTO from "dto/client.dto";
+import ClientDTO from "../dto/client.dto";
+import HttpException from "../exceptions/http.exceptions";
+import console from "console";
 
 export default class AuthController extends Controller{
 
@@ -17,7 +19,11 @@ export default class AuthController extends Controller{
       response.setHeader('Set-Cookie', [cookie]);
       response.send(client);
     } catch (error) {
-      next(error);
+      if(error instanceof HttpException){
+        response.status(error.status).send(error.data);
+      }else{
+        response.status(error.status).send({ ok: false, message: error.message});
+      }
     }
   }
 

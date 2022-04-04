@@ -1,4 +1,4 @@
-import PostgresDataSource from "../data.source.postgres";
+import PostgresDataSource from "../configs/data.source.postgres";
 import User from "../entity/client.entity";
 import DataSourceDB from "../interfaces/data.source.interface";
 import UserDTO from "../dto/client.dto";
