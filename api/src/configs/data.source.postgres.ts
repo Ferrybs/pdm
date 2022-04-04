@@ -4,7 +4,7 @@ import DataSourceDB from "../interfaces/data.source.interface";
 
 export default class PostgresDataSource implements DataSourceDB {
     appDataSource: DataSource
-    constructor(entities: EntitySchema[]) {
+    constructor() {
         this.appDataSource= new DataSource({
             type: "postgres",
             host: validateEnv.DATABASE_HOST,
@@ -14,7 +14,9 @@ export default class PostgresDataSource implements DataSourceDB {
             database: validateEnv.DATABASE,
             synchronize: true,
             logging: true,
-            entities: entities,
+            entities: [
+                __dirname + '/../**/*.entity{.ts,.js}',
+              ],
             subscribers: [],
             migrations: [],
         })

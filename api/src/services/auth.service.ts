@@ -14,7 +14,7 @@ export default class AuthService extends Services{
 
     public async register(userData: UserDTO){
         if(
-            await this.credentialsRepository.findOneBy({email: userData.credentialsDTO.email})
+            await this.credentialsRepository.findBy({email: userData.credentialsDTO.email})
         ){
             throw Error("Erro!");
         }

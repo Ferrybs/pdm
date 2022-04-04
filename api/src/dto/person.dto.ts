@@ -1,6 +1,6 @@
 import { MinLength } from "class-validator";
 
-export default class Person {
+export default class PersonDTO {
     @MinLength(3, {
         message: 'Name need to have at least 3 letters',
       })    

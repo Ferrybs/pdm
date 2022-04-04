@@ -14,7 +14,7 @@ export default class AuthRoutes {
     }
     
     private initializeRoutes() {
-            this.router.post(`${this.path}register`,this.controller.register);
+            this.router.post(`${this.path}register`,this.controller.register.bind(this.controller));
     }
 
 }

@@ -8,14 +8,7 @@ import UserDTO from "../dto/user.dto";
 export default class Services {
     dataSource: DataSourceDB
     constructor() {
-        const entityOp = new EntitySchemaOptions
-        this.dataSource = new PostgresDataSource(
-            [
-                new User(entityOp),
-                new Person(entityOp),
-                new Credentials(entityOp)
-            ]
-        );
+        this.dataSource = new PostgresDataSource();
     }
 
     getDatabase(){
