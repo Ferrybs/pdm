@@ -83,7 +83,7 @@ export default class AuthService extends Services{
             const client = await this.appDataSource.manager.findOne(
               Client,{where:{credentials: credentialsUser}, relations: ['credentials', 'person']});
             const result = new ClientDTO();
-            result.idUser = client.id;
+            result.id = client.id;
             result.personDTO = client.person as PersonDTO
             result.credentialsDTO = client.credentials as CredentialsDTO;
             result.credentialsDTO.password = null;
@@ -100,6 +100,19 @@ export default class AuthService extends Services{
       } catch (error) {
         await this.appDataSource.destroy()
         throw( new HttpException(404,error.message));
+      }
+    }
+    public async recoverypassword(client: ClientDTO){
+      try {
+        await this.appDataSource.initialize()
+        const hashedPassword = await bcrypt.hash(client.credentialsDTO.password,10);
+        client.credentialsDTO.password = hashedPassword
+        await this.appDataSource.manager.save(client.credentialsDTO);
+        await this.appDataSource.destroy();
+        return
+      } catch (error) {
+        await this.appDataSource.destroy();
+        throw new HttpException(400,error.message);
       }
     }
 }

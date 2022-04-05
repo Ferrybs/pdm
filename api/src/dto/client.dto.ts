@@ -4,7 +4,7 @@ import PersonDTO from "./person.dto"
 
 export default class ClientDTO {
     
-    public idUser?: string 
+    public id?: string 
     @ValidateNested()  
     public personDTO: PersonDTO;
     @ValidateNested()

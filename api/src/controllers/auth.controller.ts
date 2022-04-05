@@ -1,12 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import RequestUser from "interfaces/request.interface.user";
 import Controller from "./controller";
-import jwt from "jsonwebtoken";
-import DataStoreToken from "interfaces/data.store.token.interface";
 import ClientDTO from "../dto/client.dto";
 import HttpException from "../exceptions/http.exceptions";
-import console from "console";
 import CredentialsDTO from "dto/credentials.dto";
+import RequesWithClient from "interfaces/request.client.interface";
 
 export default class AuthController extends Controller{
 
@@ -45,16 +42,19 @@ export default class AuthController extends Controller{
       }
     }
   }
-
-  // public async authMiddleware(request: RequestUser, response: Response, next: NextFunction) {
-  //       const cookies = request.cookies;
-  //       if (cookies && cookies.Authorization) {
-  //         const secret = process.env.JWT_SECRET;
-  //         try {
-  //           const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoreToken;
-  //           const id = verificationResponse.id;
-  //           const user = this.userService.getUser(id)
-  //         }catch(error){}
-  //       }
-  //   }
+  public async recoverypassword(request: RequesWithClient, response: Response, next: NextFunction){
+    try {
+      const body = request.body as ClientDTO;
+      const client = request.client
+      client.credentialsDTO.password = body.credentialsDTO.password
+      this.authService.recoverypassword(client);
+      response.status(200).send({ok:true});
+    } catch (error) {
+      if(error instanceof HttpException){
+        response.status(error.status).send(error.data);
+      }else{
+        response.status(400).send({ ok: false, message: error.message});
+      }
+    }
+  }
 }

@@ -8,7 +8,7 @@ import CredentialsDTO from "../dto/credentials.dto";
 import Credentials from "../entity/credentials.entity";
 import ClientDTO from "../dto/client.dto";
 export default class Services {
-    dataSource: DataSourceDB
+    private dataSource: DataSourceDB
     constructor() {
         this.dataSource = new PostgresDataSource();
     }
