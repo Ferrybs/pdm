@@ -6,10 +6,12 @@
     "baseUrl": "./src",
     "module": "commonjs",
     "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "data.source.postgres.ts"  ],
   "exclude": [
     "node_modules"
   ]

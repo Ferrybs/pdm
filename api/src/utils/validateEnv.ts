@@ -4,7 +4,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const validateEnv = cleanEnv(process.env, {
-    PORT:port()
+    PORT:port(),
+    DATABASE_URL: str(),
+    JWT_SECRET: str()
   })
 
 export default validateEnv;
