@@ -8,7 +8,7 @@ import validateEnv from "../utils/validateEnv";
 import Person from "../entity/person.entity";
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
-import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.emaill.exist";
+import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";
 import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import PersonDTO from "../dto/person.dto";

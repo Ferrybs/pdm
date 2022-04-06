@@ -13,6 +13,7 @@ export default class HomeRoutes {
     
     private initializeRoutes() {
             this.router.get(this.path,this.controller.get.bind(this.controller));
+            this.router.get(`${this.path}email`,this.controller.getSendEmail.bind(this.controller));
     }
 
 }
