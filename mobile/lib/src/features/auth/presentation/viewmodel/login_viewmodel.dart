@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:ffi';
+
+import 'package:basearch/src/features/auth/domain/model/client.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,25 +20,33 @@ abstract class _LoginViewModelBase with Store {
   @observable
   String password = '';
 
+  @observable
+  late Client client;
+
+  @action
+  updateClient(Client client) {
+    client = client;
+  }
+
   @action
   updateEmail(String value) {
     email = value;
-    print(email);
   }
 
   @action
   updatePassword(String value) {
     password = value;
-    print(password);
   }
 
-  void login() async {
+  FutureOr<Client?> login() async {
     //TODO: Validate username
     //TODO: Validate password
     try {
-      await _usecase.login(email, password);
+      //await Future.delayed(Duration(seconds: 2));
+      return await _usecase.login(email, password);
     } catch (e) {
       print(e);
     }
+    return null;
   }
 }
