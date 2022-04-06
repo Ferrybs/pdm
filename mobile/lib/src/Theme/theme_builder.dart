@@ -5,8 +5,7 @@ class ThemeBuilder {
   final ColorScheme _colorScheme;
   ThemeBuilder(this._baseTheme, this._colorScheme);
   getTheme() {
-    return ThemeData(
-        primarySwatch: _material_color(),
+    return _baseTheme.copyWith(
         colorScheme: _colorScheme,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         appBarTheme: appBarTheme,

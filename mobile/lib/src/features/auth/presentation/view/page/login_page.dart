@@ -135,10 +135,17 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         child: Text('login'.i18n().toUpperCase()),
                         onPressed: () async {
-                          print("OI");
-                          showSpinner = true;
-                          controller.login();
-                          showSpinner = false;
+                          setState(() {
+                            showSpinner = true;
+                          });
+                          final client = await controller.login();
+                          print(client);
+                          if (client != null) {
+                            setState(() {
+                              showSpinner = false;
+                            });
+                            Modular.to.navigate('/success');
+                          }
                         },
                       ),
                     ),
