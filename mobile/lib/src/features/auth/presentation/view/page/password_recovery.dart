@@ -1,13 +1,12 @@
 import 'package:basearch/components/hud/modal_progress_hud.dart';
 import 'package:basearch/src/Theme/theme.dart';
-import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
-  //final controller = LoginViewModel();
+
   @override
   State<CreateAccount> createState() => _CreateAccount();
 }
@@ -52,9 +51,8 @@ class _CreateAccount extends State<CreateAccount> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Builder(
-                      builder: (context) => Text('name'.i18n(),
-                          style: Theme.of(context).textTheme.labelLarge)),
+                  Text('name'.i18n(),
+                      style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(height: 10),
                   Builder(
                       builder: (context) => TextField(
@@ -75,11 +73,10 @@ class _CreateAccount extends State<CreateAccount> {
                             onChanged: (value) {},
                           )),
                   const SizedBox(height: 10),
-                  Builder(
-                      builder: (context) => Text(
-                            'last-name'.i18n(),
-                            style: Theme.of(context).textTheme.labelLarge,
-                          )),
+                  Text(
+                    'last-name'.i18n(),
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                   const SizedBox(height: 10),
                   Builder(
                       builder: (context) => TextField(
@@ -102,9 +99,7 @@ class _CreateAccount extends State<CreateAccount> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Builder(
-                      builder: (context) => Text('E-mail',
-                          style: Theme.of(context).textTheme.labelLarge)),
+                  Text('E-mail', style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(
                     height: 10,
                   ),
@@ -195,7 +190,7 @@ class _CreateAccount extends State<CreateAccount> {
 
 Widget _goBackButton(BuildContext context) {
   return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: Icon(Icons.arrow_back, color: Colors.grey[350]),
       onPressed: () {
         Modular.to.navigate('/');
       });
