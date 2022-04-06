@@ -122,9 +122,14 @@ export default class AuthService extends Services{
         throw new HttpException(400,error.message);
       }
     }
-    public async sendEmail(credentials: CredentialsDTO, token: string){
+    public async sendEmail(credentials: CredentialsDTO){
       try {
-        this.getEmail().post(token,credentials.email);
+        await this.appDataSource.initialize()
+        const client = await this.appDataSource.manager.findOne(
+          Client,{where:{credentials: credentials}, relations: ['credentials', 'person']});
+        await this.appDataSource.destroy()
+        const token = this.createToken(client);
+        this.getEmail().post(token.token,credentials.email);
       } catch (error) {
         
       }

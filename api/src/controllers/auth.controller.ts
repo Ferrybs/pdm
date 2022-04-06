@@ -60,12 +60,7 @@ export default class AuthController extends Controller{
   public async sendEmail(request: Request, response: Response){
     try {
       const body = request.body as CredentialsDTO;
-      const {
-        cookie,
-        result
-      } = await this.authService.login(body);
-
-      this.authService.sendEmail(result.credentialsDTO,cookie);
+      await this.authService.sendEmail(body);
       response.status(200).send({ok:true});
     } catch (error) {
       if(error instanceof HttpException){
