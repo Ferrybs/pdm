@@ -29,67 +29,61 @@ class _SuccessLogin extends State<SuccessLogin> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: " ",
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Builder(
-              builder: (context) => Align(
-                alignment: Alignment.topCenter,
-                child: ConfettiWidget(
-                  confettiController: _controllerBottomCenter,
-                  blastDirection: pi,
-                  maxBlastForce: 3, // set a lower max blast force
-                  minBlastForce: 2,
-                  emissionFrequency: 0.3,
-                  minimumSize: const Size(10,
-                      10), // set the minimum potential size for the confetti (width, height)
-                  maximumSize: const Size(20,
-                      20), // set the maximum potential size for the confetti (width, height)
-                  numberOfParticles: 1,
-                  gravity: 1,
-                ),
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Builder(
+            builder: (context) => Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _controllerBottomCenter,
+                blastDirection: pi,
+                maxBlastForce: 3, // set a lower max blast force
+                minBlastForce: 2,
+                emissionFrequency: 0.3,
+                minimumSize: const Size(10,
+                    10), // set the minimum potential size for the confetti (width, height)
+                maximumSize: const Size(20,
+                    20), // set the maximum potential size for the confetti (width, height)
+                numberOfParticles: 1,
+                gravity: 1,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Builder(
-                builder: (context) => Text(
-                  controller.clientName,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Builder(
+              builder: (context) => Text(
+                controller.clientName,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Builder(
-                builder: (context) => Text(
-                  'Congratulations, ${controller.clientName}',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Builder(
+              builder: (context) => Text(
+                'Congratulations, ${controller.clientName}',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
-            Builder(
-              builder: (context) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'You have logged in.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
+          ),
+          Builder(
+            builder: (context) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'You have logged in.',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
-            SizedBox(
-                height: 200,
-                width: 200,
-                child: SvgPicture.asset('lib/assets/images/success.svg')),
-          ],
-        ),
+          ),
+          SizedBox(
+              height: 200,
+              width: 200,
+              child: SvgPicture.asset('lib/assets/images/success.svg')),
+        ],
       ),
     );
   }
