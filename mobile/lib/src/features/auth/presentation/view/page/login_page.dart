@@ -139,7 +139,6 @@ class _LoginPageState extends State<LoginPage> {
                             showSpinner = true;
                           });
                           final client = await controller.login();
-                          print(client);
                           if (client != null) {
                             setState(() {
                               showSpinner = false;
