@@ -1,12 +1,15 @@
+import 'dart:async';
+
+import 'package:basearch/src/features/auth/domain/model/credentials.dart';
+import 'package:basearch/src/features/auth/domain/model/client.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../model/user.dart';
 import '../repository/login_interface.dart';
 
 class LoginUseCase {
   final repository = Modular.get<ILogin>();
 
-  Future<User> login(String username, String password) {
-    return repository.login(User(username, password));
+  FutureOr<Client> login(String email, String password) {
+    return repository.login(Credentials(email, password));
   }
 }

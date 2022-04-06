@@ -9,18 +9,18 @@ part of 'login_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$LoginViewModel on _LoginViewModelBase, Store {
-  final _$usernameAtom = Atom(name: '_LoginViewModelBase.username');
+  final _$emailAtom = Atom(name: '_LoginViewModelBase.email');
 
   @override
-  String get username {
-    _$usernameAtom.reportRead();
-    return super.username;
+  String get email {
+    _$emailAtom.reportRead();
+    return super.email;
   }
 
   @override
-  set username(String value) {
-    _$usernameAtom.reportWrite(value, super.username, () {
-      super.username = value;
+  set email(String value) {
+    _$emailAtom.reportWrite(value, super.email, () {
+      super.email = value;
     });
   }
 
@@ -39,10 +39,35 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
+  final _$_LoginViewModelBaseActionController =
+      ActionController(name: '_LoginViewModelBase');
+
+  @override
+  dynamic updateEmail(String value) {
+    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
+        name: '_LoginViewModelBase.updateEmail');
+    try {
+      return super.updateEmail(value);
+    } finally {
+      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updatePassword(String value) {
+    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
+        name: '_LoginViewModelBase.updatePassword');
+    try {
+      return super.updatePassword(value);
+    } finally {
+      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-username: ${username},
+email: ${email},
 password: ${password}
     ''';
   }
