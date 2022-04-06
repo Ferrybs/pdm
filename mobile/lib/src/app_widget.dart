@@ -1,3 +1,4 @@
+import 'package:basearch/src/Theme/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -14,6 +15,8 @@ class AppWidget extends StatelessWidget {
     return MaterialApp.router(
       scrollBehavior: AppScrollBehavior(),
       title: 'app_name'.i18n(),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
