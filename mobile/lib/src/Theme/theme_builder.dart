@@ -70,14 +70,16 @@ class ThemeBuilder {
 
   get textSelectionTheme {
     return _baseTheme.textSelectionTheme.copyWith(
-        cursorColor: _colorScheme.onTertiary,
-        selectionColor: _colorScheme.onTertiary,
-        selectionHandleColor: _colorScheme.onTertiary);
+      cursorColor: _colorScheme.onTertiary,
+    );
   }
 
   get appBarTheme {
     return _baseTheme.appBarTheme.copyWith(
       backgroundColor: _colorScheme.background,
+      iconTheme: IconThemeData(
+        color: _colorScheme.tertiary,
+      ),
     );
   }
 

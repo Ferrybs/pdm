@@ -55,8 +55,9 @@ class _CreateAccount extends State<CreateAccount> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('name'.i18n(),
-                          style: Theme.of(context).textTheme.labelLarge),
+                      Builder(
+                          builder: (context) => Text('name'.i18n(),
+                              style: Theme.of(context).textTheme.labelLarge)),
                       const SizedBox(height: 10),
                       Builder(
                           builder: (context) => TextField(
@@ -78,10 +79,11 @@ class _CreateAccount extends State<CreateAccount> {
                                 onChanged: (value) {},
                               )),
                       const SizedBox(height: 10),
-                      Text(
-                        'last-name'.i18n(),
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
+                      Builder(
+                          builder: (context) => Text(
+                                'last-name'.i18n(),
+                                style: Theme.of(context).textTheme.labelLarge,
+                              )),
                       const SizedBox(height: 10),
                       Builder(
                           builder: (context) => TextField(
@@ -105,8 +107,9 @@ class _CreateAccount extends State<CreateAccount> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text('E-mail',
-                          style: Theme.of(context).textTheme.labelLarge),
+                      Builder(
+                          builder: (context) => Text('E-mail',
+                              style: Theme.of(context).textTheme.labelLarge)),
                       const SizedBox(
                         height: 10,
                       ),
@@ -200,7 +203,7 @@ class _CreateAccount extends State<CreateAccount> {
 
 Widget _goBackButton(BuildContext context) {
   return IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.grey[350]),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         Modular.to.navigate('/');
       });
