@@ -12,6 +12,7 @@ import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.emai
 import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import PersonDTO from "../dto/person.dto";
+import { instanceToPlain } from "class-transformer";
 
 export default class AuthService extends Services{
   private appDataSource = this.getAppDataSource()
@@ -107,12 +108,25 @@ export default class AuthService extends Services{
         await this.appDataSource.initialize()
         const hashedPassword = await bcrypt.hash(client.credentialsDTO.password,10);
         client.credentialsDTO.password = hashedPassword
-        await this.appDataSource.manager.save(client.credentialsDTO);
+        const credResul = this.appDataSource.manager.create(Credentials,client.credentialsDTO);
+        const personResul = this.appDataSource.manager.create(Person,client.personDTO);
+        const result = new Client();
+        result.id = client.id;
+        result.credentials =credResul;
+        result.person = personResul;
+        await this.appDataSource.manager.update(Credentials,credResul.email,credResul);
         await this.appDataSource.destroy();
         return
       } catch (error) {
         await this.appDataSource.destroy();
         throw new HttpException(400,error.message);
+      }
+    }
+    public async sendEmail(credentials: CredentialsDTO, token: string){
+      try {
+        this.getEmail().post(token,credentials.email);
+      } catch (error) {
+        
       }
     }
 }
