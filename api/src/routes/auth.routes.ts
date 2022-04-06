@@ -30,7 +30,7 @@ export default class AuthRoutes {
             this.router.post(
                 `${this.path}/forgot-password`,
                 new validationMiddleware().credentials(),
-                this.controller.sendEmail.bind(this.controller)
+                this.controller.recoverySendEmail.bind(this.controller)
             )
             this.router.patch(
                 `${this.path}/forgot-password`,

@@ -124,14 +124,19 @@ export default class AuthService extends Services{
     }
     public async sendEmail(credentials: CredentialsDTO){
       try {
-        await this.appDataSource.initialize()
+        credentials.password = null;
+        await this.appDataSource.initialize();
         const client = await this.appDataSource.manager.findOne(
           Client,{where:{credentials: credentials}, relations: ['credentials', 'person']});
-        await this.appDataSource.destroy()
-        const token = this.createToken(client);
-        this.getEmail().post(token.token,credentials.email);
+        await this.appDataSource.destroy();
+        if(client){
+          const token = this.createToken(client);
+          this.getEmail().post(token.token,credentials.email);
+        }else{
+          throw new HttpException(400,"Not Found!");
+        }
       } catch (error) {
-        
+        throw new HttpException(400,error.message);
       }
     }
 }

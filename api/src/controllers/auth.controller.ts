@@ -57,7 +57,7 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async sendEmail(request: Request, response: Response){
+  public async recoverySendEmail(request: Request, response: Response){
     try {
       const body = request.body as CredentialsDTO;
       await this.authService.sendEmail(body);
