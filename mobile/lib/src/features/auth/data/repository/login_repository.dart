@@ -8,13 +8,13 @@ import '../../domain/repository/login_interface.dart';
 
 class LoginRepository implements ILogin {
   @override
-  FutureOr<Client> login(Credentials credentials) async {
+  Future<Client> login(Credentials credentials) async {
     try {
       Response response;
       var dio = Dio();
       response = await dio.get('https://api-pdm-pia3.herokuapp.com/');
       print(response);
-      return Client("", Credentials(" ", " "), Person(" ", ""));
+      return Client("", Credentials(" ", " "), Person("Felipe", ""));
     } catch (e) {
       print(e);
     }
@@ -28,7 +28,7 @@ class LoginRepository implements ILogin {
   }
 
   @override
-  FutureOr<Client> register(client) {
+  Future<Client> register(client) {
     // TODO: implement register
     throw UnimplementedError();
   }

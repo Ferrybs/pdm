@@ -21,12 +21,7 @@ abstract class _LoginViewModelBase with Store {
   String password = '';
 
   @observable
-  late Client client;
-
-  @action
-  updateClient(Client client) {
-    client = client;
-  }
+  String clientName = 'FHFHEHE';
 
   @action
   updateEmail(String value) {
@@ -38,12 +33,14 @@ abstract class _LoginViewModelBase with Store {
     password = value;
   }
 
-  FutureOr<Client?> login() async {
+  Future<Client?> login() async {
     //TODO: Validate username
     //TODO: Validate password
     try {
+      var client = await _usecase.login(email, password);
+      clientName = client.person.name;
       //await Future.delayed(Duration(seconds: 2));
-      return await _usecase.login(email, password);
+      return client;
     } catch (e) {
       print(e);
     }

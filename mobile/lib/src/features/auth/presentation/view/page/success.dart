@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:basearch/src/Theme/theme.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +15,8 @@ class SuccessLogin extends StatefulWidget {
 
 class _SuccessLogin extends State<SuccessLogin> {
   late ConfettiController _controllerBottomCenter;
+  final controller = LoginViewModel();
+
   @override
   void initState() {
     ConfettiController(duration: const Duration(seconds: 2));
@@ -58,7 +61,16 @@ class _SuccessLogin extends State<SuccessLogin> {
               padding: const EdgeInsets.all(12.0),
               child: Builder(
                 builder: (context) => Text(
-                  'Congratulations,',
+                  controller.clientName,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Builder(
+                builder: (context) => Text(
+                  'Congratulations, ${controller.clientName}',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),

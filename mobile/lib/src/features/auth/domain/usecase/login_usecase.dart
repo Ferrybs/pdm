@@ -9,7 +9,7 @@ import '../repository/login_interface.dart';
 class LoginUseCase {
   final repository = Modular.get<ILogin>();
 
-  FutureOr<Client> login(String email, String password) {
+  Future<Client> login(String email, String password) {
     return repository.login(Credentials(email, password));
   }
 }
