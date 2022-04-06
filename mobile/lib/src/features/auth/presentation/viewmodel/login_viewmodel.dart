@@ -11,19 +11,30 @@ abstract class _LoginViewModelBase with Store {
   final _usecase = Modular.get<LoginUseCase>();
 
   @observable
-  String username = '';
+  String email = '';
 
   @observable
   String password = '';
 
+  @action
+  updateEmail(String value) {
+    email = value;
+    print(email);
+  }
+
+  @action
+  updatePassword(String value) {
+    password = value;
+    print(password);
+  }
+
   void login() async {
     //TODO: Validate username
     //TODO: Validate password
-
     try {
-      await _usecase.login(username, password);
-    } on UnimplementedError {
-      print('Put the error message in an observable instance field.');
+      await _usecase.login(email, password);
+    } catch (e) {
+      print(e);
     }
   }
 }

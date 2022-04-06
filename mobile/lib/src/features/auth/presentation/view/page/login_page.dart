@@ -1,5 +1,6 @@
 import 'package:basearch/components/hud/modal_progress_hud.dart';
 import 'package:basearch/src/Theme/theme.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,12 +8,12 @@ import 'package:localization/localization.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final controller = LoginViewModel();
   bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
@@ -82,7 +83,9 @@ class _LoginPageState extends State<LoginPage> {
                                 IconData(0xe780, fontFamily: 'MaterialIcons'),
                               ),
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              controller.updateEmail(value);
+                            },
                           ),
                         ),
                       ],
@@ -118,7 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                                 IconData(0xeb71, fontFamily: 'MaterialIcons'),
                               ),
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              controller.updatePassword(value);
+                            },
                           ),
                         ),
                       ],
@@ -129,7 +134,12 @@ class _LoginPageState extends State<LoginPage> {
                     child: Center(
                       child: ElevatedButton(
                         child: Text('login'.i18n().toUpperCase()),
-                        onPressed: () {},
+                        onPressed: () async {
+                          print("OI");
+                          showSpinner = true;
+                          controller.login();
+                          showSpinner = false;
+                        },
                       ),
                     ),
                   ),
