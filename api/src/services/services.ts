@@ -7,14 +7,21 @@ import PersonDTO from "../dto/person.dto";
 import CredentialsDTO from "../dto/credentials.dto";
 import Credentials from "../entity/credentials.entity";
 import ClientDTO from "../dto/client.dto";
+import SendEmail from "../utils/sendEmail";
 export default class Services {
-    private dataSource: DataSourceDB
+    private dataSource: DataSourceDB;
+    private email: SendEmail;
     constructor() {
+        this.email = new SendEmail();
         this.dataSource = new PostgresDataSource();
     }
 
     getAppDataSource(){
-        return this.dataSource.appDataSource
+        return this.dataSource.appDataSource;
+    }
+
+    getEmail(){
+        return this.email;
     }
     createUser(userData: UserDTO){
         const userRepository = this.getAppDataSource().getRepository(User);
