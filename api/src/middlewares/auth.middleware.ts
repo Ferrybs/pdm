@@ -14,13 +14,13 @@ export default class AuthMiddleware{
 
     public verify(): RequestHandler {
         return async(request: RequesWithClient,response,next) => {
-            const cookies = request.cookies;
-            if (cookies && cookies.Authorization) {
+            const bearerHeader = request.headers['authorization'];
+            if (bearerHeader) {
+                const token = bearerHeader.split(' ')[1];
                 const secret = validateEnv.JWT_SECRET;
                 try {
-                  const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
-                  const id = verificationResponse._id;
-                  const client = await this.services.getClient(id);
+                  const verificationResponse = jwt.verify(token,secret) as DataStoredInToken;
+                  const client = await this.services.getClient(verificationResponse.id);
                   if (client) {
                     request.client = client;
                     next();
@@ -28,7 +28,7 @@ export default class AuthMiddleware{
                     response.status(400).send(new HttpException(400,"Not Found!").data);
                   }
                 } catch (error) {
-                    response.status(400).send(new HttpException(400,"Not Found!").data);
+                    response.status(400).send(new HttpException(400,error.message).data);
                 }
               } else {
                   response.status(400).send(new HttpException(400,"Not Found!").data);

@@ -11,16 +11,16 @@ export default class AuthController extends Controller{
     const clientData: ClientDTO = request.body;
     try {
       const {
-        cookie,
+        token,
         client
       } = await this.authService.register(clientData);
-      response.setHeader('Set-Cookie', [cookie]);
+      response.setHeader('Authorization', 'Bearer '+token.token);
       response.send(client);
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
       }else{
-        response.status(error.status).send({ ok: false, message: error.message});
+        response.status(400).send({ ok: false, message: error.message});
       }
     }
   }
@@ -29,16 +29,17 @@ export default class AuthController extends Controller{
     try {
       const credentialsData: CredentialsDTO = request.body;
       const {
-        cookie,
+        token,
         result
       } = await this.authService.login(credentialsData);
-      response.setHeader('Set-Cookie', [cookie]);
+      const bearer = `Bearer ${token.token}`;
+      response.setHeader("Authorization",bearer);
       response.send(result);
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
       }else{
-        response.status(error.status).send({ ok: false, message: error.message});
+        response.status(400).send({ ok: false, message: error.message});
       }
     }
   }

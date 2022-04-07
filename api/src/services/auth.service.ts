@@ -36,13 +36,12 @@ export default class AuthService extends Services{
         await this.appDataSource.manager.save(person);
         await this.appDataSource.manager.save(cred);
         await this.appDataSource.manager.save(client);
+        await this.appDataSource.destroy();
         client.credentials.password = null;
-        const tokenData = this.createToken(client);
-        const cookie = this.createCookie(tokenData);
-        await this.appDataSource.destroy()
+        const token = this.createToken(client);
 
         return {
-          cookie,
+          token,
           client
       }
       } catch (error) {
@@ -51,12 +50,8 @@ export default class AuthService extends Services{
       }
 
     }
-
-    public createCookie(tokenData: TokenData) {
-        return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
-      }
     public createToken(client: Client): TokenData {
-        const expiresIn = 60 * 60; // an hour
+        const expiresIn = 60*60; // an hour
         const secret = validateEnv.JWT_SECRET;
         const dataStoredInToken: DataStoreToken = {
           id: client.id,
@@ -68,7 +63,7 @@ export default class AuthService extends Services{
       }
     public async login(credentialsDTO: CredentialsDTO) {
       try {
-        await this.appDataSource.initialize()
+        await this.appDataSource.initialize();
         const credentialsUser = await this.appDataSource.manager.findOne(Credentials,
           {where: 
             {
@@ -83,19 +78,19 @@ export default class AuthService extends Services{
           if(isMatch){
             const client = await this.appDataSource.manager.findOne(
               Client,{where:{credentials: credentialsUser}, relations: ['credentials', 'person']});
+            await this.appDataSource.destroy();
             const result = new ClientDTO();
             result.id = client.id;
             result.personDTO = client.person as PersonDTO
             result.credentialsDTO = client.credentials as CredentialsDTO;
             result.credentialsDTO.password = null;
-            const tokenData = this.createToken(client);
-            const cookie = this.createCookie(tokenData);
-            await this.appDataSource.destroy()
+            const token = this.createToken(client);
         return {
-          cookie,
+          token,
           result
       }
           }
+          await this.appDataSource.destroy();
           throw( new HttpException(404,"Not Found"));
         }
       } catch (error) {
