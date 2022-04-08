@@ -8,8 +8,8 @@ import RequesWithClient from "../interfaces/request.client.interface";
 export default class AuthController extends Controller{
 
   public async register(request: Request, response: Response, next: NextFunction){
-    const clientData: ClientDTO = request.body;
     try {
+      const clientData: ClientDTO = request.body;
       const {
         token,
         client
@@ -20,7 +20,7 @@ export default class AuthController extends Controller{
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
       }else{
-        response.status(400).send({ ok: false, message: error.message});
+        response.status(404).send({ ok: false, message: error.message});
       }
     }
   }
@@ -39,7 +39,7 @@ export default class AuthController extends Controller{
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
       }else{
-        response.status(400).send({ ok: false, message: error.message});
+        response.status(404).send({ ok: false, message: error.message});
       }
     }
   }
@@ -54,7 +54,7 @@ export default class AuthController extends Controller{
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
       }else{
-        response.status(400).send({ ok: false, message: error.message});
+        response.status(404).send({ ok: false, message: error.message});
       }
     }
   }
@@ -67,7 +67,7 @@ export default class AuthController extends Controller{
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
       }else{
-        response.status(400).send({ ok: false, message: error.message});
+        response.status(404).send({ ok: false, message: error.message});
       }
     }
   }

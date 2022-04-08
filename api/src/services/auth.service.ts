@@ -46,7 +46,7 @@ export default class AuthService extends Services{
       }
       } catch (error) {
         await this.appDataSource.destroy()
-        throw (new HttpException(400,error.message))
+        throw (new HttpException(404,error.message))
       }
 
     }
@@ -62,6 +62,8 @@ export default class AuthService extends Services{
         };
       }
     public async login(credentialsDTO: CredentialsDTO) {
+      const result = new ClientDTO();
+      var token: TokenData;
       try {
         await this.appDataSource.initialize();
         const credentialsUser = await this.appDataSource.manager.findOne(Credentials,
@@ -69,32 +71,33 @@ export default class AuthService extends Services{
             {
               email: credentialsDTO.email
             }
-          })
+          });
+        await this.appDataSource.destroy();
         if(credentialsUser){
           const isMatch = await bcrypt.compare(
             credentialsDTO.password,
             credentialsUser.password
           );
           if(isMatch){
+            await this.appDataSource.initialize();
             const client = await this.appDataSource.manager.findOne(
               Client,{where:{credentials: credentialsUser}, relations: ['credentials', 'person']});
             await this.appDataSource.destroy();
-            const result = new ClientDTO();
             result.id = client.id;
-            result.personDTO = client.person as PersonDTO
+            result.personDTO = client.person as PersonDTO;
             result.credentialsDTO = client.credentials as CredentialsDTO;
             result.credentialsDTO.password = null;
-            const token = this.createToken(client);
-        return {
-          token,
-          result
-      }
+            token = this.createToken(client);
+          }else{
+            await this.appDataSource.destroy();
+            throw( new HttpException(404,"Not Found"));
           }
           await this.appDataSource.destroy();
-          throw( new HttpException(404,"Not Found"));
+          return {token,result};
+        }else{
+          throw new HttpException(404,"Not Found!");
         }
       } catch (error) {
-        await this.appDataSource.destroy()
         throw( new HttpException(404,error.message));
       }
     }
@@ -114,7 +117,7 @@ export default class AuthService extends Services{
         return
       } catch (error) {
         await this.appDataSource.destroy();
-        throw new HttpException(400,error.message);
+        throw new HttpException(404,error.message);
       }
     }
     public async sendEmail(credentials: CredentialsDTO){
@@ -128,10 +131,10 @@ export default class AuthService extends Services{
           const token = this.createToken(client);
           this.getEmail().post(token.token,credentials.email);
         }else{
-          throw new HttpException(400,"Not Found!");
+          throw new HttpException(404,"Not Found!");
         }
       } catch (error) {
-        throw new HttpException(400,error.message);
+        throw new HttpException(404,error.message);
       }
     }
 }
