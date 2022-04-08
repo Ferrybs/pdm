@@ -45,10 +45,10 @@ export default class AuthController extends Controller{
   }
   public async recoverypassword(request: RequesWithClient, response: Response, next: NextFunction){
     try {
-      const body = request.body as CredentialsDTO;
-      const client = request.client
-      client.credentialsDTO.password = body.password
-      this.authService.recoverypassword(client);
+      const body = request.body as string;
+      const client = request.client;
+      client.credentialsDTO.password = body;
+      await this.authService.recoverypassword(client);
       response.status(200).send({ok:true});
     } catch (error) {
       if(error instanceof HttpException){

@@ -88,18 +88,13 @@ export default class AuthService extends Services{
             result.credentialsDTO = client.credentials as CredentialsDTO;
             result.credentialsDTO.password = null;
             token = this.createToken(client);
-          }else{
-            await this.appDataSource.destroy();
-            throw( new HttpException(404,"Not Found"));
+            return {token,result};
           }
-          await this.appDataSource.destroy();
-          return {token,result};
-        }else{
-          throw new HttpException(404,"Not Found!");
         }
       } catch (error) {
         throw( new HttpException(404,error.message));
       }
+      throw( new HttpException(404,"Not Found"));
     }
     public async recoverypassword(client: ClientDTO){
       try {
