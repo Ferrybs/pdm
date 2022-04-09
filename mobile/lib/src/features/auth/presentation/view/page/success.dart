@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:basearch/src/Theme/theme.dart';
 import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';

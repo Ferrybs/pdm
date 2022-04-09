@@ -1,6 +1,6 @@
+import 'package:basearch/src/features/auth/auth_module.dart';
+import 'package:basearch/src/features/onboarding/onboarding_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
-import 'features/auth/auth_module.dart';
 
 class AppModule extends Module {
   @override
@@ -8,6 +8,7 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ModuleRoute('/', module: AuthModule()),
+        ModuleRoute('/', module: OnboardingModule()),
+        ModuleRoute('/auth', module: AuthModule()),
       ];
 }
