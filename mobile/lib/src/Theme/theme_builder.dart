@@ -1,3 +1,4 @@
+import 'package:basearch/src/Theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class ThemeBuilder {
@@ -6,13 +7,35 @@ class ThemeBuilder {
   ThemeBuilder(this._baseTheme, this._colorScheme);
   getTheme() {
     return _baseTheme.copyWith(
-        colorScheme: _colorScheme,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: appBarTheme,
-        textSelectionTheme: textSelectionTheme,
-        inputDecorationTheme: inputDecorationTheme,
-        elevatedButtonTheme: elevatedButtonTheme,
-        textButtonTheme: textButtonTheme);
+      colorScheme: _colorScheme,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      appBarTheme: appBarTheme,
+      textSelectionTheme: textSelectionTheme,
+      inputDecorationTheme: inputDecorationTheme,
+      elevatedButtonTheme: elevatedButtonTheme,
+      textTheme: textTheme,
+      textButtonTheme: textButtonTheme,
+    )..setOnboardingTheme(onboardingThemeData);
+  }
+
+  get onboardingThemeData {
+    return OnboardingThemeData(
+      titleStyle: titleLarge?.copyWith(
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w600,
+        fontSize: 19.0,
+        color: const Color(0xff36455A),
+      ),
+      subtitleStyle: const TextStyle(
+        fontFamily: 'SF Pro Text',
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w400,
+        fontSize: 13,
+        color: Color(0xff6A6F7D),
+      ),
+      activeDotColor: _colorScheme.tertiary,
+      iconColor: const Color(0xffA1A8B9),
+    );
   }
 
   get textButtonTheme {
@@ -155,7 +178,7 @@ class ThemeBuilder {
     );
   }
 
-  get titleLarge {
+  TextStyle? get titleLarge {
     return _baseTheme.textTheme.titleLarge?.copyWith(
       fontFamily: "Poppins",
       fontWeight: FontWeight.w600,
@@ -177,7 +200,7 @@ class ThemeBuilder {
     );
   }
 
-  get textTheme {
+  TextTheme get textTheme {
     return _baseTheme.textTheme.copyWith(
       // Material 3 (2021) formats
       displayLarge: displayLarge,

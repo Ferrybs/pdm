@@ -1,5 +1,11 @@
 {
     "app_name" : "Aplicativo de Exemplo",
+    "onboarding-title-1" : "Registre sua orquídea\ne sensores",
+    "onboarding-title-2" : "Tenha o histórico e\nos parâmetros em tempo real",
+    "onboarding-title-3" : "Faça tudo\nsem preocupação",
+    "onboarding-subtitle-1" : "Após a instalação dos sensores é possível\nvisualizar os parâmetros de\numidade, temperatura e luminosidade.",
+    "onboarding-subtitle-2" : "Você pode ter o histórico\ncompleto dos parâmetros de pré-colheita de\nsua orquídea.",
+    "onboarding-subtitle-3" : "Suas orquídeas estão sendo cuidadas\nexatamente com os parâmetros que você definiu.",
     "login-scren" : "Entrar",
     "login" : "Entrar",
     "signin" : "Por favor entre para continuar.",

@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {
                           showSpinner = false;
                         });
-                        Modular.to.navigate('/success');
+                        Modular.to.navigate('/auth/success');
                       }
                     },
                   ),
@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Modular.to.navigate('/signup'),
+                    onPressed: () => Modular.to.pushNamed('/auth/signup'),
                     child: Text('sign-up'.i18n()),
                   ),
                 ],

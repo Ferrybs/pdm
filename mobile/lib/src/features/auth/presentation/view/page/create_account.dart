@@ -1,6 +1,4 @@
 import 'package:basearch/components/hud/modal_progress_hud.dart';
-import 'package:basearch/src/Theme/theme.dart';
-import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
@@ -181,7 +179,7 @@ class _CreateAccount extends State<CreateAccount> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => Modular.to.navigate('/'),
+                  onPressed: () => Modular.to.pop(),
                   child: Text('sign-in'.i18n()),
                 )
               ],

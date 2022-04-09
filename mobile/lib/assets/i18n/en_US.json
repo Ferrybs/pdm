@@ -1,5 +1,11 @@
 {
     "app_name" : "Example App",
+    "onboarding-title-1" : "Register Your Orchid\nand Sensors",
+    "onboarding-title-2" : "Have The History And\nParameters In Real Time",
+    "onboarding-title-3" : "Do Everything\nWithout Worry",
+    "onboarding-subtitle-1" : "After installing the sensors you can\nsee the humidity,\ntemperature and luminosity\nparameters.",
+    "onboarding-subtitle-2" : "You can have the complete history\nof the pre-harvest parameters of\nyour orchid.",
+    "onboarding-subtitle-3" : "Your orchids are being taken care of\nexactly with the parameters you set.",
     "login-scren" : "Login",
     "login" : "Login",
     "signin" : "Please sign in to continue.",
