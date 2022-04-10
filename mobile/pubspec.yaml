@@ -24,6 +24,7 @@ dependencies:
   confetti: ^0.6.0
   smooth_page_indicator: ^1.0.0+2
   shared_preferences: ^2.0.0-nullsafety
+  validators: ^3.0.0
 
 
 dev_dependencies:

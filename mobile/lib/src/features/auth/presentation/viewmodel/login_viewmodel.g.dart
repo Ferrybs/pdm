@@ -39,6 +39,21 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
+  final _$clientNameAtom = Atom(name: '_LoginViewModelBase.clientName');
+
+  @override
+  String get clientName {
+    _$clientNameAtom.reportRead();
+    return super.clientName;
+  }
+
+  @override
+  set clientName(String value) {
+    _$clientNameAtom.reportWrite(value, super.clientName, () {
+      super.clientName = value;
+    });
+  }
+
   final _$_LoginViewModelBaseActionController =
       ActionController(name: '_LoginViewModelBase');
 
@@ -68,7 +83,8 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
   String toString() {
     return '''
 email: ${email},
-password: ${password}
+password: ${password},
+clientName: ${clientName}
     ''';
   }
 }

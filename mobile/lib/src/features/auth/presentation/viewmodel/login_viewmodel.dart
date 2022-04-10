@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:basearch/src/features/auth/domain/model/client.dart';
+import 'package:basearch/src/features/auth/domain/model/credentials.dart';
+import 'package:basearch/src/features/auth/presentation/view/page/password_recovery.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
@@ -18,6 +18,9 @@ abstract class _LoginViewModelBase with Store {
   String email = '';
 
   @observable
+  String? emailError;
+
+  @observable
   String password = '';
 
   @observable
@@ -29,21 +32,20 @@ abstract class _LoginViewModelBase with Store {
   }
 
   @action
+  updateEmailError(String? value) {
+    emailError = value;
+  }
+
+  @action
   updatePassword(String value) {
     password = value;
   }
 
-  Future<Client?> login() async {
+  void login() async {
     //TODO: Validate username
     //TODO: Validate password
-    try {
-      var client = await _usecase.login(email, password);
-      //await Future.delayed(Duration(seconds: 2));
-      clientName = client.person.name;
-      return client;
-    } catch (e) {
-      print(e);
-    }
-    return null;
+
+    updateEmailError(_usecase.getErrorMessage(email));
+    print(emailError);
   }
 }

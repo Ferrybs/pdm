@@ -19,5 +19,6 @@
     "fill-input" : "Por favor preencha os campos abaixo.",
     "name": "Nome",
     "last-name": "Sobrenome",
-    "have-account" : "Já tem uma conta?"
+    "have-account" : "Já tem uma conta?",
+    "invalid-email" : "Email Invalido"
 }

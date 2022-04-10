@@ -39,6 +39,13 @@ class _CreateAccount extends State<CreateAccount> {
                 IconData(0xf0071, fontFamily: 'MaterialIcons'),
               ),
             ),
+            const TextInputAuth(
+              label: 'E-mail',
+              obscureText: false,
+              prefixIcon: Icon(
+                IconData(0xe780, fontFamily: 'MaterialIcons'),
+              ),
+            ),
             TextInputAuth(
               label: 'password'.i18n(),
               obscureText: true,

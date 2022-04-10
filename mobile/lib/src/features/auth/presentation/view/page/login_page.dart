@@ -29,10 +29,14 @@ class _LoginPageState extends State<LoginPage> {
               _logo(),
               _login(context),
               _signIn(),
-              const TextInputAuth(
+              TextInputAuth(
+                onChange: (value) {
+                  _viewModel.updateEmail(value);
+                },
+                errorText: _viewModel.emailError,
                 label: 'E-mail',
                 obscureText: false,
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   IconData(0xe780, fontFamily: 'MaterialIcons'),
                 ),
               ),
@@ -87,75 +91,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _getClient() async {
-    setState(() {
-      showSpinner = true;
-    });
-    final client = await _viewModel.login();
-    if (client != null) {
-      setState(() {
-        showSpinner = false;
-      });
-      Modular.to.navigate('/auth/success');
-    }
-  }
-
-  Container _fieldSecret(BuildContext context, Widget txt) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 20,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          txt,
-          const SizedBox(height: 10),
-          TextField(
-            style: _theme.textTheme.titleMedium
-                ?.copyWith(color: _theme.textSelectionTheme.cursorColor),
-            obscureText: true,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(
-                IconData(0xeb71, fontFamily: 'MaterialIcons'),
-              ),
-            ),
-            onChanged: (value) {
-              _viewModel.updatePassword(value);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container _fieldCommum(Widget txt) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          txt,
-          const SizedBox(height: 10),
-          Builder(
-            builder: (context) => TextField(
-              style: _theme.textTheme.titleMedium
-                  ?.copyWith(color: _theme.textSelectionTheme.cursorColor),
-              keyboardType: TextInputType.emailAddress,
-              obscureText: false,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  IconData(0xe780, fontFamily: 'MaterialIcons'),
-                ),
-              ),
-              onChanged: (value) {
-                _viewModel.updateEmail(value);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+    _viewModel.login();
   }
 
   Padding _signIn() {

@@ -19,5 +19,6 @@
     "fill-input" : "Please fill the input below.",
     "name": "Name",
     "last-name": "Last Name",
-    "have-account" : "Already have an account?"
+    "have-account" : "Already have an account?",
+    "invalid-email" : "Invalid Email"
 }
