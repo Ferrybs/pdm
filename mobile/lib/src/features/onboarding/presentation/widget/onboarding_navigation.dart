@@ -2,7 +2,7 @@ import 'package:basearch/src/Theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingNavigation extends StatelessWidget {
-  const OnboardingNavigation({
+  OnboardingNavigation({
     Key? key,
     this.onPreviousClicked,
     this.onNextClicked,
@@ -10,32 +10,31 @@ class OnboardingNavigation extends StatelessWidget {
 
   final void Function()? onPreviousClicked;
   final void Function()? onNextClicked;
+  late OnboardingThemeData _themeData;
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _themeData = Theme.of(context);
+    _themeData = Theme.of(context).onboardingTheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       height: 80,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: Icon(
-              onPreviousClicked == null ? null : Icons.arrow_back_ios,
-              color: _themeData.onboardingTheme.iconColor,
-            ),
-            onPressed: onPreviousClicked,
-          ),
-          IconButton(
-            icon: Icon(
-              onNextClicked == null ? null : Icons.arrow_forward_ios,
-              color: _themeData.onboardingTheme.iconColor,
-            ),
-            onPressed: onNextClicked,
-          ),
+          createIconButton(onPreviousClicked),
+          createIconButton(onNextClicked),
         ],
       ),
+    );
+  }
+
+  IconButton createIconButton(void Function()? onPreviousClicked) {
+    return IconButton(
+      icon: Icon(
+        onPreviousClicked == null ? null : Icons.arrow_back_ios,
+        color: _themeData.iconColor,
+      ),
+      onPressed: onPreviousClicked,
     );
   }
 }
