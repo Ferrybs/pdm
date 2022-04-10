@@ -19,7 +19,7 @@ class OnboardingThemeData {
   });
 }
 
-extension MyTheme on ThemeData {
+extension ThemeDataExtention on ThemeData {
   static late OnboardingThemeData _ligthOnBoardingTheme;
   static late OnboardingThemeData _darkOnBoardingTheme;
 

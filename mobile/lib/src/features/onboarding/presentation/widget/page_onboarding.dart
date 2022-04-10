@@ -20,7 +20,7 @@ class PageOnboarding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _themeData = Theme.of(context);
+    OnboardingThemeData _theme = Theme.of(context).onboardingTheme;
     return Stack(
       children: [
         Container(
@@ -31,52 +31,57 @@ class PageOnboarding extends StatelessWidget {
             children: [
               Expanded(
                 flex: 10,
-                child: Container(
-                  child: image,
+                child: Container(child: image),
+              ),
+              Expanded(
+                flex: 3,
+                child: createText(
+                  title,
+                  _theme.titleStyle,
                 ),
               ),
               Expanded(
                 flex: 3,
-                child: Container(
-                  alignment: AlignmentDirectional.center,
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: _themeData.onboardingTheme.titleStyle,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  alignment: AlignmentDirectional.center,
-                  child: Text(
-                    subtitle,
-                    textAlign: TextAlign.center,
-                    style: _themeData.onboardingTheme.subtitleStyle,
-                  ),
+                child: createText(
+                  subtitle,
+                  _theme.subtitleStyle,
                 ),
               ),
             ],
           ),
         ),
-        Container(
-          height: 90,
-          margin: const EdgeInsets.only(top: 80.0),
-          padding: const EdgeInsets.symmetric(horizontal: 17.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: imageLeft,
-              ),
-              Container(
-                child: imageRigth,
-              ),
-            ],
-          ),
-        ),
+        createTopImages(),
       ],
+    );
+  }
+
+  Container createText(String text, TextStyle? textStyle) {
+    return Container(
+      alignment: AlignmentDirectional.center,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: textStyle,
+      ),
+    );
+  }
+
+  Container createTopImages() {
+    return Container(
+      height: 90,
+      margin: const EdgeInsets.only(top: 80.0),
+      padding: const EdgeInsets.symmetric(horizontal: 17.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: imageLeft,
+          ),
+          Container(
+            child: imageRigth,
+          ),
+        ],
+      ),
     );
   }
 }

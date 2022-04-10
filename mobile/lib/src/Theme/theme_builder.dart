@@ -24,14 +24,14 @@ class ThemeBuilder {
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w600,
         fontSize: 19.0,
-        color: const Color(0xff36455A),
+        color: _colorScheme.secondary,
       ),
-      subtitleStyle: const TextStyle(
+      subtitleStyle: TextStyle(
         fontFamily: 'SF Pro Text',
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w400,
         fontSize: 13,
-        color: Color(0xff6A6F7D),
+        color: _colorScheme.secondary,
       ),
       activeDotColor: _colorScheme.tertiary,
       iconColor: const Color(0xffA1A8B9),
