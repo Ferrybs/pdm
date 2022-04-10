@@ -14,8 +14,7 @@ class LoginUseCase {
   }
 
   String? getErrorMessage(String email) {
-    if (email.isEmail()) {
-      print(email.isEmail());
+    if (!email.isEmail()) {
       return 'invalid-email'.i18n();
     }
     return null;

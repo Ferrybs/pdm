@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TextInputAuth extends StatelessWidget {
+class TextInputAuth extends StatefulWidget {
   const TextInputAuth(
       {Key? key,
       this.errorText,
@@ -15,7 +15,13 @@ class TextInputAuth extends StatelessWidget {
   final void Function(String)? onChange;
   final String label;
   final TextInputType? keyboardType;
-  final String? errorText;
+  String? errorText;
+
+  @override
+  State<TextInputAuth> createState() => _TextInputAuthState();
+}
+
+class _TextInputAuthState extends State<TextInputAuth> {
   @override
   Widget build(BuildContext context) {
     ThemeData _theme = Theme.of(context);
@@ -28,20 +34,20 @@ class TextInputAuth extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            label,
+            widget.label,
             style: _theme.textTheme.labelLarge,
           ),
           const SizedBox(height: 10),
           TextFormField(
-            keyboardType: keyboardType,
+            keyboardType: widget.keyboardType,
             style: _theme.textTheme.titleMedium
                 ?.copyWith(color: _theme.textSelectionTheme.cursorColor),
-            obscureText: obscureText,
+            obscureText: widget.obscureText,
             decoration: InputDecoration(
-              errorText: errorText,
-              prefixIcon: prefixIcon,
+              errorText: widget.errorText,
+              prefixIcon: widget.prefixIcon,
             ),
-            onChanged: onChange,
+            onChanged: widget.onChange,
           ),
         ],
       ),
