@@ -9,6 +9,7 @@
     "login-scren" : "Entrar",
     "login" : "Entrar",
     "signin" : "Por favor entre para continuar.",
+    "email": "E-mail",
     "password" : "Senha",
     "confirm-password" : "Confirme a Senha",
     "forgot-pass" : "Esqueceu a Senha?",
@@ -20,5 +21,7 @@
     "name": "Nome",
     "last-name": "Sobrenome",
     "have-account" : "Já tem uma conta?",
-    "invalid-email" : "Email Invalido"
+    "invalid-email" : "Email Invalido",
+    "redefine-password": "Redefine Password",
+    "redefine": "Redefine"
 }
