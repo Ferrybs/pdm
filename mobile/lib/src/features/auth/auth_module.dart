@@ -23,5 +23,7 @@ class AuthModule extends Module {
             child: (_, __) => const CreateAccount(), children: []),
         ChildRoute('/success',
             child: (_, __) => const SuccessLogin(), children: []),
+        ChildRoute('/recovery',
+            child: (_, __) => const SuccessLogin(), children: []),
       ];
 }

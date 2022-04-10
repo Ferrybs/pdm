@@ -7,7 +7,7 @@ class TextInputAuth extends StatefulWidget {
       this.prefixIcon,
       this.obscureText = false,
       this.onChange,
-      required this.label,
+      this.label = "",
       this.keyboardType})
       : super(key: key);
   final Widget? prefixIcon;
