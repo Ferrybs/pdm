@@ -10,6 +10,7 @@
     "login" : "Login",
     "signin" : "Please sign in to continue.",
     "password" : "Password",
+    "confirm-password" : "Confirm Password",
     "forgot-pass" : "Forgot Password?",
     "no-account" : "Dont have an account?",
     "sign-up" : "Sign Up!",
