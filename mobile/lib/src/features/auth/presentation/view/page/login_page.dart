@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
                 onChange: (value) {
                   _viewModel.updateEmail(value);
                 },
-                errorText: _viewModel.emailError,
                 label: 'E-mail',
                 obscureText: false,
                 prefixIcon: const Icon(

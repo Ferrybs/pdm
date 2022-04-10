@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextInputAuth extends StatefulWidget {
-  const TextInputAuth(
+  TextInputAuth(
       {Key? key,
       this.errorText,
       this.prefixIcon,
