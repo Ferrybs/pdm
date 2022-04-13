@@ -15,6 +15,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _viewModel = Modular.get<LoginViewModel>();
   late ThemeData _theme;
+  String? emailError;
+  String? passwordError;
   bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
@@ -29,16 +31,20 @@ class _LoginPageState extends State<LoginPage> {
               _login(context),
               _signIn(),
               TextInputAuth(
+                errorText: emailError,
                 onChange: (value) {
                   _viewModel.updateEmail(value);
                 },
                 label: 'email'.i18n(),
-                obscureText: false,
                 prefixIcon: const Icon(
                   IconData(0xe780, fontFamily: 'MaterialIcons'),
                 ),
               ),
               TextInputAuth(
+                  errorText: passwordError,
+                  onChange: (value) {
+                    _viewModel.updatePassword(value);
+                  },
                   prefixIcon: const Icon(
                     IconData(0xeb71, fontFamily: 'MaterialIcons'),
                   ),
@@ -89,7 +95,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _getClient() async {
-    _viewModel.login();
+    setState(() {
+      emailError = _viewModel.emailValidation();
+      passwordError = _viewModel.passwordValidation();
+    });
+
+    if (emailError == null) {
+      setState(() {
+        showSpinner = true;
+      });
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() {
+        showSpinner = false;
+      });
+    }
   }
 
   Padding _signIn() {

@@ -1,5 +1,6 @@
 import 'package:basearch/components/hud/modal_progress_hud.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
@@ -12,6 +13,7 @@ class PasswordRecovery extends StatefulWidget {
 }
 
 class _CreateAccount extends State<PasswordRecovery> {
+  final _viewModel = Modular.get<LoginViewModel>();
   bool showSpinner = false;
   late ThemeData _theme;
   @override

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 
-class TextInputAuth extends StatefulWidget {
-  TextInputAuth(
+class TextInputAuth extends StatelessWidget {
+  final Widget? prefixIcon;
+  final bool obscureText;
+  final void Function(String)? onChange;
+  final String label;
+  final TextInputType? keyboardType;
+  final String? errorText;
+  final String? initialValue;
+
+  const TextInputAuth(
       {Key? key,
+      this.initialValue,
       this.errorText,
       this.prefixIcon,
       this.obscureText = false,
@@ -10,18 +19,7 @@ class TextInputAuth extends StatefulWidget {
       this.label = "",
       this.keyboardType})
       : super(key: key);
-  final Widget? prefixIcon;
-  final bool obscureText;
-  final void Function(String)? onChange;
-  final String label;
-  final TextInputType? keyboardType;
-  String? errorText;
 
-  @override
-  State<TextInputAuth> createState() => _TextInputAuthState();
-}
-
-class _TextInputAuthState extends State<TextInputAuth> {
   @override
   Widget build(BuildContext context) {
     ThemeData _theme = Theme.of(context);
@@ -34,20 +32,24 @@ class _TextInputAuthState extends State<TextInputAuth> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            widget.label,
+            label,
             style: _theme.textTheme.labelLarge,
           ),
           const SizedBox(height: 10),
           TextFormField(
-            keyboardType: widget.keyboardType,
+            initialValue: initialValue,
+            keyboardType: keyboardType,
             style: _theme.textTheme.titleMedium
                 ?.copyWith(color: _theme.textSelectionTheme.cursorColor),
-            obscureText: widget.obscureText,
+            obscureText: obscureText,
             decoration: InputDecoration(
-              errorText: widget.errorText,
-              prefixIcon: widget.prefixIcon,
+              errorText: errorText,
+              hintText: label,
+              hintStyle: _theme.textTheme.titleMedium
+                  ?.copyWith(color: _theme.textSelectionTheme.cursorColor),
+              prefixIcon: prefixIcon,
             ),
-            onChanged: widget.onChange,
+            onChanged: onChange,
           ),
         ],
       ),

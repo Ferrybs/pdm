@@ -22,6 +22,9 @@
     "last-name": "Sobrenome",
     "have-account" : "Já tem uma conta?",
     "invalid-email" : "Email Invalido",
+    "invalid-password" : "Senha Invalida",
+    "invalid-name" : "Nome Invalido",
+    "invalid-last-name" : "Sobrenome Invalido",
     "redefine-password": "Redefine Password",
     "redefine": "Redefine"
 }

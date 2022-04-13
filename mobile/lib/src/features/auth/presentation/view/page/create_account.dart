@@ -1,5 +1,6 @@
 import 'package:basearch/components/hud/modal_progress_hud.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
@@ -11,6 +12,7 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccount extends State<CreateAccount> {
+  final _viewModel = Modular.get<LoginViewModel>();
   bool showSpinner = false;
   late ThemeData _theme;
   @override
@@ -42,7 +44,7 @@ class _CreateAccount extends State<CreateAccount> {
             TextInputAuth(
               label: 'E-mail',
               obscureText: false,
-              prefixIcon: Icon(
+              prefixIcon: const Icon(
                 IconData(0xe780, fontFamily: 'MaterialIcons'),
               ),
             ),

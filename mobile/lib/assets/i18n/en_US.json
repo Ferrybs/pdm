@@ -22,6 +22,9 @@
     "last-name": "Last Name",
     "have-account" : "Already have an account?",
     "invalid-email" : "Invalid Email",
+    "invalid-password" : "Invalid Password",
+    "invalid-name" : "Invalid Name",
+    "invalid-last-name" : "Invalid Last Name",
     "redefine-password": "Redefine Password",
     "redefine": "Redefine"
 }

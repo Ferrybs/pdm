@@ -18,7 +18,10 @@ abstract class _LoginViewModelBase with Store {
   String email = '';
 
   @observable
-  String? emailError;
+  String name = '';
+
+  @observable
+  String lastName = '';
 
   @observable
   String password = '';
@@ -32,20 +35,25 @@ abstract class _LoginViewModelBase with Store {
   }
 
   @action
-  updateEmailError(String? value) {
-    emailError = value;
-  }
-
-  @action
   updatePassword(String value) {
     password = value;
   }
 
-  void login() async {
-    //TODO: Validate username
-    //TODO: Validate password
+  void login() async {}
 
-    updateEmailError(_usecase.getErrorMessage(email));
-    print(emailError);
+  String? emailValidation() {
+    return _usecase.validateEmail(email);
+  }
+
+  String? passwordValidation() {
+    return _usecase.validatePassword(password);
+  }
+
+  String? nameValidation() {
+    return _usecase.validateName(name);
+  }
+
+  String? lastNameValidation() {
+    return _usecase.validateLastName(lastName);
   }
 }

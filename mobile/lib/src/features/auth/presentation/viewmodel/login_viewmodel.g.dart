@@ -24,6 +24,36 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
+  final _$nameAtom = Atom(name: '_LoginViewModelBase.name');
+
+  @override
+  String get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
+  final _$lastNameAtom = Atom(name: '_LoginViewModelBase.lastName');
+
+  @override
+  String get lastName {
+    _$lastNameAtom.reportRead();
+    return super.lastName;
+  }
+
+  @override
+  set lastName(String value) {
+    _$lastNameAtom.reportWrite(value, super.lastName, () {
+      super.lastName = value;
+    });
+  }
+
   final _$passwordAtom = Atom(name: '_LoginViewModelBase.password');
 
   @override
@@ -83,6 +113,8 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
   String toString() {
     return '''
 email: ${email},
+name: ${name},
+lastName: ${lastName},
 password: ${password},
 clientName: ${clientName}
     ''';
