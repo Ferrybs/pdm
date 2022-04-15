@@ -1,7 +1,7 @@
-import Client from "entity/client.entity";
-import DataStoreToken from "interfaces/data.store.token.interface";
-import TokenData from "interfaces/token.data.interface";
-import validateEnv from "utils/validateEnv";
+import Client from "../entity/client.entity";
+import DataStoreToken from "../interfaces/data.store.token.interface";
+import TokenData from "../interfaces/token.data.interface";
+import validateEnv from "../utils/validateEnv";
 import jwt from "jsonwebtoken";
 
 export default class AuthJwt{

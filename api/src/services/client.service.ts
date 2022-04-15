@@ -14,22 +14,15 @@ export default class ClientService extends Services{
     //toDTO
     //toEntity
     public async getClient(id: string){
-        const  appDataSource =  this.getAppDataSource();
         try {
-            await appDataSource.initialize();
-            const client = await appDataSource.manager.findOne(
-                Client,{where:{id: id}, relations: ['credentials', 'person']});
-            await appDataSource.destroy();
-            const result =  new ClientDTO();
-            result.id = client.id
-            result.credentialsDTO = client.credentials as CredentialsDTO;
-            result.personDTO = client.person as PersonDTO;
-            result.credentialsDTO.password = null;
-            return result
+            const result = await this.database.findClientById(id);
+            const clientDTO = new ClientDTO();
+            clientDTO.id = result.id;
+            clientDTO.personDTO = result.person;
+            clientDTO.credentialsDTO = result.credentials;
+            return clientDTO;
         } catch (error) {
-            await appDataSource.destroy();
             throw (new HttpException(400,error.message));
-
         }
     }
 }

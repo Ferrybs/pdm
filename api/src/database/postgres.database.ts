@@ -1,13 +1,13 @@
-import clientDto from "dto/client.dto";
-import credentialsDto from "dto/credentials.dto";
-import Credentials from "entity/credentials.entity";
-import Person from "entity/person.entity";
-import Database from "interfaces/database/database.interface";
-import Client from "entity/client.entity";
-import ClientWithThatEmailAlreadyExistsException from "exceptions/client.email.exist";
-import HttpException from "exceptions/http.exceptions";
-import { DataSource, EntityManager } from "typeorm";
-import PostgresDataSource from "configs/data.source.postgres";
+import clientDto from "../dto/client.dto";
+import credentialsDto from "../dto/credentials.dto";
+import Credentials from "../entity/credentials.entity";
+import Person from "../entity/person.entity";
+import Database from "../interfaces/database/database.interface";
+import Client from "../entity/client.entity";
+import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";
+import HttpException from "../exceptions/http.exceptions";
+import { DataSource } from "typeorm";
+import PostgresDataSource from "../configs/data.source.postgres";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -15,7 +15,8 @@ export default class PostgresDatabase implements Database{
         const dataSource = new PostgresDataSource();
         this._appDataSource = dataSource.appDataSource;
     }
-    async updateCredentials(credentialsDTO: credentialsDto) {
+
+    public async updateCredentials(credentialsDTO: credentialsDto): Promise<void>{
         try {
             await this._appDataSource.initialize();
             const credResul = this._appDataSource.manager.create(Credentials,credentialsDTO);
@@ -25,8 +26,21 @@ export default class PostgresDatabase implements Database{
             throw( new HttpException(404,error.message));
         }
     }
-    async findClient(credentialsDTO: credentialsDto): Promise<Client> {
-      try {
+    public async findClientById(id: string): Promise<Client>{
+        try {
+            await this._appDataSource.initialize();
+            const client = await this._appDataSource.manager.findOne(
+                Client,{where:{id: id}, relations: ['credentials', 'person']});
+            await this._appDataSource.destroy();
+            return client;
+        } catch (error) {
+            await this._appDataSource.destroy();
+            throw (new HttpException(400,error.message));
+
+        }
+    }
+    public async findClientByEmail(credentialsDTO: credentialsDto): Promise<Client>{
+        try {
             await this._appDataSource.initialize();
             const credentialsClient = await this._appDataSource.manager.findOne(Credentials,
             {where: 
@@ -39,13 +53,11 @@ export default class PostgresDatabase implements Database{
             Client,{where:{credentials: credentialsClient}, relations: ['credentials', 'person']});
             await this._appDataSource.destroy();
             return client;
-
         } catch (error) {
             throw( new HttpException(404,error.message));
         }
-
-    }
-    async insertClient(clientDTO: clientDto): Promise<Client>{
+      }
+    public async insertClient(clientDTO: clientDto){
         try {
             await this._appDataSource.initialize();
             if(

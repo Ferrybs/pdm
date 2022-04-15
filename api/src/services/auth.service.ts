@@ -1,18 +1,13 @@
-import Credentials from "../entity/credentials.entity";
 import Services from "./services";
 import bcrypt from "bcrypt"
-import DataStoreToken from "../interfaces/data.store.token.interface";
 import TokenData from "../interfaces/token.data.interface";
-import jwt from "jsonwebtoken";
-import validateEnv from "../utils/validateEnv";
-import Person from "../entity/person.entity";
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
 import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";
 import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import PersonDTO from "../dto/person.dto";
-import ClientStoreToken from "interfaces/storetoken/client.store.token.interface";
+import ClientStoreToken from "../interfaces/storetoken/client.store.token.interface";
 
 export default class AuthService extends Services{
   constructor(){
@@ -21,7 +16,7 @@ export default class AuthService extends Services{
   
   public async register(clientDTO: ClientDTO): Promise<ClientStoreToken>{
     try {
-      const client = await this.database.findClient(clientDTO.credentialsDTO);
+      const client = await this.database.findClientByEmail(clientDTO.credentialsDTO);
       if(client){
         throw new ClientWithThatEmailAlreadyExistsException(clientDTO.credentialsDTO.email);
       }
@@ -43,7 +38,7 @@ export default class AuthService extends Services{
       const result = new ClientDTO();
       var token: TokenData;
       try {
-        const client: Client = await this.database.findClient(credentialsDTO);
+        const client: Client = await this.database.findClientByEmail(credentialsDTO);
         if(client){
           const isMatch = await bcrypt.compare(
             credentialsDTO.password,
@@ -75,7 +70,7 @@ export default class AuthService extends Services{
     public async sendEmail(credentialsDTO: CredentialsDTO){
       try {
         credentialsDTO.password = null;
-        const client = await this.database.findClient(credentialsDTO);
+        const client = await this.database.findClientByEmail(credentialsDTO);
         if(client){
           const token = this.jwt.createToken(client);
           this.getEmail().post(token.token,credentialsDTO.email);
