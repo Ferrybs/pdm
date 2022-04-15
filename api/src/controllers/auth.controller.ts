@@ -48,7 +48,7 @@ export default class AuthController extends Controller{
       const body = request.body as string;
       const client = request.client;
       client.credentialsDTO.password = body;
-      await this.authService.recoverypassword(client);
+      await this.authService.recoverypassword(client.credentialsDTO);
       response.status(200).send({ok:true});
     } catch (error) {
       if(error instanceof HttpException){

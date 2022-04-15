@@ -5,8 +5,8 @@ import Person from "../entity/person.entity";
 import Credentials from "../entity/credentials.entity";
 import Client from "../entity/client.entity";
 
-export default class PostgresDataSource implements DataSourceDB {
-    appDataSource: DataSource
+export default class PostgresDataSource{
+    appDataSource: DataSource;
     constructor() {
         this.appDataSource= new DataSource({
             type: "postgres",

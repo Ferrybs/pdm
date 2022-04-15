@@ -8,20 +8,34 @@ import CredentialsDTO from "../dto/credentials.dto";
 import Credentials from "../entity/credentials.entity";
 import ClientDTO from "../dto/client.dto";
 import SendEmail from "../utils/sendEmail";
+import Database from "interfaces/database/database.interface";
+import PostgresDatabase from "database/postgres.database";
+import AuthJwt from "auth/auth.jwt";
 export default class Services {
-    private dataSource: DataSourceDB;
-    private email: SendEmail;
+    private _dataSource: DataSourceDB;
+    private _database: Database;
+    private _jwt: AuthJwt = new AuthJwt();
+    private _email: SendEmail;
     constructor() {
-        this.email = new SendEmail();
-        this.dataSource = new PostgresDataSource();
+        this._database = new PostgresDatabase();
+        this._email = new SendEmail();
+        this._dataSource = new PostgresDataSource();
+    }
+
+    public get database(){
+        return this._database;
+    }
+
+    public get jwt(){
+        return this._jwt;
     }
 
     getAppDataSource(){
-        return this.dataSource.appDataSource;
+        return this._dataSource.appDataSource;
     }
 
     getEmail(){
-        return this.email;
+        return this._email;
     }
     createUser(userData: UserDTO){
         const userRepository = this.getAppDataSource().getRepository(User);

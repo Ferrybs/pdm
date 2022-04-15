@@ -7,6 +7,7 @@ const validateEnv = cleanEnv(process.env, {
     PORT:port(),
     DATABASE_URL: str(),
     JWT_SECRET: str(),
+    JWT_REFRESH_SECRET: str(),
     EMAIL_HOST: str(),
     EMAIL_PORT: port(),
     EMAIL_USER: str(),
