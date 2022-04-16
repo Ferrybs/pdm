@@ -4,8 +4,9 @@ import CredentialsDTO from '../dto/credentials.dto';
 import PersonDTO from '../dto/person.dto';
 import { RequestHandler } from 'express';
 import HttpException from '../exceptions/http.exceptions';
+import Validation from 'interfaces/validation.interface';
 
-export default class ValidationMiddleware {
+export default class ValidationMiddleware implements Validation {
 
   public client(): RequestHandler{
     return async (req, res, next) => {
