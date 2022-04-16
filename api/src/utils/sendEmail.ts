@@ -14,18 +14,6 @@ export default class SendEmail{
         requireTLS: true,
     });
 
-    async get(){
-        const info = await this._transporter.sendMail({
-            from: `Intelligent Garden Co.<${this._email}>`,
-            to: process.env.RECEIVER_EMAIL,
-            subject: "Hello ✔",
-            text: "Hello world?",
-            html: "<b>Hello world?</b>",
-          });
-
-        return nodemailer.getTestMessageUrl(info);
-
-    }
     async post(token: string, email: string){
         const info = await this._transporter.sendMail({
             from: `Intelligent Garden Co.<${this._email}>`,
