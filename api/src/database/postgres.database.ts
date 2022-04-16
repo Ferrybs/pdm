@@ -48,12 +48,12 @@ export default class PostgresDatabase implements Database{
                 email: credentialsDTO.email
                 }
             });
-            await this._appDataSource.initialize();
             const client = await this._appDataSource.manager.findOne(
             Client,{where:{credentials: credentialsClient}, relations: ['credentials', 'person']});
             await this._appDataSource.destroy();
             return client;
         } catch (error) {
+            await this._appDataSource.destroy();
             throw( new HttpException(404,error.message));
         }
       }

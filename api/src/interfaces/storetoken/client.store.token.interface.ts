@@ -1,7 +1,7 @@
-import Client from "entity/client.entity";
+import ClientDTO from "dto/client.dto";
 import TokenData from "interfaces/token.data.interface";
 
 export default interface ClientStoreToken{
-    client: Client
+    clientDTO: ClientDTO
     token: TokenData
 }

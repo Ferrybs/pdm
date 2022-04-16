@@ -14,28 +14,28 @@ export default class AuthService extends Services{
     super();
   }
   
-  public async register(clientDTO: ClientDTO): Promise<ClientStoreToken>{
+  public async register(clientData: ClientDTO): Promise<ClientStoreToken>{
     try {
-      const client = await this.database.findClientByEmail(clientDTO.credentialsDTO);
-      if(client){
-        throw new ClientWithThatEmailAlreadyExistsException(clientDTO.credentialsDTO.email);
+      if(await this.database.findClientByEmail(clientData.credentialsDTO)){
+        throw new ClientWithThatEmailAlreadyExistsException(clientData.credentialsDTO.email);
       }
-      const hashedPassword = await bcrypt.hash(clientDTO.credentialsDTO.password, 10);
-      clientDTO.credentialsDTO.password = hashedPassword;
-      const result = await this.database.insertClient(clientDTO);
+      const hashedPassword = await bcrypt.hash(clientData.credentialsDTO.password, 10);
+      clientData.credentialsDTO.password = hashedPassword;
+      const result = await this.database.insertClient(clientData);
+      const clientDTO = new ClientDTO();
+      clientDTO.id = result.id;
+      clientDTO.credentialsDTO = result.credentials;
+      clientDTO.personDTO = result.person;
       result.credentials.password = null;
       const token: TokenData = this.jwt.createToken(result);
-
-      return {
-        token,
-        client
-      }
+      const clientStoreToken: ClientStoreToken = {clientDTO,token};
+      return clientStoreToken;
     } catch (error) {
       throw (new HttpException(404,error.message))
     }
   }
-    public async login(credentialsDTO: CredentialsDTO) {
-      const result = new ClientDTO();
+    public async login(credentialsDTO: CredentialsDTO): Promise<ClientStoreToken> {
+      const clientDTO = new ClientDTO();
       var token: TokenData;
       try {
         const client: Client = await this.database.findClientByEmail(credentialsDTO);
@@ -45,12 +45,13 @@ export default class AuthService extends Services{
             client.credentials.password
           );
           if(isMatch){
-            result.id = client.id;
-            result.personDTO = client.person as PersonDTO;
-            result.credentialsDTO = client.credentials as CredentialsDTO;
-            result.credentialsDTO.password = null;
+            clientDTO.id = client.id;
+            clientDTO.personDTO = client.person as PersonDTO;
+            clientDTO.credentialsDTO = client.credentials as CredentialsDTO;
+            clientDTO.credentialsDTO.password = null;
             token = this.jwt.createToken(client);
-            return {token,result};
+            const clientStoreToken: ClientStoreToken = {clientDTO,token}
+            return clientStoreToken;
           }
         }
       } catch (error) {

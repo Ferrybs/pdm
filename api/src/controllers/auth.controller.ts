@@ -10,12 +10,8 @@ export default class AuthController extends Controller{
   public async register(request: Request, response: Response, next: NextFunction){
     try {
       const clientData: ClientDTO = request.body;
-      const {
-        token,
-        client
-      } = await this.authService.register(clientData);
-      response.setHeader('Authorization', 'Bearer '+token.token);
-      response.send(client);
+      const clientStoreToken = await this.authService.register(clientData);
+      response.send(clientStoreToken);
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
@@ -28,13 +24,8 @@ export default class AuthController extends Controller{
   public async login(request: Request, response: Response, next: NextFunction) {
     try {
       const credentialsData: CredentialsDTO = request.body;
-      const {
-        token,
-        result
-      } = await this.authService.login(credentialsData);
-      const bearer = `Bearer ${token.token}`;
-      response.setHeader("Authorization",bearer);
-      response.send(result);
+      const clientStoreToken = await this.authService.login(credentialsData);
+      response.send(clientStoreToken);
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
