@@ -1,5 +1,5 @@
 import SendEmail from "../utils/sendEmail";
-import Database from "../interfaces/database/database.interface";
+import Database from "../interfaces/database.interface";
 import PostgresDatabase from "../database/postgres.database";
 import AuthJwt from "../auth/auth.jwt";
 export default class Services {

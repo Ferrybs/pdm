@@ -2,7 +2,7 @@ import clientDto from "../dto/client.dto";
 import credentialsDto from "../dto/credentials.dto";
 import Credentials from "../entity/credentials.entity";
 import Person from "../entity/person.entity";
-import Database from "../interfaces/database/database.interface";
+import Database from "../interfaces/database.interface";
 import Client from "../entity/client.entity";
 import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";
 import HttpException from "../exceptions/http.exceptions";

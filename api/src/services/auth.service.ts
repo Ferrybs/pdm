@@ -7,7 +7,7 @@ import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.emai
 import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import PersonDTO from "../dto/person.dto";
-import ClientStoreToken from "../interfaces/storetoken/client.store.token.interface";
+import ClientStoreToken from "../interfaces/client.store.token.interface";
 
 export default class AuthService extends Services{
   constructor(){
