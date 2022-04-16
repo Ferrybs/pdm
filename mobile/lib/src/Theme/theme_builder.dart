@@ -1,3 +1,4 @@
+import 'package:basearch/src/Theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class ThemeBuilder {
@@ -6,13 +7,35 @@ class ThemeBuilder {
   ThemeBuilder(this._baseTheme, this._colorScheme);
   getTheme() {
     return _baseTheme.copyWith(
-        colorScheme: _colorScheme,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: appBarTheme,
-        textSelectionTheme: textSelectionTheme,
-        inputDecorationTheme: inputDecorationTheme,
-        elevatedButtonTheme: elevatedButtonTheme,
-        textButtonTheme: textButtonTheme);
+      colorScheme: _colorScheme,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      appBarTheme: appBarTheme,
+      textSelectionTheme: textSelectionTheme,
+      inputDecorationTheme: inputDecorationTheme,
+      elevatedButtonTheme: elevatedButtonTheme,
+      textTheme: textTheme,
+      textButtonTheme: textButtonTheme,
+    )..setOnboardingTheme(onboardingThemeData);
+  }
+
+  get onboardingThemeData {
+    return OnboardingThemeData(
+      titleStyle: titleLarge?.copyWith(
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w600,
+        fontSize: 19.0,
+        color: _colorScheme.secondary,
+      ),
+      subtitleStyle: TextStyle(
+        fontFamily: 'SF Pro Text',
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w400,
+        fontSize: 13,
+        color: _colorScheme.secondary,
+      ),
+      activeDotColor: _colorScheme.tertiary,
+      iconColor: const Color(0xffA1A8B9),
+    );
   }
 
   get textButtonTheme {
@@ -155,7 +178,7 @@ class ThemeBuilder {
     );
   }
 
-  get titleLarge {
+  TextStyle? get titleLarge {
     return _baseTheme.textTheme.titleLarge?.copyWith(
       fontFamily: "Poppins",
       fontWeight: FontWeight.w600,
@@ -177,7 +200,7 @@ class ThemeBuilder {
     );
   }
 
-  get textTheme {
+  TextTheme get textTheme {
     return _baseTheme.textTheme.copyWith(
       // Material 3 (2021) formats
       displayLarge: displayLarge,
@@ -212,24 +235,6 @@ class ThemeBuilder {
       // button = LabelLarge
       // overline = LabelMedium
       // N/A = LabelSmall
-    );
-  }
-
-  MaterialColor _material_color() {
-    return const MaterialColor(
-      0xffc5d8a4, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
-      <int, Color>{
-        50: Color(0xffcbdcad), //10%
-        100: Color(0xffd1e0b6), //20%
-        200: Color(0xffd6e4bf), //30%
-        300: Color(0xffdce8c8), //40%
-        400: Color(0xffe2ecd2), //50%
-        500: Color(0xffe8efdb), //60%
-        600: Color(0xffeef3e4), //70%
-        700: Color(0xfff3f7ed), //80%
-        800: Color(0xfff9fbf6), //90%
-        900: Color(0xffffffff), //100%
-      },
     );
   }
 }

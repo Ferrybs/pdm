@@ -24,6 +24,36 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
+  final _$nameAtom = Atom(name: '_LoginViewModelBase.name');
+
+  @override
+  String get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
+  final _$lastNameAtom = Atom(name: '_LoginViewModelBase.lastName');
+
+  @override
+  String get lastName {
+    _$lastNameAtom.reportRead();
+    return super.lastName;
+  }
+
+  @override
+  set lastName(String value) {
+    _$lastNameAtom.reportWrite(value, super.lastName, () {
+      super.lastName = value;
+    });
+  }
+
   final _$passwordAtom = Atom(name: '_LoginViewModelBase.password');
 
   @override
@@ -36,6 +66,21 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
   set password(String value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
+    });
+  }
+
+  final _$clientNameAtom = Atom(name: '_LoginViewModelBase.clientName');
+
+  @override
+  String get clientName {
+    _$clientNameAtom.reportRead();
+    return super.clientName;
+  }
+
+  @override
+  set clientName(String value) {
+    _$clientNameAtom.reportWrite(value, super.clientName, () {
+      super.clientName = value;
     });
   }
 
@@ -68,7 +113,10 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
   String toString() {
     return '''
 email: ${email},
-password: ${password}
+name: ${name},
+lastName: ${lastName},
+password: ${password},
+clientName: ${clientName}
     ''';
   }
 }

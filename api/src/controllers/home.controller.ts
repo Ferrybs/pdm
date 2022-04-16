@@ -7,6 +7,5 @@ export default class HomeController extends Controller{
     
     public async get(request: Request, response: Response){
         response.send(this.service.getHome());
-    }
-    
+    }    
 }

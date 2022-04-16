@@ -8,7 +8,7 @@ import validationMiddleware from "../middlewares/validation.middleware";
 import ValidationMiddleware from "../middlewares/validation.middleware";
 
 export default class AuthRoutes {
-    public path : string = '/';
+    public path : string = '/auth';
     public router : Router = express.Router();
     private controller: AuthController = new AuthController();
 
@@ -18,17 +18,22 @@ export default class AuthRoutes {
     
     private initializeRoutes() {
             this.router.post(
-                `${this.path}register`,
+                `${this.path}/register`,
                 new ValidationMiddleware().client(),
                 this.controller.register.bind(this.controller)
                 );
             this.router.get(
-                `${this.path}login`,
+                `${this.path}/login`,
                 new validationMiddleware().credentials(),
                 this.controller.login.bind(this.controller)
                 );
+            this.router.post(
+                `${this.path}/forgot-password`,
+                new validationMiddleware().credentials(),
+                this.controller.recoverySendEmail.bind(this.controller)
+            )
             this.router.patch(
-                `${this.path}forgot-password`,
+                `${this.path}/forgot-password`,
                 new authMiddleware(this.controller.clientService).verify(),
                 this.controller.recoverypassword.bind(this.controller)
             )

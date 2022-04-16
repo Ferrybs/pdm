@@ -1,21 +1,24 @@
 import 'package:basearch/components/hud/modal_progress_hud.dart';
-import 'package:basearch/src/Theme/theme.dart';
+import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
 import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
+import 'package:basearch/src/Theme/theme.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
-  //final controller = LoginViewModel();
   @override
   State<CreateAccount> createState() => _CreateAccount();
 }
 
 class _CreateAccount extends State<CreateAccount> {
+  final _viewModel = Modular.get<LoginViewModel>();
   bool showSpinner = false;
+  late ThemeData _theme;
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: Scaffold(
@@ -26,139 +29,38 @@ class _CreateAccount extends State<CreateAccount> {
         body: SingleChildScrollView(
             child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Builder(
-                builder: (context) => Text(
-                  'create-account'.i18n(),
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            _createAccount(),
+            _commumSubtittle(),
+            TextInputAuth(
+                label: 'name'.i18n(),
+                prefixIcon: const Icon(
+                  IconData(0xf0071, fontFamily: 'MaterialIcons'),
+                )),
+            TextInputAuth(
+              label: 'last-name'.i18n(),
+              prefixIcon: const Icon(
+                IconData(0xf0071, fontFamily: 'MaterialIcons'),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Builder(
-                builder: (context) => Text(
-                  'fill-input'.i18n(),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+            TextInputAuth(
+              label: 'E-mail',
+              obscureText: false,
+              prefixIcon: const Icon(
+                IconData(0xe780, fontFamily: 'MaterialIcons'),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 20,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Builder(
-                      builder: (context) => Text('name'.i18n(),
-                          style: Theme.of(context).textTheme.labelLarge)),
-                  const SizedBox(height: 10),
-                  Builder(
-                      builder: (context) => TextField(
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .textSelectionTheme
-                                        .cursorColor),
-                            keyboardType: TextInputType.emailAddress,
-                            obscureText: false,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                IconData(0xf0071, fontFamily: 'MaterialIcons'),
-                              ),
-                            ),
-                            onChanged: (value) {},
-                          )),
-                  const SizedBox(height: 10),
-                  Builder(
-                      builder: (context) => Text(
-                            'last-name'.i18n(),
-                            style: Theme.of(context).textTheme.labelLarge,
-                          )),
-                  const SizedBox(height: 10),
-                  Builder(
-                      builder: (context) => TextField(
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .textSelectionTheme
-                                        .cursorColor),
-                            keyboardType: TextInputType.emailAddress,
-                            obscureText: false,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                IconData(0xf0071, fontFamily: 'MaterialIcons'),
-                              ),
-                            ),
-                            onChanged: (value) {},
-                          )),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Builder(
-                      builder: (context) => Text('E-mail',
-                          style: Theme.of(context).textTheme.labelLarge)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Builder(
-                      builder: (context) => TextField(
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .textSelectionTheme
-                                        .cursorColor),
-                            keyboardType: TextInputType.emailAddress,
-                            obscureText: false,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                IconData(0xe780, fontFamily: 'MaterialIcons'),
-                              ),
-                            ),
-                            onChanged: (value) {},
-                          )),
-                ],
+            TextInputAuth(
+              label: 'password'.i18n(),
+              obscureText: true,
+              prefixIcon: const Icon(
+                IconData(0xeb71, fontFamily: 'MaterialIcons'),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Builder(
-                    builder: (context) => Text(
-                      'password'.i18n(),
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Builder(
-                      builder: (context) => TextField(
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .textSelectionTheme
-                                        .cursorColor),
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                IconData(0xeb71, fontFamily: 'MaterialIcons'),
-                              ),
-                            ),
-                            onChanged: (value) {},
-                          )),
-                ],
+            TextInputAuth(
+              label: 'confirm-password'.i18n(),
+              obscureText: true,
+              prefixIcon: const Icon(
+                IconData(0xeb71, fontFamily: 'MaterialIcons'),
               ),
             ),
             Padding(
@@ -177,17 +79,41 @@ class _CreateAccount extends State<CreateAccount> {
                 Builder(
                   builder: (context) => Text(
                     'have-account'.i18n(),
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: _theme.textTheme.bodyMedium,
                   ),
                 ),
                 TextButton(
-                  onPressed: () => Modular.to.navigate('/'),
+                  onPressed: () => Modular.to.pop(),
                   child: Text('sign-in'.i18n()),
                 )
               ],
             ),
           ],
         )),
+      ),
+    );
+  }
+
+  Padding _commumSubtittle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Builder(
+        builder: (context) => Text(
+          'fill-input'.i18n(),
+          style: _theme.textTheme.titleMedium,
+        ),
+      ),
+    );
+  }
+
+  Padding _createAccount() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+      child: Builder(
+        builder: (context) => Text(
+          'create-account'.i18n(),
+          style: _theme.textTheme.titleLarge,
+        ),
       ),
     );
   }

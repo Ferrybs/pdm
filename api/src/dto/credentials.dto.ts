@@ -7,5 +7,5 @@ export default class CredentialsDTO {
     @MinLength(6, {
         message: 'Password is shorter than 6 letters',
       })
-    public password: string;
+    public password?: string;
 }
