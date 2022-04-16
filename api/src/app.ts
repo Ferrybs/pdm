@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import routes from './interfaces/routes.interface';
-import Routes from 'interfaces/routes.interface';
+import Routes from './interfaces/routes.interface';
 import cookieParser from 'cookie-parser'
  
 class App {

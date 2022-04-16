@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import validateEnv from "../utils/validateEnv";
 import ClientService from "../services/client.service";
 import HttpException from "../exceptions/http.exceptions";
-import DataStoreToken from "interfaces/data.store.token.interface";
+import DataStoreToken from "../interfaces/data.store.token.interface";
 
 export default class AuthMiddleware{
     private services: ClientService;
