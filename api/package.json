@@ -4,7 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "ts-node",
     "start": "node dist/server.js"
   },
   "keywords": [],
@@ -26,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.7.3",
     "pg": "^8.7.3",
+    "pug": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.4"
   },

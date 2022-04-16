@@ -18,7 +18,12 @@ class App {
  
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
+    this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.set('view engine', 'pug');
+    this.app.set('views',  __dirname+'/../src/views');
+    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(express.static(__dirname+'/../src/views/styles'));
   }
 
  
