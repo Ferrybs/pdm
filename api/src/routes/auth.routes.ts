@@ -32,6 +32,11 @@ export default class AuthRoutes {
                 new validationMiddleware().credentials(),
                 this.controller.recoverySendEmail.bind(this.controller)
             )
+            this.router.get(
+                `${this.path}/forgot-password`,
+                new authMiddleware(this.controller.clientService).verify(),
+                this.controller.recoverypassword.bind(this.controller)
+            )
             this.router.patch(
                 `${this.path}/forgot-password`,
                 new authMiddleware(this.controller.clientService).verify(),

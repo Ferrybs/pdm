@@ -73,8 +73,12 @@ export default class AuthService extends Services{
         credentialsDTO.password = null;
         const client = await this.database.findClientByEmail(credentialsDTO);
         if(client){
+          const clientDTO = new ClientDTO();
+          clientDTO.id =  client.id;
+          clientDTO.credentialsDTO = client.credentials;
+          clientDTO.personDTO = client.person;
           const token = this.jwt.createToken(client);
-          this.getEmail().post(token.token,credentialsDTO.email);
+          this.getEmail().sendEmail({clientDTO,token});
         }else{
           throw new HttpException(404,"Not Found!");
         }
