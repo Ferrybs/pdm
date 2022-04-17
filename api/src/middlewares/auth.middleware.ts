@@ -1,6 +1,6 @@
 import { RequestHandler, Response } from "express";
 import RequesWithClient from "../interfaces/request.client.interface";
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import validateEnv from "../utils/validateEnv";
 import ClientService from "../services/client.service";
 import HttpException from "../exceptions/http.exceptions";
@@ -18,7 +18,7 @@ export default class AuthMiddleware implements Auth{
         const secret = validateEnv.JWT_REFRESH_SECRET;
         try {
           const verificationResponse = jwt.verify(refreshToken,secret) as DataStoreToken;
-          const client = await this._services.getClient(verificationResponse.id);
+          const client = await this._services.getClientById(verificationResponse.id);
           if(client){
             request.client = client;
             next();
@@ -40,7 +40,7 @@ export default class AuthMiddleware implements Auth{
           const secret = validateEnv.JWT_SECRET;
           try {
             const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
-            const client = await this._services.getClient(verificationResponse.id);
+            const client = await this._services.getClientById(verificationResponse.id);
             if (client) {
               request.client = client;
               next();
@@ -48,7 +48,11 @@ export default class AuthMiddleware implements Auth{
               response.status(400).send(new HttpException(400,"Not Found!").data);
             }
           } catch (error) {
-              response.status(400).send(new HttpException(400,error.message).data);
+              if(error instanceof TokenExpiredError){
+                response.render('pages/invalidLink');
+              }else{
+                response.status(400).send(new HttpException(400,error.message).data);
+              }
           }
         } else {
             response.status(400).send(new HttpException(400,"Not Found!").data);
@@ -63,7 +67,7 @@ export default class AuthMiddleware implements Auth{
               const secret = validateEnv.JWT_SECRET;
               try {
                 const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
-                const client = await this._services.getClient(verificationResponse.id);
+                const client = await this._services.getClientById(verificationResponse.id);
                 if (client) {
                   request.client = client;
                   next();
@@ -85,7 +89,7 @@ export default class AuthMiddleware implements Auth{
           const secret = validateEnv.JWT_SECRET;
           try {
             const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
-            const client = await this._services.getClient(verificationResponse.id);
+            const client = await this._services.getClientById(verificationResponse.id);
             if (client) {
               request.client = client;
               next();

@@ -43,9 +43,27 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async recoverypassword(request: RequesWithClient, response: Response, next: NextFunction){
+  public async changePassword(request: RequesWithClient, response: Response, next: NextFunction){
+    let message: string;
+    let name: string;
+    let result: boolean = false;
     try {
-      response.send(request.body)
+      const password = request.body.pass as string;
+      const clientDTO = request.client as ClientDTO;
+      const credentialsDTO = clientDTO.credentialsDTO;
+      credentialsDTO.password = password;
+      name = clientDTO.personDTO.name;
+      result = await this.clientService.updateCredentials(credentialsDTO);
+    } catch (error) {
+      message = error.message;
+    }
+    try {
+      const data = {
+        ok: result,
+        message: result ? "Password Changed" : message,
+        name:name
+      }
+      response.render('pages/redefinePassword',{data});
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
@@ -58,9 +76,10 @@ export default class AuthController extends Controller{
     try {
       const clientDTO = request.client;
       const data = {
+        token: request.params.token,
         name: clientDTO.personDTO.name
       }
-      response.render('pages/redefine-password',{data});
+      response.render('pages/redefinePassword',{data});
     } catch (error) {
       response.status(404).send({ ok: false, message: error.message});
     }

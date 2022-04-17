@@ -1,8 +1,7 @@
 import ClientDTO from "../dto/client.dto";
 import CredentialsDTO from "../dto/credentials.dto";
-import PersonDTO from "../dto/person.dto";
+import bcrypt from "bcrypt";
 import HttpException from "../exceptions/http.exceptions";
-import Client from "../entity/client.entity";
 import Services from "./services";
 
 export default class ClientService extends Services{
@@ -13,7 +12,7 @@ export default class ClientService extends Services{
     // getUser()
     //toDTO
     //toEntity
-    public async getClient(id: string){
+    public async getClientById(id: string){
         try {
             const result = await this.database.findClientById(id);
             const clientDTO = new ClientDTO();
@@ -23,6 +22,16 @@ export default class ClientService extends Services{
             return clientDTO;
         } catch (error) {
             throw (new HttpException(400,error.message));
+        }
+    }
+    public async updateCredentials(credentialsDTO: CredentialsDTO): Promise<boolean> {
+        try {
+            const hashedPassword =  await bcrypt.hash(credentialsDTO.password,10);
+            credentialsDTO.password = hashedPassword;
+            const result = await this.database.updateCredentials(credentialsDTO);
+            return result;
+        } catch (error) {
+            
         }
     }
 }

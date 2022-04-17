@@ -16,12 +16,16 @@ export default class PostgresDatabase implements Database{
         this._appDataSource = dataSource.appDataSource;
     }
 
-    public async updateCredentials(credentialsDTO: credentialsDto): Promise<void>{
+    public async updateCredentials(credentialsDTO: credentialsDto): Promise<boolean>{
         try {
             await this._appDataSource.initialize();
             const credResul = this._appDataSource.manager.create(Credentials,credentialsDTO);
-            await this._appDataSource.manager.update(Credentials,credResul.email,credResul);
+            const result = await this._appDataSource.manager.update(Credentials,credResul.email,credResul);
             await this._appDataSource.destroy();
+            if(result.affected===1){
+                return true;
+            }
+            return false
         } catch (error) {
             throw( new HttpException(404,error.message));
         }

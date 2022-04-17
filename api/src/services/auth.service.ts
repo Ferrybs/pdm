@@ -1,6 +1,5 @@
 import Services from "./services";
 import bcrypt from "bcrypt"
-import TokenData from "../interfaces/token.data.interface";
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
 import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";

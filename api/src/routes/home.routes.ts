@@ -13,8 +13,6 @@ export default class HomeRoutes {
     
     private initializeRoutes() {
         this.router.get(this.path,this.controller.get.bind(this.controller));
-        this.router.patch(this.path,this.controller.get.bind(this.controller));
-        this.router.get(`${this.path}/home`,this.controller.home.bind(this.controller));
     }
 
 }

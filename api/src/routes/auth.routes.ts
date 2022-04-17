@@ -46,10 +46,10 @@ export default class AuthRoutes {
                 this._authMiddleware.verifyByParam(),
                 this._controller.resetPasswordPage.bind(this._controller)
             )
-            this.router.patch(
-                `${this.path}/reset-password`,
-                //this._authMiddleware.verifyByBody(),
-                this._controller.recoverypassword.bind(this._controller)
+            this.router.post(
+                `${this.path}/change-password`,
+                this._authMiddleware.verifyByBody(),
+                this._controller.changePassword.bind(this._controller)
             )
     }
 
