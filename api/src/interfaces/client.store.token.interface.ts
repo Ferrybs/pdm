@@ -1,7 +1,7 @@
 import ClientDTO from "../dto/client.dto";
-import TokenData from "../interfaces/token.data.interface";
+import StoreAllToken from "./store.all.token.interface";
 
 export default interface ClientStoreToken{
     clientDTO: ClientDTO
-    token: TokenData
+    allToken: StoreAllToken
 }

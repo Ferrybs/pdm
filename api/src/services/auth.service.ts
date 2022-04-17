@@ -8,6 +8,7 @@ import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import PersonDTO from "../dto/person.dto";
 import ClientStoreToken from "../interfaces/client.store.token.interface";
+import StoreAllToken from "interfaces/store.all.token.interface";
 
 export default class AuthService extends Services{
   constructor(){
@@ -26,17 +27,28 @@ export default class AuthService extends Services{
       clientDTO.id = result.id;
       clientDTO.credentialsDTO = result.credentials;
       clientDTO.personDTO = result.person;
-      result.credentials.password = null;
-      const token: TokenData = this.jwt.createToken(result);
-      const clientStoreToken: ClientStoreToken = {clientDTO,token};
+      clientDTO.credentialsDTO.password = null;
+      const allToken: StoreAllToken = this.jwt.createToken(clientDTO);
+      const clientStoreToken: ClientStoreToken = {clientDTO,allToken};
       return clientStoreToken;
     } catch (error) {
       throw (new HttpException(404,error.message))
     }
   }
+
+    public refresh(clientDTO: ClientDTO): StoreAllToken {
+      try {
+        if (clientDTO) {
+            return this.jwt.createToken(clientDTO);
+        }
+      } catch (error) {
+        throw( new HttpException(404,error.message));
+      }
+      throw( new HttpException(404,"Not Found"));
+    }
     public async login(credentialsDTO: CredentialsDTO): Promise<ClientStoreToken> {
       const clientDTO = new ClientDTO();
-      var token: TokenData;
+      var allToken: StoreAllToken;
       try {
         const client: Client = await this.database.findClientByEmail(credentialsDTO);
         if(client){
@@ -49,8 +61,8 @@ export default class AuthService extends Services{
             clientDTO.personDTO = client.person as PersonDTO;
             clientDTO.credentialsDTO = client.credentials as CredentialsDTO;
             clientDTO.credentialsDTO.password = null;
-            token = this.jwt.createToken(client);
-            const clientStoreToken: ClientStoreToken = {clientDTO,token}
+            allToken = this.jwt.createToken(clientDTO);
+            const clientStoreToken: ClientStoreToken = {clientDTO,allToken}
             return clientStoreToken;
           }
         }
@@ -77,7 +89,7 @@ export default class AuthService extends Services{
           clientDTO.id =  client.id;
           clientDTO.credentialsDTO = client.credentials;
           clientDTO.personDTO = client.person;
-          const token = this.jwt.createToken(client);
+          const token = this.jwt.createToken(clientDTO);
           const link = `https://api-pdm-pia3.herokuapp.com/auth/reset-password/`+token.token;
           const result = await this.getEmail().sendEmail(clientDTO,link);
           if(!result){

@@ -20,6 +20,15 @@ export default class AuthController extends Controller{
       }
     }
   }
+  public refresh(request: RequesWithClient, response: Response, next: NextFunction){
+    try {
+      const clientDTO = request.client;
+      const tokenData = this.authService.refresh(clientDTO);
+      response.send(tokenData);
+    } catch (error) {
+      response.status(404).send({ ok: false, message: error.message});
+    }
+  }
 
   public async login(request: Request, response: Response, next: NextFunction) {
     try {
