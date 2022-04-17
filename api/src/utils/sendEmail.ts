@@ -37,11 +37,11 @@ export default class SendEmail implements SendMail{
             const info = await this._transporter.sendMail({
                 from: `Intelligent Garden Co.<${this._email}>`,
                 to: clientDTO.credentialsDTO.email,
-                subject: `${clientDTO.personDTO.name} Redefine Your Password ✔`,
+                subject: `${clientDTO.personDTO.name}, your password reset is ready ✔`,
                 html: this.emailTemplate(clientDTO.personDTO.name,link),
               });    
 
-            if (nodemailer.getTestMessageUrl(info)) {
+            if (info) {
                 return true;
             } else{
                 return false;
@@ -102,7 +102,7 @@ export default class SendEmail implements SendMail{
                                                         password has been generated for you. To reset your password, click the
                                                         following link and follow the instructions.
                                                     </p>
-                                                    <a href="${link};"
+                                                    <a href="${link}"
                                                         style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset Password</a>
                                                 </td>
                                             </tr>

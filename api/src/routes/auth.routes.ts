@@ -39,17 +39,16 @@ export default class AuthRoutes {
                 );
             this.router.post(
                 `${this.path}/reset-password`,
-                this._validationMiddleware.credentials(),
-                this._controller.resetSendEmail.bind(this._controller)
+                this._controller.resetPasswordSendEmail.bind(this._controller)
             )
             this.router.get(
                 `${this.path}/reset-password/:token`,
                 this._authMiddleware.verifyByParam(),
-                this._controller.recoverypassword.bind(this._controller)
+                this._controller.resetPasswordPage.bind(this._controller)
             )
             this.router.patch(
                 `${this.path}/reset-password`,
-                this._authMiddleware.verifyByheader(),
+                //this._authMiddleware.verifyByBody(),
                 this._controller.recoverypassword.bind(this._controller)
             )
     }

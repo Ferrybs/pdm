@@ -17,7 +17,7 @@ export default class AuthJwt{
           id: clientDTO.id,
         };
         return {
-          token: {
+          accessToken: {
             token: jwt.sign(dataStoredInToken, this._secret, {expiresIn:this._expiresIn} ),
             expiresIn: this._expiresIn},
           refreshToken: this.createRefreshToken(clientDTO)

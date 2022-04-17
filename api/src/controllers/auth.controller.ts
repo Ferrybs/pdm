@@ -45,11 +45,7 @@ export default class AuthController extends Controller{
   }
   public async recoverypassword(request: RequesWithClient, response: Response, next: NextFunction){
     try {
-      const body = request.body as string;
-      const client = request.client;
-      client.credentialsDTO.password = body;
-      await this.authService.recoverypassword(client.credentialsDTO);
-      response.status(200).send({ok:true});
+      response.send(request.body)
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);
@@ -58,11 +54,24 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async resetSendEmail(request: Request, response: Response){
+  public resetPasswordPage(request: RequesWithClient, response: Response, next: NextFunction) {
+    try {
+      const clientDTO = request.client;
+      const data = {
+        name: clientDTO.personDTO.name
+      }
+      response.render('pages/redefine-password',{data});
+    } catch (error) {
+      response.status(404).send({ ok: false, message: error.message});
+    }
+  }
+  public async resetPasswordSendEmail(request: Request, response: Response){
     try {
       const body = request.body as CredentialsDTO;
-      await this.authService.sendEmail(body);
-      response.status(200).send({ok:true});
+      if (body) {
+        await this.authService.sendEmail(body);
+        response.status(200).send({ok:true});
+      }
     } catch (error) {
       if(error instanceof HttpException){
         response.status(error.status).send(error.data);

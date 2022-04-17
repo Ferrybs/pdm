@@ -77,5 +77,28 @@ export default class AuthMiddleware implements Auth{
                 response.status(400).send(new HttpException(400,"Not Found!").data);
             }
             }
-      }
+  }
+  public verifyByBody(): RequestHandler {
+    return async(request: RequesWithClient,response,next) => {
+      const token = request.body.token;
+      if (token) {
+          const secret = validateEnv.JWT_SECRET;
+          try {
+            const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
+            const client = await this._services.getClient(verificationResponse.id);
+            if (client) {
+              request.client = client;
+              next();
+            } else {
+              response.status(400).send(new HttpException(400,"Not Found!").data);
+            }
+          } catch (error) {
+              response.status(400).send(new HttpException(400,error.message).data);
+          }
+        } else {
+            response.status(400).send(new HttpException(400,"Not Found!").data);
+        }
+    }
+  }
+  
 }
