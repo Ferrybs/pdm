@@ -59,7 +59,7 @@ export default class PostgresDatabase implements Database{
                 return client;
             }
             await this._appDataSource.destroy();
-            throw( new HttpException(404,"Not Found"));
+            return null;
         } catch (error) {
             await this._appDataSource.destroy();
             throw( new HttpException(404,error.message));
