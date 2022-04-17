@@ -33,17 +33,17 @@ export default class AuthRoutes {
                 this._controller.login.bind(this._controller)
                 );
             this.router.post(
-                `${this.path}/forgot-password`,
+                `${this.path}/reset-password`,
                 this._validationMiddleware.credentials(),
-                this._controller.recoverySendEmail.bind(this._controller)
+                this._controller.resetSendEmail.bind(this._controller)
             )
             this.router.get(
-                `${this.path}/forgot-password`,
-                this._authMiddleware.verifyByheader(),
+                `${this.path}/reset-password/:token`,
+                this._authMiddleware.verifyByParam(),
                 this._controller.recoverypassword.bind(this._controller)
             )
             this.router.patch(
-                `${this.path}/forgot-password`,
+                `${this.path}/reset-password`,
                 this._authMiddleware.verifyByheader(),
                 this._controller.recoverypassword.bind(this._controller)
             )
