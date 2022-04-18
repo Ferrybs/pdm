@@ -45,11 +45,13 @@ export default class AuthController extends Controller{
   }
   public async changePassword(request: RequesWithClient, response: Response, next: NextFunction){
     let message: string;
-    let name: string;
+    let token: string;
+    let name: string = "User";
     let result: boolean = false;
     try {
       const password = request.body.pass as string;
       const clientDTO = request.client as ClientDTO;
+      token = request.body.token;
       const credentialsDTO = clientDTO.credentialsDTO;
       credentialsDTO.password = password;
       name = clientDTO.personDTO.name;
@@ -60,6 +62,7 @@ export default class AuthController extends Controller{
     try {
       const data = {
         ok: result,
+        token: token,
         message: result ? "Password Changed" : message,
         name:name
       }
