@@ -20,7 +20,7 @@ export default class Services {
         return this._jwt;
     }
 
-    getEmail(){
+    public get email(){
         return this._email;
     }
 }

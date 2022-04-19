@@ -5,6 +5,8 @@ import PersonDTO from '../dto/person.dto';
 import { RequestHandler } from 'express';
 import HttpException from '../exceptions/http.exceptions';
 import Validation from 'interfaces/validation.interface';
+import { ValidationError } from 'class-validator';
+import { type } from 'os';
 
 export default class ValidationMiddleware implements Validation {
 
@@ -18,7 +20,12 @@ export default class ValidationMiddleware implements Validation {
           await transformAndValidate(CredentialsDTO, credentialsDTO);
           await transformAndValidate(PersonDTO, personDTO);
         } catch (err) {
-          message = err.map((err) => Object.values(err.constraints)).join(', ');
+          if(Array.isArray(err)){
+            message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+          }else{
+            message = err.message;
+          }
+            
         }
         if(message){
           res.status(400).send(new HttpException(400,message).data);
@@ -38,7 +45,7 @@ export default class ValidationMiddleware implements Validation {
           credentialsDTO.password = aux.password;
           await transformAndValidate(CredentialsDTO, credentialsDTO);
         } catch (err) {
-          message = err.map((err) => Object.values(err.constraints)).join(', ');
+          message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
         }
         if(message){
           res.status(400).send(new HttpException(400,message).data);

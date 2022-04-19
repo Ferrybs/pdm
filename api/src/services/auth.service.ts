@@ -90,7 +90,7 @@ export default class AuthService extends Services{
           clientDTO.personDTO = client.person;
           const allToken = this.jwt.createToken(clientDTO);
           const link = `https://api-pdm-pia3.herokuapp.com/auth/reset-password/`+allToken.accessToken.token;
-          const result = await this.getEmail().sendEmail(clientDTO,link);
+          const result = await this.email.sendEmail(clientDTO,link);
           if(!result){
             throw new HttpException(404,"Not Found!");
           }
