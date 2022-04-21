@@ -1,30 +1,22 @@
 import { RequestHandler, Response } from "express";
-import RequesWithClient from "../interfaces/request.client.interface";
-import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import validateEnv from "../utils/validateEnv";
-import ClientService from "../services/client.service";
 import HttpException from "../exceptions/http.exceptions";
 import DataStoreToken from "../interfaces/data.store.token.interface";
 import Auth from "../interfaces/auth.interface";
+import RequesWithToken from "interfaces/request.token.interface";
 export default class AuthMiddleware implements Auth{
-    private _services: ClientService;
-    constructor(clientService: ClientService){
-        this._services = clientService;
+    constructor(){
     }
   public refreshToken(): RequestHandler{
-    return async(request: RequesWithClient, response: Response, next) =>{
-      const refreshToken = request.body.refreshToken;
+    return async(request: RequesWithToken, response: Response, next) =>{
+      const refreshToken: string = request.body.refreshToken;
       if (refreshToken) {
         const secret = validateEnv.JWT_REFRESH_SECRET;
         try {
           const verificationResponse = jwt.verify(refreshToken,secret) as DataStoreToken;
-          const client = await this._services.getClientById(verificationResponse.id);
-          if(client){
-            request.client = client;
-            next();
-          }else{
-            response.status(400).send(new HttpException(400,"Not Found!").data);
-          }
+          request.dataStoreToken = verificationResponse;
+          next();
         } catch (error) {
           response.status(400).send(new HttpException(400,error.message).data);
         }
@@ -34,46 +26,29 @@ export default class AuthMiddleware implements Auth{
     }
   }
   public verifyByParam(): RequestHandler {
-    return async(request: RequesWithClient,response,next) => {
-      const token = request.params['token'];
-      if (token) {
+    return async(request: RequesWithToken,response,next) => {
+      try {
+          const token: string = request.params['token'];
+          if (token) {
           const secret = validateEnv.JWT_SECRET;
-          try {
-            const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
-            const client = await this._services.getClientById(verificationResponse.id);
-            if (client) {
-              request.client = client;
+              request.dataStoreToken = jwt.verify(token,secret) as DataStoreToken;
               next();
-            } else {
-              response.status(400).send(new HttpException(400,"Not Found!").data);
-            }
-          } catch (error) {
-              if(error instanceof TokenExpiredError){
-                response.render('pages/invalidLink');
-              }else{
-                response.status(400).send(new HttpException(400,error.message).data);
-              }
-          }
         } else {
             response.status(400).send(new HttpException(400,"Not Found!").data);
         }
+      } catch (error) {
+        next(error);
+    }
     }
   }
   public verifyByheader(): RequestHandler {
-      return async(request: RequesWithClient,response,next) => {
+      return async(request: RequesWithToken,response,next) => {
           const bearerHeader = request.headers['authorization'];
           if (bearerHeader) {
               const token = bearerHeader.split(' ')[1];
               const secret = validateEnv.JWT_SECRET;
               try {
-                const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
-                const client = await this._services.getClientById(verificationResponse.id);
-                if (client) {
-                  request.client = client;
-                  next();
-                } else {
-                  response.status(400).send(new HttpException(400,"Not Found!").data);
-                }
+                request.dataStoreToken = jwt.verify(token,secret) as DataStoreToken;
               } catch (error) {
                   response.status(400).send(new HttpException(400,error.message).data);
               }
@@ -83,21 +58,15 @@ export default class AuthMiddleware implements Auth{
             }
   }
   public verifyByBody(): RequestHandler {
-    return async(request: RequesWithClient,response,next) => {
+    return async(request: RequesWithToken,response,next) => {
       const token = request.body.token;
       if (token) {
           const secret = validateEnv.JWT_SECRET;
           try {
-            const verificationResponse = jwt.verify(token,secret) as DataStoreToken;
-            const client = await this._services.getClientById(verificationResponse.id);
-            if (client) {
-              request.client = client;
-              next();
-            } else {
-              response.status(400).send(new HttpException(400,"Not Found!").data);
-            }
+            request.dataStoreToken = jwt.verify(token,secret) as DataStoreToken;
+            next();
           } catch (error) {
-              response.status(400).send(new HttpException(400,error.message).data);
+            next(error);
           }
         } else {
             response.status(400).send(new HttpException(400,"Not Found!").data);

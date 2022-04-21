@@ -1,6 +1,3 @@
-// post signup
-// get login
-// patch forgot password
 import express, { Router } from "express";
 import AuthController from "../controllers/auth.controller"
 import ValidationMiddleware from "../middlewares/validation.middleware";
@@ -17,7 +14,7 @@ export default class AuthRoutes {
     constructor(){
         this._validationMiddleware = new ValidationMiddleware();
         this._controller = new AuthController();
-        this._authMiddleware = new AuthMiddleware(this._controller.clientService);
+        this._authMiddleware = new AuthMiddleware();
         this.initializeRoutes();
     }
     
@@ -49,7 +46,7 @@ export default class AuthRoutes {
             this.router.post(
                 `${this.path}/change-password`,
                 this._authMiddleware.verifyByBody(),
-                this._controller.changePassword.bind(this._controller)
+                this._controller.changePasswordPage.bind(this._controller)
             )
     }
 

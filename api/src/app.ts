@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import routes from './interfaces/routes.interface';
 import Routes from './interfaces/routes.interface';
-import cookieParser from 'cookie-parser'
  
 class App {
   public app: express.Application;
@@ -19,7 +18,6 @@ class App {
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
-    this.app.use(cookieParser());
     this.app.set('view engine', 'pug');
     this.app.set('views',  __dirname+'/../src/views');
     this.app.use(express.urlencoded({ extended: false }));

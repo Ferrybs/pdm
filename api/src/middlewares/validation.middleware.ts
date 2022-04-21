@@ -6,7 +6,6 @@ import { RequestHandler } from 'express';
 import HttpException from '../exceptions/http.exceptions';
 import Validation from 'interfaces/validation.interface';
 import { ValidationError } from 'class-validator';
-import { type } from 'os';
 
 export default class ValidationMiddleware implements Validation {
 
@@ -14,11 +13,11 @@ export default class ValidationMiddleware implements Validation {
     return async (req, res, next) => {
         let message: string
       try {
-          const aux = req.body as ClientDTO;
+          const aux: ClientDTO = req.body;
           const credentialsDTO = aux.credentialsDTO;
           const personDTO = aux.personDTO;
-          await transformAndValidate(CredentialsDTO, credentialsDTO);
-          await transformAndValidate(PersonDTO, personDTO);
+          await transformAndValidate(CredentialsDTO,credentialsDTO);
+          await transformAndValidate(PersonDTO,personDTO);
         } catch (err) {
           if(Array.isArray(err)){
             message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');

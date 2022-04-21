@@ -1,36 +1,40 @@
-import Client from "../entity/client.entity";
 import DataStoreToken from "../interfaces/data.store.token.interface";
 import TokenData from "../interfaces/token.data.interface";
 import validateEnv from "../utils/validateEnv";
 import jwt from "jsonwebtoken";
-import ClientDTO from "dto/client.dto";
-import StoreAllToken from "interfaces/store.all.token.interface";
 
 export default class AuthJwt{
     private _secret: string = validateEnv.JWT_SECRET;
     private _secretRefresh: string =validateEnv.JWT_REFRESH_SECRET;
     private _expiresInRefresh: number = 60*60*24*30;
-    private _expiresIn: number = 60*60;
+    private _expiresInAccess: number = 60*60;
 
-    public createToken(clientDTO: ClientDTO): StoreAllToken {
+    public createAccessToken(sessionId: string): TokenData {
+      const iat: number = Math.floor(Date.now() / 1000);
         const dataStoredInToken: DataStoreToken = {
-          id: clientDTO.id,
+          id: sessionId,
+          iat: iat,
+          expiresIn: this._expiresInAccess + iat
         };
         return {
-          accessToken: {
-            token: jwt.sign(dataStoredInToken, this._secret, {expiresIn:this._expiresIn} ),
-            expiresIn: this._expiresIn},
-          refreshToken: this.createRefreshToken(clientDTO)
-        };
+            token: jwt.sign(dataStoredInToken, this._secret, {expiresIn:this._expiresInAccess} ),
+            expiresIn: this._expiresInAccess + iat,
+            iat: iat
+          };
+    
       }
     
-    private createRefreshToken(clientDTO: ClientDTO): TokenData {
+    public createRefreshToken(id: string): TokenData {
+      const iat: number = Math.floor(Date.now() / 1000);
         const dataStoredInToken: DataStoreToken = {
-          id: clientDTO.id,
+          id: id,
+          iat: iat,
+          expiresIn: iat + this._expiresInRefresh
         };
         return {
           token: jwt.sign(dataStoredInToken, this._secretRefresh, {expiresIn:this._expiresInRefresh} ),
-          expiresIn: this._expiresInRefresh
+          expiresIn: this._expiresInRefresh + iat,
+          iat: iat
         };
       }
     

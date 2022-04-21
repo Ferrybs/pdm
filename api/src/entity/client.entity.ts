@@ -1,6 +1,7 @@
-import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Credentials from './credentials.entity';
 import Person from "./person.entity"
+import Sessions from "./sessions.entity";
 
 @Entity()
 export default class Client{    
@@ -14,4 +15,8 @@ export default class Client{
     @OneToOne(() => Credentials, (credentials: Credentials) => credentials.client)
     @JoinColumn()
     public credentials: Credentials;
+
+    @OneToMany(() => Sessions, (sessions: Sessions) => sessions.client, {cascade: true})
+    @JoinColumn()
+    public sessions?: Sessions[];
 }

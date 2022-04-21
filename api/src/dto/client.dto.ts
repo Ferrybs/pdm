@@ -1,7 +1,7 @@
-import { Exclude, Expose } from 'class-transformer';
-import { IsString, MinLength, ValidateNested } from 'class-validator';
+import { ValidateNested } from 'class-validator';
 import CredentialsDTO from './credentials.dto';
 import PersonDTO from "./person.dto"
+import SessionsDTO from './sessions.dto';
 
 export default class ClientDTO {
 
@@ -12,4 +12,6 @@ export default class ClientDTO {
 
     @ValidateNested()
     public credentialsDTO: CredentialsDTO;
+
+    public sessionsDTO?: SessionsDTO[];
 }

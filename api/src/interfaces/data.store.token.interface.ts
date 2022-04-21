@@ -1,3 +1,5 @@
 export default interface DataStoreToken {
-    id: string
+    id: string;
+    iat: number
+    expiresIn: number;
 }

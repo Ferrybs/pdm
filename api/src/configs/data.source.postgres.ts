@@ -3,6 +3,7 @@ import validateEnv from "../utils/validateEnv";
 import Person from "../entity/person.entity";
 import Credentials from "../entity/credentials.entity";
 import Client from "../entity/client.entity";
+import Sessions from "../entity/sessions.entity";
 
 export default class PostgresDataSource{
     appDataSource: DataSource;
@@ -13,7 +14,7 @@ export default class PostgresDataSource{
             synchronize: true,
             logging: true,
             entities: [
-                Credentials,Client,Person
+                Credentials,Client,Person,Sessions
               ],
             subscribers: [],
             migrations: [],

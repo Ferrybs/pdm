@@ -3,15 +3,13 @@ import CredentialsDTO from "../dto/credentials.dto";
 import bcrypt from "bcrypt";
 import HttpException from "../exceptions/http.exceptions";
 import Services from "./services";
+import { plainToInstance } from "class-transformer";
+import PersonDTO from "../dto/person.dto";
+import SessionsDTO from "../dto/sessions.dto";
+
 
 export default class ClientService extends Services{
-    //login
-    //signup
-    //verify if email exists
-    //
-    // getUser()
-    //toDTO
-    //toEntity
+
     public async getClientById(id: string){
         try {
             const result = await this.database.findClientById(id);
@@ -24,12 +22,44 @@ export default class ClientService extends Services{
             throw (new HttpException(400,error.message));
         }
     }
+    public async getClientBySessionId(sessionid: string){
+        try {
+            const result = await this.database.findClientBySessionId(sessionid);
+            if (result) {
+                const clientDTO = new ClientDTO();
+                clientDTO.id = result.id;
+                clientDTO.personDTO = result.person;
+                clientDTO.credentialsDTO = result.credentials;
+                clientDTO.sessionsDTO = result.sessions;
+                return clientDTO;
+            }
+            return null;
+        } catch (error) {
+            throw (new HttpException(400,error.message));
+        }
+    }
     public async updateCredentials(credentialsDTO: CredentialsDTO): Promise<boolean> {
         try {
             const hashedPassword =  await bcrypt.hash(credentialsDTO.password,10);
             credentialsDTO.password = hashedPassword;
             const result = await this.database.updateCredentials(credentialsDTO);
             return result;
+        } catch (error) {
+            throw (new HttpException(400,error.message));
+        }
+    }
+    public async getClientByEmail(credentialsData: CredentialsDTO):Promise<ClientDTO>{
+        try {
+            const client = await this.database.findClientByEmail(credentialsData);
+            const personDTO = plainToInstance(PersonDTO,client.person)
+            const credentialsDTO = plainToInstance(CredentialsDTO,client.credentials);
+            const sessionsDTO = plainToInstance(SessionsDTO,client.sessions);
+            const clientDTO = new ClientDTO();
+            clientDTO.id = client.id;
+            clientDTO.personDTO = personDTO;
+            clientDTO.credentialsDTO =credentialsDTO;
+            clientDTO.sessionsDTO = sessionsDTO;
+            return clientDTO;
         } catch (error) {
             
         }
