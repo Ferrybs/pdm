@@ -6,7 +6,7 @@ block content
       div(class="card text-white bg-warning mb-3" style="max-width: 20rem;")
         div(class="card-body")
           h4(class="alert-heading") Warning!
-          if mesagem != undefined
+          if mesagem == undefined
             p(class="mb-0") This link is not valid any more! Please, ask for another link!
           else
             p(class="mb-0") #{message}
