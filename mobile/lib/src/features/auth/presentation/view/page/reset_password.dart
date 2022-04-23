@@ -5,14 +5,14 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 
-class PasswordRecovery extends StatefulWidget {
-  const PasswordRecovery({Key? key}) : super(key: key);
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({Key? key}) : super(key: key);
 
   @override
-  State<PasswordRecovery> createState() => _CreateAccount();
+  State<ResetPassword> createState() => _ResetPassord();
 }
 
-class _CreateAccount extends State<PasswordRecovery> {
+class _ResetPassord extends State<ResetPassword> {
   final _viewModel = Modular.get<LoginViewModel>();
   bool showSpinner = false;
   late ThemeData _theme;
@@ -37,25 +37,11 @@ class _CreateAccount extends State<PasswordRecovery> {
                 IconData(0xf0071, fontFamily: 'MaterialIcons'),
               ),
             ),
-            TextInputAuth(
-              label: 'password'.i18n(),
-              obscureText: true,
-              prefixIcon: const Icon(
-                IconData(0xeb71, fontFamily: 'MaterialIcons'),
-              ),
-            ),
-            TextInputAuth(
-              label: 'confirm-password'.i18n(),
-              obscureText: true,
-              prefixIcon: const Icon(
-                IconData(0xeb71, fontFamily: 'MaterialIcons'),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: ElevatedButton(
-                  child: Text('recovery'.i18n().toUpperCase()),
+                  child: Text('reset'.i18n().toUpperCase()),
                   onPressed: () {},
                 ),
               ),
@@ -83,7 +69,7 @@ class _CreateAccount extends State<PasswordRecovery> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
       child: Builder(
         builder: (context) => Text(
-          'recovery'.i18n(),
+          'reset-password'.i18n(),
           style: _theme.textTheme.titleLarge,
         ),
       ),

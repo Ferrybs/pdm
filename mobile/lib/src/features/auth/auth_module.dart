@@ -1,4 +1,5 @@
 import 'package:basearch/src/features/auth/presentation/view/page/create_account.dart';
+import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
 import 'package:basearch/src/features/auth/presentation/view/page/success.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -23,7 +24,7 @@ class AuthModule extends Module {
             child: (_, __) => const CreateAccount(), children: []),
         ChildRoute('/success',
             child: (_, __) => const SuccessLogin(), children: []),
-        ChildRoute('/recovery',
-            child: (_, __) => const SuccessLogin(), children: []),
+        ChildRoute('/reset-password',
+            child: (_, __) => const ResetPassword(), children: []),
       ];
 }

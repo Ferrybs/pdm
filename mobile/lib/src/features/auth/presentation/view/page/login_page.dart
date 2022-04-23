@@ -53,8 +53,8 @@ class _LoginPageState extends State<LoginPage> {
               _button(_getClient, Text('login'.i18n().toUpperCase())),
               Center(
                 child: TextButton(
-                  child: Text('forgot-pass'.i18n()),
-                  onPressed: () {},
+                  child: Text('forgot-password'.i18n()),
+                  onPressed: () => Modular.to.pushNamed('/auth/reset-password'),
                 ),
               ),
               const SizedBox(height: 25),

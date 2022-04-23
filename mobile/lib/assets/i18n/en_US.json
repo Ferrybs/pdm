@@ -12,7 +12,7 @@
     "email": "E-mail",
     "password" : "Password",
     "confirm-password" : "Confirm Password",
-    "forgot-pass" : "Forgot Password?",
+    "forgot-password" : "Forgot Password?",
     "no-account" : "Dont have an account?",
     "sign-up" : "Sign Up!",
     "sign-in" : "Sign In",
@@ -25,6 +25,6 @@
     "invalid-password" : "Invalid Password",
     "invalid-name" : "Invalid Name",
     "invalid-last-name" : "Invalid Last Name",
-    "redefine-password": "Redefine Password",
-    "redefine": "Redefine"
+    "reset-password": "Reset Password",
+    "reset": "Reset"
 }
