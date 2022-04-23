@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:basearch/src/features/auth/domain/model/client.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials.dart';
-import 'package:basearch/src/features/auth/presentation/view/page/password_recovery.dart';
+import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
