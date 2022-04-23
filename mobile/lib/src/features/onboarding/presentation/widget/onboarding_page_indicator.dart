@@ -17,11 +17,13 @@ class OnboardingPageIndicator extends StatelessWidget {
     ThemeData _theme = Theme.of(context);
     return Container(
       alignment: Alignment.center,
-      height: 80,
+      height: 70,
       child: SmoothPageIndicator(
         controller: controller,
         count: count,
         effect: WormEffect(
+          dotHeight: 14,
+          dotWidth: 14,
           spacing: 16,
           dotColor: _theme.onboardingTheme.dotColor,
           activeDotColor: _theme.onboardingTheme.activeDotColor,

@@ -97,7 +97,7 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   get _onNextClicked {
-    if (_currentPage == widget.pageList.length - 1) {
+    if (_currentPage >= 0 && _currentPage < widget.pageList.length - 1) {
       return () {
         _controller.nextPage(
           duration: const Duration(milliseconds: 500),
