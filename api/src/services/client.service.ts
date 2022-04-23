@@ -22,6 +22,18 @@ export default class ClientService extends Services{
             throw (new HttpException(400,error.message));
         }
     }
+    public async sessionType(id: string): Promise<string> {
+        const client = await this.database.findClientBySessionId(id);
+        if (client) {
+            const sessions = client.sessions.find((session)=>{
+                if(session.id === id){
+                    return session;
+                }
+            });
+            return sessions.type;
+        }
+        return null;
+    }
     public async getClientBySessionId(sessionid: string){
         try {
             const result = await this.database.findClientBySessionId(sessionid);

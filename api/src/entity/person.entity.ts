@@ -6,10 +6,10 @@ export default class Person{
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 
-    @Column()
+    @Column({nullable:false})
     public name: string;
 
-    @Column()
+    @Column({nullable:false})
     public lastName: string;
 
     @OneToOne(() => Client, client => client.id)

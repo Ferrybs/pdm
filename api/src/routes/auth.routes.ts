@@ -36,6 +36,7 @@ export default class AuthRoutes {
                 );
             this.router.post(
                 `${this.path}/reset-password`,
+                this._validationMiddleware.email(),
                 this._controller.resetPasswordSendEmail.bind(this._controller)
             )
             this.router.get(
@@ -46,6 +47,7 @@ export default class AuthRoutes {
             this.router.post(
                 `${this.path}/change-password`,
                 this._authMiddleware.verifyByBody(),
+                this._validationMiddleware.password(),
                 this._controller.changePasswordPage.bind(this._controller)
             )
     }

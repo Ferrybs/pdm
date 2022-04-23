@@ -14,8 +14,9 @@ export default class AuthService extends Services{
   constructor(){
     super();
   }
-  public createSession(description: string = ' ', tokenData: TokenData,sessionId: string): Sessions{
+  public createSession(type: string,description: string = ' ', tokenData: TokenData,sessionId: string): Sessions{
     const session: Sessions = new Sessions;
+    session.type = type;
     session.description = description;
     session.expiresIn = tokenData.expiresIn;
     session.iat = tokenData.iat;
@@ -33,7 +34,7 @@ export default class AuthService extends Services{
 
       const sessionId = this.generateSessionId();
       const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-      const sessions = [this.createSession(" ",accessToken,sessionId)];
+      const sessions = [this.createSession("LOGIN",' ',accessToken,sessionId)];
 
       clientData.sessionsDTO = sessions;
       const result = await this.database.insertClient(clientData);
@@ -56,16 +57,18 @@ export default class AuthService extends Services{
   public async refresh(id: string ): Promise<StoreAllToken> {
       try {
         const client = await this.database.findClientById(id);
-        await this.updateClientSessions(client);
-        const sessionId = this.generateSessionId();
-        const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-        const session: Sessions = this.createSession(" ",accessToken,sessionId);
-        const refreshToken: TokenData = this.jwt.createRefreshToken(client.id);
-        const allToken: StoreAllToken = {accessToken,refreshToken};
-        session.client = client;
-        await this.database.insertClientSessions(session);
-
-        return allToken;
+        if (client) {
+          await this.updateClientSessions(client);
+          const sessionId = this.generateSessionId();
+          const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
+          const session: Sessions = this.createSession("LOGIN"," ",accessToken,sessionId);
+          const refreshToken: TokenData = this.jwt.createRefreshToken(client.id);
+          const allToken: StoreAllToken = {accessToken,refreshToken};
+          session.client = client;
+          await this.database.insertClientSessions(session);
+          return allToken;
+        }
+        return null;
       } catch (error) {
         throw( new HttpException(404,error.message));
       }
@@ -74,7 +77,7 @@ export default class AuthService extends Services{
   public async updateClientSessions(client: Client){
       const time: number = Math.floor(Date.now() / 1000);
       client.sessions.forEach( async (session) => {
-        if (session.expiresIn < time || session.description == "RESET_PASSWORD") {
+        if (session.expiresIn < time || session.type == "RESET_PASSWORD") {
           await this.database.deleteClientSessions(session);
         }
       });
@@ -83,7 +86,7 @@ export default class AuthService extends Services{
       const client = await this.database.findClientById(id);
       const time: number = Math.floor(Date.now() / 1000);
       client.sessions.forEach( async (session) => {
-        if (session.expiresIn < time || session.description == "RESET_PASSWORD") {
+        if (session.expiresIn < time || session.type == "RESET_PASSWORD") {
           await this.database.deleteClientSessions(session);
         }
       });
@@ -101,7 +104,7 @@ export default class AuthService extends Services{
             await this.updateClientSessions(client);
             const sessionId = this.generateSessionId();
             const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-            const session: Sessions = this.createSession(" ",accessToken,sessionId);
+            const session: Sessions = this.createSession("LOGIN"," ",accessToken,sessionId);
             const refreshToken: TokenData = this.jwt.createRefreshToken(client.id);
             const allToken: StoreAllToken = {accessToken,refreshToken};
             session.client= client;
@@ -131,7 +134,7 @@ export default class AuthService extends Services{
           await this.updateClientSessions(client);
           const sessionId = this.generateSessionId();
           const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-          const session: Sessions = this.createSession("RESET_PASSWORD",accessToken,sessionId);
+          const session: Sessions = this.createSession("RESET_PASSWORD"," ",accessToken,sessionId);
           session.client = client;
           const sessions = await this.database.insertClientSessions(session);
           

@@ -17,6 +17,5 @@ export default class Client{
     public credentials: Credentials;
 
     @OneToMany(() => Sessions, (sessions: Sessions) => sessions.client, {cascade: true})
-    @JoinColumn()
     public sessions?: Sessions[];
 }

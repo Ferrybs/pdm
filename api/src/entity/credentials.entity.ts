@@ -6,9 +6,9 @@ export default class Credentials{
     @PrimaryColumn()
     public email: string;
 
-    @Column()
+    @Column({nullable:false})
     public password?: string;
 
     @OneToOne(() => Client, client => client.id)
-    public client: Client;
+    public client?: Client;
 }

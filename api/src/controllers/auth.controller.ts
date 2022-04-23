@@ -1,46 +1,55 @@
-import { NextFunction, Request, Response } from "express";
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import Controller from "./controller";
 import ClientDTO from "../dto/client.dto";
-import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import RequesWithToken from "interfaces/request.token.interface";
+import { validate } from "class-validator";
+import RequestWithError from "interfaces/request.error.interface";
 
 export default class AuthController extends Controller{
 
-  public async register(request: Request, response: Response){
-    try {
-      const clientDTO: ClientDTO = request.body;
-      const clientStoreToken = await this.authService.register(clientDTO);
-      response.send(clientStoreToken);
-    } catch (error) {
-      if(error instanceof HttpException){
-        response.status(error.status).send(error.data);
-      }else{
+  public async register(request: RequestWithError, response: Response){
+    if (request.error) {
+      response.status(404).send({ ok: false, message: request.error});
+    }else{
+      try {
+        const clientDTO: ClientDTO = request.body;
+        const clientStoreToken = await this.authService.register(clientDTO);
+        response.status(200).send({ok:true,clientStoreToken});
+      } catch (error) {
         response.status(404).send({ ok: false, message: error.message});
       }
     }
   }
   public async refresh(request: RequesWithToken, response: Response, next: NextFunction){
-    try {
-      const data = request.dataStoreToken;
-      const tokenData = await this.authService.refresh(data.id);
-      response.status(200).send(tokenData);
-    } catch (error) {
-      response.status(404).send({ ok: false, message: error.message});
+    if (request.error) {
+      response.status(404).send({ ok: false, message: request.error});
+    }else{
+      try {
+        const data = request.dataStoreToken;
+        const tokenData = await this.authService.refresh(data.id);
+        if (tokenData) {
+          response.send(tokenData);
+        }else{
+          response.status(404).send({ ok: false, message: "Not Found"});
+        }
+      } catch (error) {
+        response.status(404).send({ ok: false, message: error.message});
+      }
     }
   }
 
-  public async login(request: Request, response: Response, next: NextFunction) {
-    try {
-      const credentialsData: CredentialsDTO = request.body;
-      const allToken = await this.authService.login(credentialsData);
-      const clientDTO = await this.clientService.getClientByEmail(credentialsData);
-      clientDTO.credentialsDTO.password = null;
-      response.send({allToken,clientDTO});
-    } catch (error) {
-      if(error instanceof HttpException){
-        response.status(error.status).send(error.data);
-      }else{
+  public async login(request: RequestWithError, response: Response, next: NextFunction) {
+    if (request.error) {
+      response.status(404).send({ ok: false, message: request.error});
+    }else{
+      try {
+        const credentialsData: CredentialsDTO = request.body;
+        const allToken = await this.authService.login(credentialsData);
+        const clientDTO = await this.clientService.getClientByEmail(credentialsData);
+        clientDTO.credentialsDTO.password = null;
+        response.status(200).send({ok:true,allToken,clientDTO});
+      } catch (error) {
         response.status(404).send({ ok: false, message: error.message});
       }
     }
@@ -50,22 +59,34 @@ export default class AuthController extends Controller{
     let token: string;
     let name: string = "User";
     let result: boolean = false;
-    try {
-      const password: string = request.body.pass;
-      const dataStoreToken = request.dataStoreToken;
-      name = request.body.name;
-      token = request.body.token;
-      const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
-      if (clientDTO) {
-        await this.authService.updateClientSessionByClientId(clientDTO.id);
-        const credentialsDTO = clientDTO.credentialsDTO;
-        credentialsDTO.password = password;
-        result = await this.clientService.updateCredentials(credentialsDTO);
-      }else{
-        message = " This link is not invalid any more."
+    if (request.error) {
+      try {
+        message = request.error;
+        name = request.body.name;
+        token = request.body.token;
+      } catch (error) {
+        message = error.message;
       }
-    } catch (error) {
-      message = error.message;
+    }else{
+      try {
+        const password: string = request.body.pass;
+        const dataStoreToken = request.dataStoreToken;
+        name = request.body.name;
+        token = request.body.token;
+        const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
+        if (clientDTO) {
+          name = clientDTO.personDTO.name;
+          await this.authService.updateClientSessionByClientId(clientDTO.id);
+          const credentialsDTO = clientDTO.credentialsDTO;
+          credentialsDTO.password = password;
+          await validate(credentialsDTO);
+          result = await this.clientService.updateCredentials(credentialsDTO);
+        }else{
+          message = " This link is not invalid any more."
+        }
+      } catch (error) {
+        message = error.message;
+      }
     }
     try {
       const data = {
@@ -76,42 +97,46 @@ export default class AuthController extends Controller{
       }
       response.render('pages/redefinePassword',{data});
     } catch (error) {
-      if(error instanceof HttpException){
-        response.status(error.status).send(error.data);
-      }else{
-        response.status(404).send({ ok: false, message: error.message});
-      }
+      response.status(404).send({ ok: false, message: error.message});
     }
   }
   public async resetPasswordPage(request: RequesWithToken, response: Response, next: NextFunction) {
-    try {
-      const dataStoreToken = request.dataStoreToken;
-      const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
-      if(clientDTO){
-        const data = {
-          token: request.params.token,
-          name: clientDTO.personDTO.name
+    if (request.error) {
+      response.render('pages/invalidLink',{message: request.error});
+    }else{
+      try {
+        const dataStoreToken = request.dataStoreToken;
+        const sessionType = await this.clientService.sessionType(dataStoreToken.id);
+        if(sessionType && sessionType == 'RESET_PASSWORD')
+        {
+          const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
+          if(clientDTO){
+            const data = {
+              token: request.params.token,
+              name: clientDTO.personDTO.name
+            }
+            response.render('pages/redefinePassword',{data});
+          }
         }
-        response.render('pages/redefinePassword',{data});
-      }else{
-        response.render('pages/invalidLink');
+        else{
+          response.render('pages/invalidLink');
+        }
+      } catch (error) {
+        response.render('pages/invalidLink',{message: error.message});
       }
-    } catch (error) {
-      response.render('pages/invalidLink',{message: error.message});
     }
   }
-  public async resetPasswordSendEmail(request: Request, response: Response){
-    try {
-      const body: CredentialsDTO = request.body;
-      if (body) {
-        body.password = null;
-        await this.authService.sendEmail(body);
-        response.status(200).send({ok:true});
-      }
-    } catch (error) {
-      if(error instanceof HttpException){
-        response.status(error.status).send(error.data);
-      }else{
+  public async resetPasswordSendEmail(request: RequestWithError, response: Response){
+    if (request.error){
+      response.status(404).send({ ok: false, message: request.error});
+    }else{
+      try {
+        const body: CredentialsDTO = request.body;
+        if (body) {
+          await this.authService.sendEmail(body);
+          response.status(200).send({ok:true});
+        }
+      } catch (error) {
         response.status(404).send({ ok: false, message: error.message});
       }
     }

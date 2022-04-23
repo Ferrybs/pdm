@@ -5,16 +5,19 @@ import Client from "./client.entity";
 export default class Sessions{    
     
     @PrimaryColumn()
-    public id?: string;
+    public id: string;
+
+    @Column({nullable:false})
+    public type: string;
 
     @Column()
     public description?: string;
 
-    @Column()
-    public iat?: number;
+    @Column({nullable:false})
+    public iat: number;
 
-    @Column()
-    public expiresIn?: number;
+    @Column({nullable:false})
+    public expiresIn: number;
 
     @ManyToOne(() => Client, client => client.id)
     public client?: Client;
