@@ -60,44 +60,37 @@ export default class AuthController extends Controller{
     let name: string = "User";
     let result: boolean = false;
     if (request.error) {
-      try {
-        message = request.error;
-        name = request.body.name;
-        token = request.body.token;
-      } catch (error) {
-        message = error.message;
-      }
+      response.render('pages/invalidLink',{message: request.error});
     }else{
       try {
         const password: string = request.body.pass;
         const dataStoreToken = request.dataStoreToken;
-        name = request.body.name;
-        token = request.body.token;
         const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
         if (clientDTO) {
           name = clientDTO.personDTO.name;
+          token = request.body.token;
           await this.authService.updateClientSessionByClientId(clientDTO.id);
           const credentialsDTO = clientDTO.credentialsDTO;
           credentialsDTO.password = password;
           await validate(credentialsDTO);
           result = await this.clientService.updateCredentials(credentialsDTO);
+          try {
+            const data = {
+              ok: result,
+              token: token,
+              message: result ? "Password Changed" : message,
+              name:name
+            }
+            response.render('pages/redefinePassword',{data});
+          } catch (error) {
+            response.status(404).send({ ok: false, message: error.message});
+          }
         }else{
-          message = " This link is not invalid any more."
+          response.render('pages/invalidLink');
         }
       } catch (error) {
-        message = error.message;
+        response.render('pages/invalidLink',{message: error.message});
       }
-    }
-    try {
-      const data = {
-        ok: result,
-        token: token,
-        message: result ? "Password Changed" : message,
-        name:name
-      }
-      response.render('pages/redefinePassword',{data});
-    } catch (error) {
-      response.status(404).send({ ok: false, message: error.message});
     }
   }
   public async resetPasswordPage(request: RequesWithToken, response: Response, next: NextFunction) {
