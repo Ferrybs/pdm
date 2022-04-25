@@ -15,7 +15,7 @@ export default class AuthController extends Controller{
       try {
         const clientDTO: ClientDTO = request.body;
         const clientStoreToken = await this.authService.register(clientDTO);
-        response.status(200).send({ok:true,clientStoreToken});
+        response.status(200).send({ok:true,data: clientStoreToken});
       } catch (error) {
         response.status(404).send({ ok: false, message: error.message});
       }
@@ -29,7 +29,7 @@ export default class AuthController extends Controller{
         const data = request.dataStoreToken;
         const tokenData = await this.authService.refresh(data.id);
         if (tokenData) {
-          response.send(tokenData);
+          response.send({ok: true, data:tokenData});
         }else{
           response.status(404).send({ ok: false, message: "Not Found"});
         }
@@ -48,7 +48,7 @@ export default class AuthController extends Controller{
         const allToken = await this.authService.login(credentialsData);
         const clientDTO = await this.clientService.getClientByEmail(credentialsData);
         clientDTO.credentialsDTO.password = null;
-        response.status(200).send({ok:true,allToken,clientDTO});
+        response.status(200).send({ok:true,data:[allToken,clientDTO]});
       } catch (error) {
         response.status(404).send({ ok: false, message: error.message});
       }

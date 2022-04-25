@@ -30,9 +30,12 @@ class LoginRepository extends Repository implements ILogin {
   }
 
   @override
-  Future<bool> register(client) {
-    var dio = Dio(options);
-
+  Future<bool> register(client) async {
+    try {
+      Response response;
+      var dio = Dio(options);
+      response = await dio.post("/register");
+    } catch (e) {}
     throw UnimplementedError();
   }
 }
