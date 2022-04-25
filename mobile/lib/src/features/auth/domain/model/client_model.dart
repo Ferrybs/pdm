@@ -1,12 +1,12 @@
-import 'package:basearch/src/features/auth/domain/model/credentials.dart';
-import 'package:basearch/src/features/auth/domain/model/person.dart';
+import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
+import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class ClientModel {
   final String? id;
-  final Credentials? credentials;
-  final Person? person;
+  final CredentialsModel? credentials;
+  final PersonModel? person;
 
   ClientModel({this.id, this.credentials, this.person});
 
