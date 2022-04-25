@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:basearch/src/features/auth/domain/model/credentials.dart';
+import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/validators/validator.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -10,7 +10,7 @@ class LoginUseCase {
   final repository = Modular.get<ILogin>();
 
   Future<ClientModel> login(String email, String password) {
-    return repository.login(Credentials(email, password));
+    return repository.login(CredentialsModel(email: email, password: password));
   }
 
   String? passwordMatch(String? password, String? rPassword) {

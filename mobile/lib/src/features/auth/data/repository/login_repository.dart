@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:basearch/src/features/auth/data/repository/repository.dart';
-import 'package:basearch/src/features/auth/domain/model/credentials.dart';
-import 'package:basearch/src/features/auth/domain/model/person.dart';
+import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
+import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/repository/login_interface.dart';
@@ -11,7 +11,7 @@ class LoginRepository extends Repository implements ILogin {
   final String url = "https://api-pdm-pia3.herokuapp.com/";
   final Dio dio = Dio();
   @override
-  Future<ClientModel> login(Credentials credentials) async {
+  Future<ClientModel> login(CredentialsModel credentials) async {
     try {
       Response response;
       response = await dio.get(url);
@@ -24,7 +24,7 @@ class LoginRepository extends Repository implements ILogin {
   }
 
   @override
-  recoveryPassword(Credentials credentials) {
+  recoveryPassword(CredentialsModel credentials) {
     // TODO: implement recoveryPassword
     throw UnimplementedError();
   }
