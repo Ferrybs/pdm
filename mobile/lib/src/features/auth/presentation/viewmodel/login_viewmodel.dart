@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'package:basearch/src/features/auth/data/dto/client_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
@@ -55,7 +58,11 @@ abstract class _LoginViewModelBase with Store {
     confirmPassword = value;
   }
 
-  void register() async {}
+  Future<bool> register() async {
+    var person = PersonDto(name, lastName);
+    var credentials = CredentialsDto(email, password);
+    return _usecase.register(credentials, person);
+  }
 
   String? nameValidation() {
     return _usecase.validateName(name);

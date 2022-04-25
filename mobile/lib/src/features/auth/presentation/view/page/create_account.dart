@@ -120,7 +120,8 @@ class _CreateAccount extends State<CreateAccount> {
       setState(() {
         showSpinner = true;
       });
-      _viewModel.register();
+      print("DENTRO DO REGISTER");
+      print(await _viewModel.register());
       await Future.delayed(const Duration(seconds: 1));
       setState(() {
         showSpinner = false;

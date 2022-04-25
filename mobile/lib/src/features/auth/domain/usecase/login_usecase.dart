@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'package:basearch/src/features/auth/data/dto/client_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
+import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/validators/validator.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
@@ -11,6 +15,17 @@ class LoginUseCase {
 
   Future<ClientModel> login(String email, String password) {
     return repository.login(CredentialsModel(email: email, password: password));
+  }
+
+  Future<bool> register(
+      CredentialsDto credentialsDto, PersonDto personDto) async {
+    var credetialsModel = CredentialsModel(
+        email: credentialsDto.email, password: credentialsDto.password);
+    var personModel =
+        PersonModel(name: personDto.name, lastName: personDto.lastName);
+    var clientModel =
+        ClientModel(credentials: credetialsModel, person: personModel);
+    return repository.register(clientModel);
   }
 
   String? passwordMatch(String? password, String? rPassword) {

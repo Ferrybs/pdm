@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:basearch/src/features/auth/data/repository/repository.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
+import 'package:basearch/src/features/auth/domain/model/response_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/repository/login_interface.dart';
 
@@ -33,9 +34,19 @@ class LoginRepository extends Repository implements ILogin {
     try {
       Response response;
       var dio = Dio(options);
-      response = await dio.post("/register");
-      var data = response.data;
-    } catch (e) {}
-    throw UnimplementedError();
+      response = await dio.post("/auth/register", data: client.toJson());
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final recive = ResponseModel.fromJson(response.data);
+        print(recive.toJson());
+        if (recive.ok == true) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }
