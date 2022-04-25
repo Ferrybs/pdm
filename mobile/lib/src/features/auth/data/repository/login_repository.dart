@@ -1,19 +1,22 @@
 import 'dart:async';
 
+import 'package:basearch/src/features/auth/data/repository/repository.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials.dart';
 import 'package:basearch/src/features/auth/domain/model/person.dart';
-import 'package:basearch/src/features/auth/domain/model/client.dart';
+import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/repository/login_interface.dart';
 
-class LoginRepository implements ILogin {
+class LoginRepository extends Repository implements ILogin {
+  final String url = "https://api-pdm-pia3.herokuapp.com/";
+  final Dio dio = Dio();
   @override
-  Future<Client> login(Credentials credentials) async {
+  Future<ClientModel> login(Credentials credentials) async {
     try {
       Response response;
-      var dio = Dio();
-      response = await dio.get('https://api-pdm-pia3.herokuapp.com/');
-      return Client("", Credentials(" ", " "), Person("Felipe", ""));
+      response = await dio.get(url);
+      response.statusCode;
+      throw UnimplementedError();
     } catch (e) {
       print(e);
     }
@@ -27,8 +30,9 @@ class LoginRepository implements ILogin {
   }
 
   @override
-  Future<Client> register(client) {
-    // TODO: implement register
+  Future<bool> register(client) {
+    var dio = Dio(options);
+
     throw UnimplementedError();
   }
 }

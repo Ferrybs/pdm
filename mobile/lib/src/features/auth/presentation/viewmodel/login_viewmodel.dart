@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
-import 'package:basearch/src/features/auth/domain/model/client.dart';
+import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials.dart';
 import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
 import 'package:flutter_modular/flutter_modular.dart';
