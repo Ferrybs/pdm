@@ -13,7 +13,6 @@ class LoginRepository implements ILogin {
       Response response;
       var dio = Dio();
       response = await dio.get('https://api-pdm-pia3.herokuapp.com/');
-      print(response);
       return Client("", Credentials(" ", " "), Person("Felipe", ""));
     } catch (e) {
       print(e);

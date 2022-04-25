@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       passwordError = _viewModel.passwordValidation();
     });
 
-    if (emailError == null) {
+    if (_viewModel.signInValidation()) {
       setState(() {
         showSpinner = true;
       });

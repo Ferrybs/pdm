@@ -36,6 +36,7 @@ class _ResetPassord extends State<ResetPassword> {
               prefixIcon: const Icon(
                 IconData(0xf0071, fontFamily: 'MaterialIcons'),
               ),
+              onChange: (value) {},
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

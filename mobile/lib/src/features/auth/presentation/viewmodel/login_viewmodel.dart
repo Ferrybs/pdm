@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:basearch/src/features/auth/domain/model/client.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials.dart';
 import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
@@ -15,19 +16,29 @@ abstract class _LoginViewModelBase with Store {
   final _usecase = Modular.get<LoginUseCase>();
 
   @observable
-  String email = '';
-
-  @observable
   String name = '';
 
   @observable
   String lastName = '';
 
   @observable
+  String email = '';
+
+  @observable
   String password = '';
 
   @observable
-  String clientName = '';
+  String confirmPassword = '';
+
+  @action
+  updateName(String value) {
+    name = value;
+  }
+
+  @action
+  updateLastName(String value) {
+    lastName = value;
+  }
 
   @action
   updateEmail(String value) {
@@ -39,7 +50,20 @@ abstract class _LoginViewModelBase with Store {
     password = value;
   }
 
-  void login() async {}
+  @action
+  updateConfirmPassword(String value) {
+    confirmPassword = value;
+  }
+
+  void register() async {}
+
+  String? nameValidation() {
+    return _usecase.validateName(name);
+  }
+
+  String? lastNameValidation() {
+    return _usecase.validateLastName(lastName);
+  }
 
   String? emailValidation() {
     return _usecase.validateEmail(email);
@@ -49,11 +73,27 @@ abstract class _LoginViewModelBase with Store {
     return _usecase.validatePassword(password);
   }
 
-  String? nameValidation() {
-    return _usecase.validateName(name);
+  String? passwordMatchValidation() {
+    return _usecase.passwordMatch(password, confirmPassword);
   }
 
-  String? lastNameValidation() {
-    return _usecase.validateLastName(lastName);
+  bool signInValidation() {
+    if (emailValidation() == null &&
+        passwordValidation() == null &&
+        passwordMatchValidation() == null) {
+      return true;
+    }
+    return false;
+  }
+
+  bool signUpValidation() {
+    if (nameValidation() == null &&
+        lastNameValidation() == null &&
+        emailValidation() == null &&
+        passwordValidation() == null &&
+        passwordMatchValidation() == null) {
+      return true;
+    }
+    return false;
   }
 }

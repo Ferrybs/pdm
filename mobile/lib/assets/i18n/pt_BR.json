@@ -25,6 +25,7 @@
     "invalid-password" : "Senha Invalida",
     "invalid-name" : "Nome Invalido",
     "invalid-last-name" : "Sobrenome Invalido",
+    "invalid-passwordMatch": "Senhas não são iguais",
     "reset-password": "Redefine Password",
     "reset": "Redefine"
 }

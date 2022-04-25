@@ -14,7 +14,7 @@
     "confirm-password" : "Confirm Password",
     "forgot-password" : "Forgot Password?",
     "no-account" : "Dont have an account?",
-    "sign-up" : "Sign Up!",
+    "sign-up" : "Sign Up",
     "sign-in" : "Sign In",
     "create-account" : "Create Account",
     "fill-input" : "Please fill the input below.",
@@ -25,6 +25,7 @@
     "invalid-password" : "Invalid Password",
     "invalid-name" : "Invalid Name",
     "invalid-last-name" : "Invalid Last Name",
+    "invalid-passwordMatch": "Password dit not Match",
     "reset-password": "Reset Password",
     "reset": "Reset"
 }

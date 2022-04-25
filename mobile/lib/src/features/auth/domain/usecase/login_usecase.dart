@@ -13,6 +13,13 @@ class LoginUseCase {
     return repository.login(Credentials(email, password));
   }
 
+  String? passwordMatch(String? password, String? rPassword) {
+    if (password != rPassword || password == '') {
+      return 'invalid-passwordMatch'.i18n();
+    }
+    return null;
+  }
+
   String? validateEmail(String? email) {
     if (email == null || !email.isEmail()) {
       return 'invalid-email'.i18n();
@@ -21,23 +28,21 @@ class LoginUseCase {
   }
 
   String? validatePassword(String? password) {
-    print(password);
-    print(password?.isPassword());
     if (password == null || !password.isPassword()) {
       return 'invalid-password'.i18n();
     }
     return null;
   }
 
-  String? validateName(String? email) {
-    if (email == null || !email.isPerson()) {
+  String? validateName(String? name) {
+    if (name == null || !name.isPerson()) {
       return 'invalid-name'.i18n();
     }
     return null;
   }
 
-  String? validateLastName(String? email) {
-    if (email == null || !email.isPerson()) {
+  String? validateLastName(String? lastName) {
+    if (lastName == null || !lastName.isPerson()) {
       return 'invalid-last-name'.i18n();
     }
     return null;

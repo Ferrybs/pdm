@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TextInputAuth extends StatelessWidget {
   final Widget? prefixIcon;
   final bool obscureText;
-  final void Function(String)? onChange;
+  final void Function(String) onChange;
   final String label;
   final TextInputType? keyboardType;
   final String? errorText;
@@ -15,7 +15,7 @@ class TextInputAuth extends StatelessWidget {
       this.errorText,
       this.prefixIcon,
       this.obscureText = false,
-      this.onChange,
+      required this.onChange,
       this.label = "",
       this.keyboardType})
       : super(key: key);

@@ -16,6 +16,11 @@ class _CreateAccount extends State<CreateAccount> {
   final _viewModel = Modular.get<LoginViewModel>();
   bool showSpinner = false;
   late ThemeData _theme;
+  String? nameError;
+  String? lastNameError;
+  String? emailError;
+  String? passwordError;
+  String? passwordMatchError;
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -32,43 +37,52 @@ class _CreateAccount extends State<CreateAccount> {
             _createAccount(),
             _commumSubtittle(),
             TextInputAuth(
+                errorText: nameError,
                 label: 'name'.i18n(),
                 prefixIcon: const Icon(
                   IconData(0xf0071, fontFamily: 'MaterialIcons'),
-                )),
+                ),
+                onChange: _viewModel.updateName),
             TextInputAuth(
-              label: 'last-name'.i18n(),
-              prefixIcon: const Icon(
-                IconData(0xf0071, fontFamily: 'MaterialIcons'),
-              ),
-            ),
+                errorText: lastNameError,
+                label: 'last-name'.i18n(),
+                prefixIcon: const Icon(
+                  IconData(0xf0071, fontFamily: 'MaterialIcons'),
+                ),
+                onChange: _viewModel.updateLastName),
             TextInputAuth(
+              errorText: emailError,
               label: 'E-mail',
               obscureText: false,
               prefixIcon: const Icon(
                 IconData(0xe780, fontFamily: 'MaterialIcons'),
               ),
+              onChange: _viewModel.updateEmail,
             ),
             TextInputAuth(
+              errorText: passwordError,
               label: 'password'.i18n(),
               obscureText: true,
               prefixIcon: const Icon(
                 IconData(0xeb71, fontFamily: 'MaterialIcons'),
               ),
+              onChange: _viewModel.updatePassword,
             ),
             TextInputAuth(
+              errorText: passwordMatchError,
               label: 'confirm-password'.i18n(),
               obscureText: true,
               prefixIcon: const Icon(
                 IconData(0xeb71, fontFamily: 'MaterialIcons'),
               ),
+              onChange: _viewModel.updateConfirmPassword,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: ElevatedButton(
                   child: Text('sign-up'.i18n().toUpperCase()),
-                  onPressed: () {},
+                  onPressed: _signUp,
                 ),
               ),
             ),
@@ -92,6 +106,26 @@ class _CreateAccount extends State<CreateAccount> {
         )),
       ),
     );
+  }
+
+  void _signUp() async {
+    setState(() {
+      nameError = _viewModel.nameValidation();
+      lastNameError = _viewModel.lastNameValidation();
+      emailError = _viewModel.emailValidation();
+      passwordError = _viewModel.passwordValidation();
+      passwordMatchError = _viewModel.passwordMatchValidation();
+    });
+    if (_viewModel.signUpValidation()) {
+      setState(() {
+        showSpinner = true;
+      });
+      _viewModel.register();
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() {
+        showSpinner = false;
+      });
+    }
   }
 
   Padding _commumSubtittle() {
