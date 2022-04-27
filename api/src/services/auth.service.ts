@@ -10,6 +10,7 @@ import Sessions from "../entity/sessions.entity";
 import EmailFoundHttpException from "../exceptions/email.found.http.exception";
 import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
+import SessionHttpException from "exceptions/session.http.exception";
 
 export default class AuthService extends Services{
   constructor(){
@@ -95,26 +96,53 @@ export default class AuthService extends Services{
       });
     }
   public async login(credentialsDTO: CredentialsDTO): Promise<StoreAllToken> {
+      var client: Client;
+      var isMatch = false;
+      credentialsDTO.email = credentialsDTO.email.toLowerCase();
       try {
-        credentialsDTO.email = credentialsDTO.email.toLowerCase();
-        const client: Client = await this.database.findClientByEmail(credentialsDTO);
+        client = await this.database.findClientByEmail(credentialsDTO);
+      } catch (error) {
+        throw new DatabaseHttpException(error.message);
+        
+      }
+      try {
+        
+      } catch (error) {
+        
+      }
+      try {
         if(client){
-          const isMatch = await bcrypt.compare(
-            credentialsDTO.password,
-            client.credentials.password
-          );
-          if(isMatch){
-            await this.updateClientSessions(client);
-            const sessionId = this.generateSessionId();
-            const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-            const session: Sessions = this.createSession("LOGIN"," ",accessToken,sessionId);
-            const refreshToken: TokenData = this.jwt.createRefreshToken(client.id);
-            const allToken: StoreAllToken = {accessToken,refreshToken};
-            session.client= client;
-            await this.database.insertClientSessions(session);
-
-            return allToken;
-          }
+            try {
+              isMatch = await bcrypt.compare(
+                credentialsDTO.password,
+                client.credentials.password
+              );
+            } catch (error) {
+              throw new HashHttpException(error.message);
+            }
+            try {
+              if(isMatch){
+                await this.updateClientSessions(client);
+                try {
+                  const sessionId = this.generateSessionId();
+                  const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
+                  const session: Sessions = this.createSession("LOGIN"," ",accessToken,sessionId);
+                  const refreshToken: TokenData = this.jwt.createRefreshToken(client.id);
+                  const allToken: StoreAllToken = {accessToken,refreshToken};
+                  session.client= client;
+                  try {
+                    await this.database.insertClientSessions(session);
+                  } catch (error) {
+                    throw new DatabaseHttpException(error.message);
+                  }
+                return allToken;
+                } catch (error) {
+                  throw new HashHttpException(error.message);
+                }
+              }
+            } catch (error) {
+              throw new SessionHttpException("UPDATE",error.message);
+            }
         }
       } catch (error) {
         throw( new HttpException(404,error.message));

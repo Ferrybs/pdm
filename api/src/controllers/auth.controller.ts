@@ -47,7 +47,7 @@ export default class AuthController extends Controller{
 
   public async login(request: RequestWithError, response: Response, next: NextFunction) {
     if (request.error) {
-      response.status(404).send({ ok: false, message: request.error});
+      response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
         const credentialsData: CredentialsDTO = request.body;
@@ -56,7 +56,11 @@ export default class AuthController extends Controller{
         clientDTO.credentialsDTO.password = null;
         response.status(200).send({ok:true,data:[allToken,clientDTO]});
       } catch (error) {
-        response.status(404).send({ ok: false, message: error.message});
+        if(error instanceof(HttpException)){
+          response.status(error.status).send(error.data);
+        }else{
+          response.status(500).send({ ok: false, message: error.message});
+        }
       }
     }
   }
