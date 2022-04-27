@@ -29,18 +29,22 @@ export default class AuthController extends Controller{
   }
   public async refresh(request: RequesWithToken, response: Response, next: NextFunction){
     if (request.error) {
-      response.status(404).send({ ok: false, message: request.error});
+      response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
         const data = request.dataStoreToken;
         const tokenData = await this.authService.refresh(data.id);
         if (tokenData) {
-          response.send({ok: true, data:tokenData});
+          response.status(200).send({ok: true, data:tokenData});
         }else{
-          response.status(404).send({ ok: false, message: "Not Found"});
+          response.status(401).send({ ok: false, message: "Not Found"});
         }
       } catch (error) {
-        response.status(404).send({ ok: false, message: error.message});
+        if(error instanceof(HttpException)){
+          response.status(error.status).send(error.data);
+        }else{
+          response.status(500).send({ ok: false, message: error.message});
+        }
       }
     }
   }

@@ -4,11 +4,12 @@ import Person from "../entity/person.entity";
 import Database from "../interfaces/database.interface";
 import Client from "../entity/client.entity";
 import HttpException from "../exceptions/http.exceptions";
-import { DataSource } from "typeorm";
+import { DataSource, DeleteResult, UpdateResult } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
 import Sessions from "../entity/sessions.entity";
 import ClientDTO from "../dto/client.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
+import EmailFoundHttpException from "../exceptions/email.found.http.exception";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -23,14 +24,14 @@ export default class PostgresDatabase implements Database{
 
     public async updateCredentials(credentialsDTO: credentialsDto): Promise<boolean>{
         try {
-            const credResul = this._appDataSource.manager.create(Credentials,credentialsDTO);
-            const result = await this._appDataSource.manager.update(Credentials,credResul.email,credResul);
-            if(result.affected>0){
+            const credentials = this._appDataSource.manager.create(Credentials,credentialsDTO);
+            const result: UpdateResult = await this._appDataSource.manager.update(Credentials,credentials.email,credentials);
+            if(result.affected != null && result.affected>0){
                 return true;
             }
             return false
         } catch (error) {
-            throw( new HttpException(404,error.message));
+            throw( new DatabaseHttpException(error.message));
         }
     }
     public async findClientById(id: string): Promise<Client>{
@@ -39,7 +40,7 @@ export default class PostgresDatabase implements Database{
                 Client,{where:{id: id}, relations: ['credentials', 'person','sessions']});
             return client;
         } catch (error) {
-            throw (new HttpException(400,error.message));
+            throw (new DatabaseHttpException(error.message));
 
         }
     }
@@ -54,7 +55,7 @@ export default class PostgresDatabase implements Database{
             }
             return null;
         } catch (error) {
-            throw (new HttpException(400,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
     public async findClientByEmail(credentialsDTO: credentialsDto): Promise<Client>{
@@ -76,12 +77,12 @@ export default class PostgresDatabase implements Database{
             throw(new DatabaseHttpException(error.message));
         }
       }
-    public async insertClient(clientDTO: ClientDTO){
+    public async insertClient(clientDTO: ClientDTO): Promise<Client>{
         try {
             if(
                 await this.findClientByEmail(clientDTO.credentialsDTO)
             ){
-                throw new HttpException(403, `Client with email ${clientDTO.credentialsDTO.email} already exists`);
+                throw new EmailFoundHttpException(clientDTO.credentialsDTO.email);
             }
         } catch (error) {
             throw error;
@@ -99,18 +100,18 @@ export default class PostgresDatabase implements Database{
             await this._appDataSource.manager.save(sessions);
             return await this._appDataSource.manager.save(client);
         } catch (error) {
-            throw (new HttpException(500,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
     public async deleteClientSessions(session: Sessions): Promise<boolean> {
         try {
-            const result = await this._appDataSource.manager.delete(Sessions,session.id);
-            if (result) {
+            const result: DeleteResult = await this._appDataSource.manager.delete(Sessions,session.id);
+            if(result.affected != null && result.affected>0) {
                 return true;
             }
             return false;
         } catch (error) {
-            throw (new HttpException(404,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
     public async insertClientSessions(sessions: Sessions): Promise<Sessions> {
@@ -118,7 +119,7 @@ export default class PostgresDatabase implements Database{
             const result = await this._appDataSource.manager.save(sessions);
             return result;
         } catch (error) {
-            throw (new HttpException(404,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
 }
