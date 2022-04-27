@@ -1,9 +1,10 @@
-import 'package:basearch/components/hud/modal_progress_hud.dart';
+import 'package:basearch/src/features/auth/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
 import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:basearch/src/Theme/theme.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -24,91 +25,111 @@ class _CreateAccount extends State<CreateAccount> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return ModalProgressHUD(
-      inAsyncCall: showSpinner,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: _goBackButton(context),
-        ),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            _createAccount(),
-            _commumSubtittle(),
-            TextInputAuth(
-                errorText: nameError,
-                label: 'name'.i18n(),
-                prefixIcon: const Icon(
-                  IconData(0xf0071, fontFamily: 'MaterialIcons'),
-                ),
-                onChange: _viewModel.updateName),
-            TextInputAuth(
-                errorText: lastNameError,
-                label: 'last-name'.i18n(),
-                prefixIcon: const Icon(
-                  IconData(0xf0071, fontFamily: 'MaterialIcons'),
-                ),
-                onChange: _viewModel.updateLastName),
-            TextInputAuth(
-              errorText: emailError,
-              label: 'E-mail',
-              obscureText: false,
-              prefixIcon: const Icon(
-                IconData(0xe780, fontFamily: 'MaterialIcons'),
-              ),
-              onChange: _viewModel.updateEmail,
-            ),
-            TextInputAuth(
-              errorText: passwordError,
-              label: 'password'.i18n(),
-              obscureText: true,
-              prefixIcon: const Icon(
-                IconData(0xeb71, fontFamily: 'MaterialIcons'),
-              ),
-              onChange: _viewModel.updatePassword,
-            ),
-            TextInputAuth(
-              errorText: passwordMatchError,
-              label: 'confirm-password'.i18n(),
-              obscureText: true,
-              prefixIcon: const Icon(
-                IconData(0xeb71, fontFamily: 'MaterialIcons'),
-              ),
-              onChange: _viewModel.updateConfirmPassword,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: ElevatedButton(
-                  child: Text('sign-up'.i18n().toUpperCase()),
-                  onPressed: _signUp,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Builder(
-                  builder: (context) => Text(
-                    'have-account'.i18n(),
-                    style: _theme.textTheme.bodyMedium,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Modular.to.pop(),
-                  child: Text('sign-in'.i18n()),
-                )
-              ],
-            ),
-          ],
-        )),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: _goBackButton(context),
       ),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          _createAccount(),
+          _commumSubtittle(),
+          TextInputAuth(
+              errorText: nameError,
+              label: 'name'.i18n(),
+              prefixIcon: const Icon(
+                IconData(0xf0071, fontFamily: 'MaterialIcons'),
+              ),
+              onChange: _viewModel.updateName),
+          TextInputAuth(
+              errorText: lastNameError,
+              label: 'last-name'.i18n(),
+              prefixIcon: const Icon(
+                IconData(0xf0071, fontFamily: 'MaterialIcons'),
+              ),
+              onChange: _viewModel.updateLastName),
+          TextInputAuth(
+            errorText: emailError,
+            label: 'E-mail',
+            obscureText: false,
+            prefixIcon: const Icon(
+              IconData(0xe780, fontFamily: 'MaterialIcons'),
+            ),
+            onChange: _viewModel.updateEmail,
+          ),
+          TextInputAuth(
+            errorText: passwordError,
+            label: 'password'.i18n(),
+            obscureText: true,
+            prefixIcon: const Icon(
+              IconData(0xeb71, fontFamily: 'MaterialIcons'),
+            ),
+            onChange: _viewModel.updatePassword,
+          ),
+          TextInputAuth(
+            errorText: passwordMatchError,
+            label: 'confirm-password'.i18n(),
+            obscureText: true,
+            prefixIcon: const Icon(
+              IconData(0xeb71, fontFamily: 'MaterialIcons'),
+            ),
+            onChange: _viewModel.updateConfirmPassword,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: ElevatedButton(
+                child: Text('sign-up'.i18n().toUpperCase()),
+                onPressed: _signUp,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Builder(
+                builder: (context) => Text(
+                  'have-account'.i18n(),
+                  style: _theme.textTheme.bodyMedium,
+                ),
+              ),
+              TextButton(
+                onPressed: () => Modular.to.pop(),
+                child: Text('sign-in'.i18n()),
+              )
+            ],
+          ),
+        ],
+      )),
     );
   }
 
   void _signUp() async {
+    var result = true;
+    var dimiss = false;
+    _setFieldsState();
+    //result = await _viewModel.register();
+    if (result) {
+      SmartDialog.show(
+          widget: DialogContainer(
+            message: "Usuario Ja Cadastrado!",
+            buttonText: "Login",
+            onClick: () {
+              Modular.to.navigate('/');
+              SmartDialog.dismiss();
+            },
+            height: 120,
+          ),
+          onDismiss: () {
+            Modular.to.navigate('/');
+          },
+          isLoadingTemp: false);
+    }
+  }
+
+  void _setFieldsState() {
     setState(() {
       nameError = _viewModel.nameValidation();
       lastNameError = _viewModel.lastNameValidation();
@@ -116,17 +137,6 @@ class _CreateAccount extends State<CreateAccount> {
       passwordError = _viewModel.passwordValidation();
       passwordMatchError = _viewModel.passwordMatchValidation();
     });
-    if (_viewModel.signUpValidation()) {
-      setState(() {
-        showSpinner = true;
-      });
-      print("DENTRO DO REGISTER");
-      print(await _viewModel.register());
-      await Future.delayed(const Duration(seconds: 1));
-      setState(() {
-        showSpinner = false;
-      });
-    }
   }
 
   Padding _commumSubtittle() {

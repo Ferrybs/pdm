@@ -26,6 +26,7 @@ dependencies:
   shared_preferences: ^2.0.0-nullsafety
   validators: ^3.0.0
   json_annotation: ^4.4.0
+  flutter_smart_dialog: ^3.4.2+2
 
 
 dev_dependencies:

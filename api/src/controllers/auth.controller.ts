@@ -2,22 +2,28 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import Controller from "./controller";
 import ClientDTO from "../dto/client.dto";
 import CredentialsDTO from "../dto/credentials.dto";
-import RequesWithToken from "interfaces/request.token.interface";
+import RequesWithToken from "../interfaces/request.token.interface";
 import { validate } from "class-validator";
-import RequestWithError from "interfaces/request.error.interface";
+import RequestWithError from "../interfaces/request.error.interface";
+import HttpException from "../exceptions/http.exceptions";
 
 export default class AuthController extends Controller{
 
   public async register(request: RequestWithError, response: Response){
     if (request.error) {
-      response.status(404).send({ ok: false, message: request.error});
+      response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
         const clientDTO: ClientDTO = request.body;
-        const clientStoreToken = await this.authService.register(clientDTO);
-        response.status(200).send({ok:true,data: clientStoreToken});
+        const result = await this.authService.register(clientDTO);
+        response.status(200).send({ok: result});
       } catch (error) {
-        response.status(404).send({ ok: false, message: error.message});
+        if(error instanceof(HttpException)){
+          response.status(error.status).send(error.data);
+        }else{
+          response.status(500).send({ ok: false, message: error.message});
+        }
+      
       }
     }
   }

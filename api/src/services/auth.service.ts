@@ -2,13 +2,14 @@ import Services from "./services";
 import bcrypt from "bcrypt"
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
-import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";
 import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
-import ClientStoreToken from "../interfaces/client.store.token.interface";
 import StoreAllToken from "../interfaces/store.all.token.interface";
 import TokenData from "../interfaces/token.data.interface";
 import Sessions from "../entity/sessions.entity";
+import EmailFoundHttpException from "../exceptions/email.found.http.exception";
+import HashHttpException from "../exceptions/hash.http.exception";
+import DatabaseHttpException from "../exceptions/database.http.exception";
 
 export default class AuthService extends Services{
   constructor(){
@@ -23,34 +24,36 @@ export default class AuthService extends Services{
     session.id = sessionId;
     return session;
   }
-  public async register(clientData: ClientDTO): Promise<ClientStoreToken>{
+  public async register(clientData: ClientDTO): Promise<boolean>{
+    var client: Client;
+    var sessions: Sessions[];
+    clientData.credentialsDTO.email = clientData.credentialsDTO.email.toLowerCase();
     try {
-      clientData.credentialsDTO.email = clientData.credentialsDTO.email.toLowerCase();
-      if(await this.database.findClientByEmail(clientData.credentialsDTO)){
-        throw new ClientWithThatEmailAlreadyExistsException(clientData.credentialsDTO.email);
-      }
+      client = await this.database.findClientByEmail(clientData.credentialsDTO);
+    } catch (error) {
+      throw error;
+    }
+    if(client){
+      throw new EmailFoundHttpException(clientData.credentialsDTO.email);
+    }
+    try {
       const hashedPassword = await bcrypt.hash(clientData.credentialsDTO.password, 10);
       clientData.credentialsDTO.password = hashedPassword;
-
       const sessionId = this.generateSessionId();
       const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-      const sessions = [this.createSession("LOGIN",' ',accessToken,sessionId)];
-
+      sessions = [this.createSession("LOGIN",' ',accessToken,sessionId)];
+    } catch (error) {
+      throw new HashHttpException(error.message);
+    }
+    try {
       clientData.sessionsDTO = sessions;
       const result = await this.database.insertClient(clientData);
-      const clientDTO = new ClientDTO();
-      clientDTO.id = result.id;
-      clientDTO.credentialsDTO = result.credentials;
-      clientDTO.personDTO = result.person;
-      clientDTO.sessionsDTO = result.sessions;
-      clientDTO.credentialsDTO.password = null;
-
-      const refreshToken: TokenData = this.jwt.createRefreshToken(result.id);
-      const allToken: StoreAllToken = {accessToken,refreshToken};
-      const clientStoreToken: ClientStoreToken = {clientDTO,allToken};
-      return clientStoreToken;
+      if(result){
+        return true;
+      }
+      return false
     } catch (error) {
-      throw (new HttpException(404,error.message))
+      throw new DatabaseHttpException(error.message);
     }
   }
 

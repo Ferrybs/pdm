@@ -1,4 +1,3 @@
-import SessionsDTO from "dto/sessions.dto";
 import Sessions from "entity/sessions.entity";
 import ClientDTO from "../dto/client.dto";
 import CredentialsDTO from "../dto/credentials.dto";

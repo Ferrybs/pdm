@@ -3,12 +3,12 @@ import Credentials from "../entity/credentials.entity";
 import Person from "../entity/person.entity";
 import Database from "../interfaces/database.interface";
 import Client from "../entity/client.entity";
-import ClientWithThatEmailAlreadyExistsException from "../exceptions/client.email.exist";
 import HttpException from "../exceptions/http.exceptions";
 import { DataSource } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
 import Sessions from "../entity/sessions.entity";
 import ClientDTO from "../dto/client.dto";
+import DatabaseHttpException from "../exceptions/database.http.exception";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -73,7 +73,7 @@ export default class PostgresDatabase implements Database{
             }
             return null;
         } catch (error) {
-            throw( new HttpException(404,error.message));
+            throw(new DatabaseHttpException(error.message));
         }
       }
     public async insertClient(clientDTO: ClientDTO){
@@ -81,8 +81,12 @@ export default class PostgresDatabase implements Database{
             if(
                 await this.findClientByEmail(clientDTO.credentialsDTO)
             ){
-                throw new ClientWithThatEmailAlreadyExistsException(clientDTO.credentialsDTO.email);
+                throw new HttpException(403, `Client with email ${clientDTO.credentialsDTO.email} already exists`);
             }
+        } catch (error) {
+            throw error;
+        }
+        try {
             const person = this._appDataSource.manager.create(Person,clientDTO.personDTO);
             const cred = this._appDataSource.manager.create(Credentials,clientDTO.credentialsDTO);
             const sessions =  this._appDataSource.manager.create(Sessions,clientDTO.sessionsDTO);
@@ -94,9 +98,8 @@ export default class PostgresDatabase implements Database{
             await this._appDataSource.manager.save(cred);
             await this._appDataSource.manager.save(sessions);
             return await this._appDataSource.manager.save(client);
-            
         } catch (error) {
-            throw (new HttpException(404,error.message));
+            throw (new HttpException(500,error.message));
         }
     }
     public async deleteClientSessions(session: Sessions): Promise<boolean> {
