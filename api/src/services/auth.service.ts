@@ -2,7 +2,6 @@ import Services from "./services";
 import bcrypt from "bcrypt"
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
-import HttpException from "../exceptions/http.exceptions";
 import CredentialsDTO from "../dto/credentials.dto";
 import StoreAllToken from "../interfaces/store.all.token.interface";
 import TokenData from "../interfaces/token.data.interface";
@@ -13,6 +12,7 @@ import DatabaseHttpException from "../exceptions/database.http.exception";
 import SessionHttpException from "../exceptions/session.http.exception";
 import ServerErrorHttpException from "../exceptions/server.error.http.exception";
 import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
+import NotFoundHttpException from "../exceptions/not.found.http.exception";
 
 export default class AuthService extends Services{
   constructor(){
@@ -173,6 +173,8 @@ export default class AuthService extends Services{
           } catch (error) {
             throw new HashHttpException(error.message);
           }
+        }else{
+          throw new NotFoundHttpException("CLIENT");
         }
       } catch (error) {
         throw new SessionHttpException("UPDATE",error.message);
