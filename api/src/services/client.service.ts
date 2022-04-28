@@ -6,6 +6,7 @@ import Services from "./services";
 import { plainToInstance } from "class-transformer";
 import PersonDTO from "../dto/person.dto";
 import SessionsDTO from "../dto/sessions.dto";
+import DatabaseHttpException from "exceptions/database.http.exception";
 
 
 export default class ClientService extends Services{
@@ -19,7 +20,7 @@ export default class ClientService extends Services{
             clientDTO.credentialsDTO = result.credentials;
             return clientDTO;
         } catch (error) {
-            throw (new HttpException(400,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
     public async sessionType(id: string): Promise<string> {
@@ -47,7 +48,7 @@ export default class ClientService extends Services{
             }
             return null;
         } catch (error) {
-            throw (new HttpException(400,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
     public async updateCredentials(credentialsDTO: CredentialsDTO): Promise<boolean> {
@@ -57,7 +58,7 @@ export default class ClientService extends Services{
             const result = await this.database.updateCredentials(credentialsDTO);
             return result;
         } catch (error) {
-            throw (new HttpException(400,error.message));
+            throw (new DatabaseHttpException(error.message));
         }
     }
     public async getClientByEmail(credentialsData: CredentialsDTO):Promise<ClientDTO>{
@@ -73,7 +74,7 @@ export default class ClientService extends Services{
             clientDTO.sessionsDTO = sessionsDTO;
             return clientDTO;
         } catch (error) {
-            
+            throw new DatabaseHttpException(error.message)
         }
     }
 }

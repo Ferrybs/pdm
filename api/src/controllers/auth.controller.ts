@@ -6,6 +6,7 @@ import RequesWithToken from "../interfaces/request.token.interface";
 import { validate } from "class-validator";
 import RequestWithError from "../interfaces/request.error.interface";
 import HttpException from "../exceptions/http.exceptions";
+import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
 
 export default class AuthController extends Controller{
 
@@ -135,16 +136,25 @@ export default class AuthController extends Controller{
   }
   public async resetPasswordSendEmail(request: RequestWithError, response: Response){
     if (request.error){
-      response.status(404).send({ ok: false, message: request.error});
+      response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
         const body: CredentialsDTO = request.body;
         if (body) {
-          await this.authService.sendEmail(body);
-          response.status(200).send({ok:true});
+          try {
+            await this.authService.sendEmail(body);
+            response.status(200).send({ok:true});
+          } catch (error) {
+            throw new EmailNotSendHttpException(error.message);
+
+          }
         }
       } catch (error) {
-        response.status(404).send({ ok: false, message: error.message});
+        if(error instanceof(HttpException)){
+          response.status(error.status).send(error.data);
+        }else{
+          response.status(500).send({ ok: false, message: error.message});
+        }
       }
     }
   }
