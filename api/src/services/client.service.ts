@@ -1,12 +1,11 @@
 import ClientDTO from "../dto/client.dto";
 import CredentialsDTO from "../dto/credentials.dto";
 import bcrypt from "bcrypt";
-import HttpException from "../exceptions/http.exceptions";
 import Services from "./services";
 import { plainToInstance } from "class-transformer";
 import PersonDTO from "../dto/person.dto";
 import SessionsDTO from "../dto/sessions.dto";
-import DatabaseHttpException from "exceptions/database.http.exception";
+import DatabaseHttpException from "../exceptions/database.http.exception";
 
 
 export default class ClientService extends Services{

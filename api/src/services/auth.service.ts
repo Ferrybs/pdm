@@ -11,8 +11,8 @@ import EmailFoundHttpException from "../exceptions/email.found.http.exception";
 import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import SessionHttpException from "../exceptions/session.http.exception";
-import ServerErrorHttpException from "exceptions/server.error.http.exception";
-import EmailNotSendHttpException from "exceptions/email.not.send.exception";
+import ServerErrorHttpException from "../exceptions/server.error.http.exception";
+import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
 
 export default class AuthService extends Services{
   constructor(){

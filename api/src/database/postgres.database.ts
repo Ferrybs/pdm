@@ -3,13 +3,13 @@ import Credentials from "../entity/credentials.entity";
 import Person from "../entity/person.entity";
 import Database from "../interfaces/database.interface";
 import Client from "../entity/client.entity";
-import HttpException from "../exceptions/http.exceptions";
 import { DataSource, DeleteResult, UpdateResult } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
 import Sessions from "../entity/sessions.entity";
 import ClientDTO from "../dto/client.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import EmailFoundHttpException from "../exceptions/email.found.http.exception";
+import NotFoundHttpException from "../exceptions/not.found.http.exception";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -38,27 +38,37 @@ export default class PostgresDatabase implements Database{
         try {
             const client = await this._appDataSource.manager.findOne(
                 Client,{where:{id: id}, relations: ['credentials', 'person','sessions']});
-            return client;
+            if (client) {
+                return client;
+            }else{
+                throw new NotFoundHttpException("CLIENT");
+                
+            }
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
 
         }
     }
     public async findClientBySessionId(sessionId: string): Promise<Client>{
+        var client: Client;
         try {
             const session = await this._appDataSource.manager.findOne(Sessions,{where:{id:sessionId}})
             if(session){
-                const client = await this._appDataSource.manager.findOne(Client,
+                client = await this._appDataSource.manager.findOne(Client,
                     {where:{sessions: session}, 
                     relations: ['credentials', 'person','sessions']});
-                return client;
             }
-            return null;
+            if (client) {
+                return client;
+            }else{
+                throw new NotFoundHttpException("CLIENT");  
+            }
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
     }
     public async findClientByEmail(credentialsDTO: credentialsDto): Promise<Client>{
+        var client: Client;
         try {
             const credentialsClient = await this._appDataSource.manager.findOne(Credentials,
             {where: 
@@ -67,12 +77,15 @@ export default class PostgresDatabase implements Database{
                 }
             });
             if (credentialsClient) {
-                const client = await this._appDataSource.manager.findOne(
+                client = await this._appDataSource.manager.findOne(
                 Client,{where:{credentials: credentialsClient}, 
                 relations: ['credentials', 'person','sessions']});
-                return client;
             }
-            return null;
+            if (client) {
+                return client;
+            }else{
+                throw new NotFoundHttpException("CLIENT");  
+            }
         } catch (error) {
             throw(new DatabaseHttpException(error.message));
         }
