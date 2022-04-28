@@ -13,11 +13,14 @@ export default class ClientService extends Services{
     public async getClientById(id: string){
         try {
             const result = await this.database.findClientById(id);
-            const clientDTO = new ClientDTO();
-            clientDTO.id = result.id;
-            clientDTO.personDTO = result.person;
-            clientDTO.credentialsDTO = result.credentials;
-            return clientDTO;
+            if (result){
+                const clientDTO = new ClientDTO();
+                clientDTO.id = result.id;
+                clientDTO.personDTO = result.person;
+                clientDTO.credentialsDTO = result.credentials;
+                return clientDTO;
+            }
+            return null;
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
@@ -30,7 +33,9 @@ export default class ClientService extends Services{
                     return session;
                 }
             });
-            return sessions.type;
+            if(sessions){
+                return sessions.type;
+            }
         }
         return null;
     }
@@ -55,7 +60,10 @@ export default class ClientService extends Services{
             const hashedPassword =  await bcrypt.hash(credentialsDTO.password,10);
             credentialsDTO.password = hashedPassword;
             const result = await this.database.updateCredentials(credentialsDTO);
-            return result;
+            if (result){
+                return result;
+            }
+            return null;
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
@@ -63,15 +71,18 @@ export default class ClientService extends Services{
     public async getClientByEmail(credentialsData: CredentialsDTO):Promise<ClientDTO>{
         try {
             const client = await this.database.findClientByEmail(credentialsData);
-            const personDTO = plainToInstance(PersonDTO,client.person)
-            const credentialsDTO = plainToInstance(CredentialsDTO,client.credentials);
-            const sessionsDTO = plainToInstance(SessionsDTO,client.sessions);
-            const clientDTO = new ClientDTO();
-            clientDTO.id = client.id;
-            clientDTO.personDTO = personDTO;
-            clientDTO.credentialsDTO =credentialsDTO;
-            clientDTO.sessionsDTO = sessionsDTO;
-            return clientDTO;
+            if (client){
+                const personDTO = plainToInstance(PersonDTO,client.person)
+                const credentialsDTO = plainToInstance(CredentialsDTO,client.credentials);
+                const sessionsDTO = plainToInstance(SessionsDTO,client.sessions);
+                const clientDTO = new ClientDTO();
+                clientDTO.id = client.id;
+                clientDTO.personDTO = personDTO;
+                clientDTO.credentialsDTO =credentialsDTO;
+                clientDTO.sessionsDTO = sessionsDTO;
+                return clientDTO;
+            }
+            return null;
         } catch (error) {
             throw new DatabaseHttpException(error.message)
         }

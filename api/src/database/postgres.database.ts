@@ -38,12 +38,7 @@ export default class PostgresDatabase implements Database{
         try {
             const client = await this._appDataSource.manager.findOne(
                 Client,{where:{id: id}, relations: ['credentials', 'person','sessions']});
-            if (client) {
-                return client;
-            }else{
-                throw new NotFoundHttpException("CLIENT");
-                
-            }
+            return client;
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
 
@@ -58,11 +53,8 @@ export default class PostgresDatabase implements Database{
                     {where:{sessions: session}, 
                     relations: ['credentials', 'person','sessions']});
             }
-            if (client) {
-                return client;
-            }else{
-                throw new NotFoundHttpException("CLIENT");  
-            }
+            return client;
+            
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
@@ -81,11 +73,8 @@ export default class PostgresDatabase implements Database{
                 Client,{where:{credentials: credentialsClient}, 
                 relations: ['credentials', 'person','sessions']});
             }
-            if (client) {
-                return client;
-            }else{
-                throw new NotFoundHttpException("CLIENT");  
-            }
+        
+            return client;
         } catch (error) {
             throw(new DatabaseHttpException(error.message));
         }

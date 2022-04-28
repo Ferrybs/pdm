@@ -37,7 +37,7 @@ export default class AuthService extends Services{
     try {
       client = await this.database.findClientByEmail(clientData.credentialsDTO);
     } catch (error) {
-      throw error;
+      throw new DatabaseHttpException(error.message);
     }
     if(client){
       throw new EmailFoundHttpException(clientData.credentialsDTO.email);
@@ -158,9 +158,14 @@ export default class AuthService extends Services{
       } catch (error) {
         throw new HashHttpException(error.message);
       }
-      try {
         if(isMatch){
-          await this.updateClientSessions(client);
+          
+          try{
+            await this.updateClientSessions(client);
+          } catch (error) {
+            throw new SessionHttpException("UPDATE",error.message);
+          }
+          
           try {
             const sessionId = this.generateSessionId();
             const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
@@ -180,9 +185,7 @@ export default class AuthService extends Services{
         }else{
           throw new NotFoundHttpException("CLIENT");
         }
-      } catch (error) {
-        throw new SessionHttpException("UPDATE",error.message);
-      }
+      
     }
     throw( new ServerErrorHttpException("Client Not Found!"));
   }
@@ -235,7 +238,7 @@ export default class AuthService extends Services{
           clientDTO.credentialsDTO = client.credentials;
           clientDTO.personDTO = client.person;
           clientDTO.sessionsDTO= [sessions];
-          const link = `https://api-pdm-pia3.herokuapp.com/auth/reset-password/`+accessToken.token;
+          const link = `https://api-pdm-pia3.herokuapp.com/api/v1/auth/reset-password/`+accessToken.token;
           const result = await this.email.sendEmail(clientDTO,link);
           if(!result){
             throw new EmailNotSendHttpException("e-mail not send");
