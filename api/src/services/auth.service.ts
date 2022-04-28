@@ -12,7 +12,7 @@ import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import SessionHttpException from "../exceptions/session.http.exception";
 import ServerErrorHttpException from "../exceptions/server.error.http.exception";
-import NotFoundHttpException from "exceptions/not.found.http.exception";
+import NotFoundHttpException from "../exceptions/not.found.http.exception";
 
 export default class AuthService extends Services{
   constructor(){
