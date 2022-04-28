@@ -131,7 +131,11 @@ export default class AuthService extends Services{
     const time: number = Math.floor(Date.now() / 1000);
     client.sessions.forEach( async (session) => {
       if (session.expiresIn < time || session.type == "RESET_PASSWORD") {
-        await this.database.deleteClientSessions(session);
+        try{
+          await this.database.deleteClientSessions(session);
+        } catch (error) {
+          throw new DatabaseHttpException(error.message);
+        }
       }
     });
   }
