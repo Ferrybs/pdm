@@ -146,7 +146,6 @@ export default class AuthController extends Controller{
             response.status(200).send({ok:true});
           } catch (error) {
             throw new EmailNotSendHttpException(error.message);
-
           }
         }
       } catch (error) {
