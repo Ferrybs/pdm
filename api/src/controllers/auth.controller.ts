@@ -98,7 +98,7 @@ export default class AuthController extends Controller{
             }
             response.render('pages/redefinePassword',{data});
           } catch (error) {
-            response.status(404).send({ ok: false, message: error.message});
+            response.status(500).send({ ok: false, message: error.message});
           }
         }else{
           response.render('pages/invalidLink');

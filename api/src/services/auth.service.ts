@@ -110,7 +110,7 @@ export default class AuthService extends Services{
         }
         return allToken;
       }
-      return null;
+      throw new NotFoundHttpException("CLIENT");
   }
 
   public async updateClientSessions(client: Client){
