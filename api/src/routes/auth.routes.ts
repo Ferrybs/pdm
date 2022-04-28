@@ -30,6 +30,11 @@ export default class AuthRoutes {
                 this._controller.login.bind(this._controller)
                 );
             this.router.get(
+                `${this.path}/refresh-token`,
+                this._authMiddleware.verifyByBody(),
+                this._controller.newRefreshToken.bind(this._controller)
+                );
+            this.router.get(
                 `${this.path}/refresh`,
                 this._authMiddleware.refreshToken(),
                 this._controller.refresh.bind(this._controller)

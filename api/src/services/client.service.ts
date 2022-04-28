@@ -6,6 +6,7 @@ import { plainToInstance } from "class-transformer";
 import PersonDTO from "../dto/person.dto";
 import SessionsDTO from "../dto/sessions.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
+import NotFoundHttpException from "../exceptions/not.found.http.exception";
 
 
 export default class ClientService extends Services{
@@ -20,7 +21,7 @@ export default class ClientService extends Services{
                 clientDTO.credentialsDTO = result.credentials;
                 return clientDTO;
             }
-            return null;
+            throw new NotFoundHttpException("CLIENT");
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
@@ -37,7 +38,7 @@ export default class ClientService extends Services{
                 return sessions.type;
             }
         }
-        return null;
+        throw new NotFoundHttpException("SESSION_TYPE");
     }
     public async getClientBySessionId(sessionid: string){
         try {
@@ -50,7 +51,7 @@ export default class ClientService extends Services{
                 clientDTO.sessionsDTO = result.sessions;
                 return clientDTO;
             }
-            return null;
+            throw new NotFoundHttpException("CLIENT","By this Session Id");
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
@@ -59,11 +60,7 @@ export default class ClientService extends Services{
         try {
             const hashedPassword =  await bcrypt.hash(credentialsDTO.password,10);
             credentialsDTO.password = hashedPassword;
-            const result = await this.database.updateCredentials(credentialsDTO);
-            if (result){
-                return result;
-            }
-            return null;
+            return  await this.database.updateCredentials(credentialsDTO);
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
@@ -82,7 +79,7 @@ export default class ClientService extends Services{
                 clientDTO.sessionsDTO = sessionsDTO;
                 return clientDTO;
             }
-            return null;
+            throw new NotFoundHttpException("CLIENT");
         } catch (error) {
             throw new DatabaseHttpException(error.message)
         }

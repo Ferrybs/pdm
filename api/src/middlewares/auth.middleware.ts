@@ -1,7 +1,6 @@
 import { RequestHandler, Response } from "express";
 import jwt from 'jsonwebtoken';
 import validateEnv from "../utils/validateEnv";
-import HttpException from "../exceptions/http.exceptions";
 import DataStoreToken from "../interfaces/data.store.token.interface";
 import Auth from "../interfaces/auth.interface";
 import RequestWithToken from "interfaces/request.token.interface";

@@ -32,13 +32,13 @@ export default class SendEmail implements SendMail{
         }
     }
 
-    async sendEmail(clientDTO: ClientDTO, link: string): Promise<boolean>{
+    async sendEmail(clientDTO: ClientDTO, token: string): Promise<boolean>{
         try {
             const info = await this._transporter.sendMail({
                 from: `Intelligent Garden Co.<${this._email}>`,
                 to: clientDTO.credentialsDTO.email,
                 subject: `${clientDTO.personDTO.name}, your password reset is ready ✔`,
-                html: this.emailTemplate(clientDTO.personDTO.name,link),
+                html: this.emailTemplate(clientDTO.personDTO.name,token),
               });    
 
             if (info) {
@@ -56,7 +56,7 @@ export default class SendEmail implements SendMail{
         }          
     }
 
-    private emailTemplate(name: string,link: string): string{
+    private emailTemplate(name: string,token: string): string{
         return (
             `
             <!doctype html>
@@ -102,7 +102,7 @@ export default class SendEmail implements SendMail{
                                                         password has been generated for you. To reset your password, click the
                                                         following link and follow the instructions.
                                                     </p>
-                                                    <a href="${link}"
+                                                    <a href="https://api-pdm-pia3.herokuapp.com/api/v1/auth/reset-password/${token}"
                                                         style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset Password</a>
                                                 </td>
                                             </tr>
