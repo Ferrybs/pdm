@@ -12,6 +12,7 @@ import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import SessionHttpException from "../exceptions/session.http.exception";
 import ServerErrorHttpException from "exceptions/server.error.http.exception";
+import EmailNotSendHttpException from "exceptions/email.not.send.exception";
 
 export default class AuthService extends Services{
   constructor(){
@@ -186,20 +187,42 @@ export default class AuthService extends Services{
         credentialsDTO.password = hashedPassword;
         this.database.updateCredentials(credentialsDTO);;
       } catch (error) {
-        throw new HttpException(404,error.message);
+        throw new DatabaseHttpException(error.message);
       }
   }
    
   public async sendEmail(credentialsDTO: CredentialsDTO){
+    var sessionId: string;
+    var session: Sessions;
+    var sessions: Sessions;
       try {
         const client = await this.database.findClientByEmail(credentialsDTO);
         if(client){
-          await this.updateClientSessions(client);
-          const sessionId = this.generateSessionId();
+          try {
+            await this.updateClientSessions(client);
+          } catch (error) {
+            throw new DatabaseHttpException(error.message);
+          }
+          
+          try {
+            sessionId = this.generateSessionId();
+          } catch (error) {
+            throw new SessionHttpException("GENERATE", error.message);
+          }
+          
           const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
-          const session: Sessions = this.createSession("RESET_PASSWORD"," ",accessToken,sessionId);
+          try {
+            session = this.createSession("RESET_PASSWORD"," ",accessToken,sessionId);
+          } catch (error) {
+            throw new SessionHttpException("CREATE", error.message);
+          }
+          
           session.client = client;
-          const sessions = await this.database.insertClientSessions(session);
+          try {
+            sessions = await this.database.insertClientSessions(session);
+          } catch (error) {
+            throw new DatabaseHttpException(error.message);
+          }
           
           const clientDTO = new ClientDTO();
           clientDTO.id =  client.id;
@@ -209,13 +232,13 @@ export default class AuthService extends Services{
           const link = `https://api-pdm-pia3.herokuapp.com/auth/reset-password/`+accessToken.token;
           const result = await this.email.sendEmail(clientDTO,link);
           if(!result){
-            throw new HttpException(404,"Not Found!");
+            throw new EmailNotSendHttpException("e-mail not send");
           }
         }else{
-          throw new HttpException(404,"Not Found!");
+          throw new EmailFoundHttpException(credentialsDTO.email);
         }
       } catch (error) {
-        throw new HttpException(404,error.message);
+        throw new DatabaseHttpException(error.message);
       }
   }
 }
