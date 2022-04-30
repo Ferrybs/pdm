@@ -35,9 +35,9 @@ export default class AuthRoutes {
                 this._controller.newRefreshToken.bind(this._controller)
                 );
             this.router.get(
-                `${this.path}/refresh`,
+                `${this.path}/access-token`,
                 this._authMiddleware.refreshToken(),
-                this._controller.refresh.bind(this._controller)
+                this._controller.newAccessToken.bind(this._controller)
                 );
             this.router.post(
                 `${this.path}/reset-password`,

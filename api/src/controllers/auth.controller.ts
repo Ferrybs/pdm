@@ -34,7 +34,7 @@ export default class AuthController extends Controller{
     }else{
       try {
         const data = request.dataStoreToken;
-        const refreshToken = this.authService.getNewRefreshToken(data.id);
+        const refreshToken = await this.authService.getNewRefreshToken(data.id);
         response.status(200).send({ok: true,data: refreshToken})
       } catch (error) {
         if(error instanceof(HttpException)){
@@ -45,13 +45,13 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async refresh(request: RequesWithToken, response: Response, next: NextFunction){
+  public async newAccessToken(request: RequesWithToken, response: Response, next: NextFunction){
     if (request.error) {
       response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
         const data = request.dataStoreToken;
-        const tokenData = await this.authService.refresh(data.id);
+        const tokenData = await this.authService.getNewAccessToken(data.id);
         if (tokenData) {
           response.status(200).send({ok: true, data:tokenData});
         }else{

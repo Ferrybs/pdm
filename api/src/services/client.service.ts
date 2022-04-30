@@ -38,23 +38,19 @@ export default class ClientService extends Services{
                 return sessions.type;
             }
         }
-        throw new NotFoundHttpException("SESSION_TYPE");
+        return null;
     }
     public async getClientBySessionId(sessionid: string){
-        try {
-            const result = await this.database.findClientBySessionId(sessionid);
-            if (result) {
-                const clientDTO = new ClientDTO();
-                clientDTO.id = result.id;
-                clientDTO.personDTO = result.person;
-                clientDTO.credentialsDTO = result.credentials;
-                clientDTO.sessionsDTO = result.sessions;
-                return clientDTO;
-            }
-            throw new NotFoundHttpException("CLIENT","By this Session Id");
-        } catch (error) {
-            throw (new DatabaseHttpException(error.message));
+        const result = await this.database.findClientBySessionId(sessionid);
+        if (result) {
+            const clientDTO = new ClientDTO();
+            clientDTO.id = result.id;
+            clientDTO.personDTO = result.person;
+            clientDTO.credentialsDTO = result.credentials;
+            clientDTO.sessionsDTO = result.sessions;
+            return clientDTO;
         }
+        throw new NotFoundHttpException("TOKEN","Try with another token!");
     }
     public async updateCredentials(credentialsDTO: CredentialsDTO): Promise<boolean> {
         try {

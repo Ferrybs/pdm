@@ -92,14 +92,11 @@ export default class PostgresDatabase implements Database{
         try {
             const person = this._appDataSource.manager.create(Person,clientDTO.personDTO);
             const cred = this._appDataSource.manager.create(Credentials,clientDTO.credentialsDTO);
-            const sessions =  this._appDataSource.manager.create(Sessions,clientDTO.sessionsDTO);
             const client = new Client();
             client.credentials = cred;
             client.person = person;
-            client.sessions = sessions;
             await this._appDataSource.manager.save(person);
             await this._appDataSource.manager.save(cred);
-            await this._appDataSource.manager.save(sessions);
             return await this._appDataSource.manager.save(client);
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
