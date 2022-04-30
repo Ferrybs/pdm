@@ -27,5 +27,9 @@
     "invalid-last-name" : "Sobrenome Invalido",
     "invalid-passwordMatch": "Senhas não são iguais",
     "reset-password": "Redefinir Senha",
-    "reset": "Redefinir"
+    "reset": "Redefinir",
+    "create-account-success": "Sua conta foi criada!",
+    "create-account-failed": "Ooops, algo saiu errado!",
+    "continue": "Continue",
+    "try-agin": "Tente Novamente"
 }

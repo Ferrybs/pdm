@@ -107,26 +107,35 @@ class _CreateAccount extends State<CreateAccount> {
   }
 
   void _signUp() async {
-    var result = true;
-    var dimiss = false;
+    var result = false;
     _setFieldsState();
-    //result = await _viewModel.register();
-    if (result) {
-      SmartDialog.show(
-          widget: DialogContainer(
-            message: "Usuario Ja Cadastrado!",
-            buttonText: "Login",
-            onClick: () {
-              Modular.to.navigate('/');
-              SmartDialog.dismiss();
-            },
-            height: 120,
-          ),
-          onDismiss: () {
-            Modular.to.navigate('/');
-          },
-          isLoadingTemp: false);
+    if (_viewModel.signInValidation()) {
+      result = await _register();
+      if (result) {
+        _dialog("create-account-success".i18n(), "continue".i18n(), "/");
+      } else {
+        _dialog("create-account-failed".i18n(), "try-agin".i18n(), "/signup");
+      }
     }
+  }
+
+  Future<bool> _register() async {
+    SmartDialog.showLoading(background: _theme.backgroundColor);
+    var result = await _viewModel.register();
+    SmartDialog.dismiss();
+    return result;
+  }
+
+  void _dialog(String message, String buttonText, String page) {
+    SmartDialog.show(
+        widget: DialogContainer(
+      message: message,
+      buttonText: buttonText,
+      onClick: () {
+        Modular.to.navigate(page);
+        SmartDialog.dismiss();
+      },
+    ));
   }
 
   void _setFieldsState() {

@@ -8,7 +8,6 @@ import 'package:dio/dio.dart';
 import '../../domain/repository/login_interface.dart';
 
 class LoginRepository extends Repository implements ILogin {
-  final String url = "https://api-pdm-pia3.herokuapp.com/";
   final Dio dio = Dio();
   @override
   Future<ClientModel> login(CredentialsModel credentials) async {
@@ -34,6 +33,7 @@ class LoginRepository extends Repository implements ILogin {
     try {
       Response response;
       var dio = Dio(options);
+      print(client.toJson());
       response = await dio.post("/auth/register", data: client.toJson());
       print(response.statusCode);
       if (response.statusCode == 200) {
@@ -45,7 +45,6 @@ class LoginRepository extends Repository implements ILogin {
       }
       return false;
     } catch (e) {
-      print(e);
       return false;
     }
   }

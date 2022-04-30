@@ -27,5 +27,9 @@
     "invalid-last-name" : "Invalid Last Name",
     "invalid-passwordMatch": "Password dit not Match",
     "reset-password": "Reset Password",
-    "reset": "Reset"
+    "reset": "Reset",
+    "create-account-success": "Your account has been created!",
+    "create-account-failed": "Ooops, something went wrong!",
+    "continue": "Continue",
+    "try-agin": "Try again"
 }

@@ -76,7 +76,7 @@ export default class AuthController extends Controller{
         const tokenData = await this.authService.login(credentialsData);
         const clientDTO = await this.clientService.getClientByEmail(credentialsData);
         clientDTO.credentialsDTO.password = null;
-        response.status(200).send({ok:true,data:[tokenData,clientDTO]});
+        response.status(200).send({ok:true,tokenData,clientDTO});
       } catch (error) {
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
