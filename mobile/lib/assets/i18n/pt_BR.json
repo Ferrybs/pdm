@@ -29,6 +29,7 @@
     "reset-password": "Redefinir Senha",
     "reset": "Redefinir",
     "create-account-success": "Sua conta foi criada!",
+    "email-send-success": "Email enviado com sucesso!",
     "create-account-failed": "Ooops, algo saiu errado!",
     "continue": "Continue",
     "try-agin": "Tente Novamente"

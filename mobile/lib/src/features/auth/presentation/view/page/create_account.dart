@@ -109,7 +109,7 @@ class _CreateAccount extends State<CreateAccount> {
   void _signUp() async {
     var result = false;
     _setFieldsState();
-    if (_viewModel.signInValidation()) {
+    if (_viewModel.signUpValidation()) {
       result = await _register();
       if (result) {
         _dialog("create-account-success".i18n(), "continue".i18n(), "/");

@@ -29,6 +29,7 @@
     "reset-password": "Reset Password",
     "reset": "Reset",
     "create-account-success": "Your account has been created!",
+    "email-send-success": "Email send with success!",
     "create-account-failed": "Ooops, something went wrong!",
     "continue": "Continue",
     "try-agin": "Try again"

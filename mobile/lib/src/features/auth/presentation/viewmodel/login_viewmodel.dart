@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'package:basearch/src/features/auth/data/dto/client_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
-import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -17,6 +14,9 @@ class LoginViewModel = _LoginViewModelBase with _$LoginViewModel;
 
 abstract class _LoginViewModelBase with Store {
   final _usecase = Modular.get<LoginUseCase>();
+
+  @observable
+  ClientModel? client;
 
   @observable
   String name = '';
@@ -32,6 +32,11 @@ abstract class _LoginViewModelBase with Store {
 
   @observable
   String confirmPassword = '';
+
+  @action
+  updateClient(ClientModel value) {
+    client = value;
+  }
 
   @action
   updateName(String value) {
@@ -56,6 +61,18 @@ abstract class _LoginViewModelBase with Store {
   @action
   updateConfirmPassword(String value) {
     confirmPassword = value;
+  }
+
+  Future<bool> resetPassword() async {
+    return _usecase.resetPassword(email);
+  }
+
+  Future<ClientModel?> login() async {
+    var client = await _usecase.login(email, password);
+    if (client != null) {
+      updateClient(client);
+    }
+    return client;
   }
 
   Future<bool> register() async {
@@ -85,9 +102,14 @@ abstract class _LoginViewModelBase with Store {
   }
 
   bool signInValidation() {
-    if (emailValidation() == null &&
-        passwordValidation() == null &&
-        passwordMatchValidation() == null) {
+    if (emailValidation() == null && password != '') {
+      return true;
+    }
+    return false;
+  }
+
+  bool resetPasswordValidation() {
+    if (emailValidation() == null) {
       return true;
     }
     return false;

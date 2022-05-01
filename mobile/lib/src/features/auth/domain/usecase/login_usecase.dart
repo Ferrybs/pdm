@@ -4,6 +4,7 @@ import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
+import 'package:basearch/src/features/auth/domain/model/login_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/validators/validator.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -13,8 +14,18 @@ import '../repository/login_interface.dart';
 class LoginUseCase {
   final repository = Modular.get<ILogin>();
 
-  Future<ClientModel> login(String email, String password) {
-    return repository.login(CredentialsModel(email: email, password: password));
+  Future<bool> resetPassword(String email) async {
+    var credentials = CredentialsModel(email: email);
+    return await repository.resetPassword(credentials);
+  }
+
+  Future<ClientModel?> login(String email, String password) async {
+    LoginModel? loginModel = await repository
+        .login(CredentialsModel(email: email, password: password));
+    if (loginModel != null) {
+      return loginModel.client;
+    }
+    return null;
   }
 
   Future<bool> register(

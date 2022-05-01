@@ -24,12 +24,12 @@ export default class AuthRoutes {
                 this._validationMiddleware.client(),
                 this._controller.register.bind(this._controller)
                 );
-            this.router.get(
+            this.router.post(
                 `${this.path}/login`,
                 this._validationMiddleware.credentials(),
                 this._controller.login.bind(this._controller)
                 );
-            this.router.get(
+            this.router.post(
                 `${this.path}/refresh-token`,
                 this._authMiddleware.verifyByBody(),
                 this._controller.newRefreshToken.bind(this._controller)

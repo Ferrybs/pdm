@@ -1,7 +1,10 @@
+import 'package:basearch/src/features/auth/domain/model/client_model.dart';
+import 'package:basearch/src/features/auth/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
 import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
 
@@ -16,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   late ThemeData _theme;
   String? emailError;
   String? passwordError;
-  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -91,20 +93,40 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _getClient() async {
+    _validateFields();
+    if (_viewModel.signInValidation()) {
+      var result = await _doLogin();
+      if (result != null) {
+        Modular.to.navigate('/auth/home');
+      } else {
+        _dialog("create-account-failed".i18n(), "try-agin".i18n());
+      }
+    }
+  }
+
+  void _dialog(String message, String buttonText) {
+    SmartDialog.show(
+        widget: DialogContainer(
+      message: message,
+      buttonText: buttonText,
+      onClick: () {
+        SmartDialog.dismiss();
+      },
+    ));
+  }
+
+  Future<ClientModel?> _doLogin() async {
+    SmartDialog.showLoading(background: _theme.backgroundColor);
+    var result = await _viewModel.login();
+    SmartDialog.dismiss();
+    return result;
+  }
+
+  void _validateFields() {
     setState(() {
       emailError = _viewModel.emailValidation();
       passwordError = _viewModel.passwordValidation();
     });
-
-    if (_viewModel.signInValidation()) {
-      setState(() {
-        showSpinner = true;
-      });
-      await Future.delayed(const Duration(seconds: 1));
-      setState(() {
-        showSpinner = false;
-      });
-    }
   }
 
   Padding _signIn() {

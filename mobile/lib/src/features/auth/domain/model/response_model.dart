@@ -1,14 +1,13 @@
-import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
-import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class ResponseModel {
   final bool? ok;
+  final String? message;
 
-  ResponseModel({this.ok});
+  ResponseModel({this.message, this.ok});
 
   factory ResponseModel.fromJson(Map<String, dynamic> json) =>
-      ResponseModel(ok: json["ok"]);
-  Map<String, dynamic> toJson() => {"ok": ok};
+      ResponseModel(ok: json["ok"], message: json["message"]);
+  Map<String, dynamic> toJson() => {"ok": ok, "message": message};
 }

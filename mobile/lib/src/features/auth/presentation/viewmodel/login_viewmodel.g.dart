@@ -9,6 +9,21 @@ part of 'login_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$LoginViewModel on _LoginViewModelBase, Store {
+  final _$clientAtom = Atom(name: '_LoginViewModelBase.client');
+
+  @override
+  ClientModel? get client {
+    _$clientAtom.reportRead();
+    return super.client;
+  }
+
+  @override
+  set client(ClientModel? value) {
+    _$clientAtom.reportWrite(value, super.client, () {
+      super.client = value;
+    });
+  }
+
   final _$nameAtom = Atom(name: '_LoginViewModelBase.name');
 
   @override
@@ -89,6 +104,17 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
       ActionController(name: '_LoginViewModelBase');
 
   @override
+  dynamic updateClient(ClientModel value) {
+    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
+        name: '_LoginViewModelBase.updateClient');
+    try {
+      return super.updateClient(value);
+    } finally {
+      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic updateName(String value) {
     final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
         name: '_LoginViewModelBase.updateName');
@@ -146,6 +172,7 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
   @override
   String toString() {
     return '''
+client: ${client},
 name: ${name},
 lastName: ${lastName},
 email: ${email},
