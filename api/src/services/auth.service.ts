@@ -227,6 +227,7 @@ export default class AuthService extends Services{
     var sessionId: string;
     var session: Sessions;
     var sessions: Sessions;
+    var result: boolean = false;
     const client = await this.database.findClientByEmail(credentialsDTO);
     if(client){
       try {
@@ -260,6 +261,7 @@ export default class AuthService extends Services{
       clientDTO.credentialsDTO = client.credentials;
       clientDTO.personDTO = client.person;
       clientDTO.sessionsDTO= [sessions];
+      
       const result = await this.email.sendEmail(clientDTO,accessToken.token);
       if(!result){
         throw new EmailNotSendHttpException("e-mail not send");
@@ -269,6 +271,5 @@ export default class AuthService extends Services{
     }else{
       throw new NotFoundHttpException("CLIENT");
     }
-  throw new ServerErrorHttpException("CLIENT Not Found!");
   }
 }
