@@ -114,7 +114,7 @@ class _CreateAccount extends State<CreateAccount> {
       if (result == null) {
         _dialog("create-account-success".i18n(), "continue".i18n(), "/");
       } else {
-        _dialog(result, "try-agin".i18n(), "/signup");
+        _dialog(result, "try-agin".i18n(), null);
       }
     }
   }
@@ -126,13 +126,15 @@ class _CreateAccount extends State<CreateAccount> {
     return result;
   }
 
-  void _dialog(String message, String buttonText, String page) {
+  void _dialog(String message, String buttonText, String? page) {
     SmartDialog.show(
         widget: DialogContainer(
       message: message,
       buttonText: buttonText,
       onClick: () {
-        Modular.to.navigate(page);
+        if (page != null) {
+          Modular.to.navigate(page);
+        }
         SmartDialog.dismiss();
       },
     ));
