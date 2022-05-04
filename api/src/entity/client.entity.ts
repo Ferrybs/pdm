@@ -17,9 +17,9 @@ export default class Client{
     @JoinColumn()
     public credentials?: Credentials;
 
-    @OneToMany(() => Sessions, (sessions: Sessions) => sessions.client, {cascade: true})
+    @OneToMany(() => Sessions, sessions => sessions.client, {cascade: true})
     public sessions?: Sessions[];
 
-    @OneToMany(() => Device, (device: Device) => device.client, {cascade: true})
+    @OneToMany(() => Device, device => device.client, {cascade: true})
     public devices?: Device[];
 }

@@ -6,15 +6,15 @@ import Measure from "./measure.entity";
 export default class Device{
 
     @PrimaryColumn()
-    public id: string;
+    public id?: string;
 
     @Column()
-    public name: string;
+    public name?: string;
 
-    @OneToMany(() => Measure, (measure: Measure) => measure.device, {cascade: true})
+    @OneToMany(() => Measure, measure => measure.device, {cascade: true})
     public measures?: Measure[];
 
-    @ManyToOne(() => Client, client => client.id)
+    @ManyToOne(() => Client, client => client.devices)
     public client?: Client;
 
 

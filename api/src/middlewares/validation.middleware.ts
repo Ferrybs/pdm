@@ -3,14 +3,29 @@ import ClientDTO from '../dto/client.dto';
 import CredentialsDTO from '../dto/credentials.dto';
 import PersonDTO from '../dto/person.dto';
 import { RequestHandler, Response } from 'express';
-import HttpException from '../exceptions/http.exceptions';
-import Validation from 'interfaces/validation.interface';
+import Validation from '../interfaces/validation.interface';
 import { ValidationError } from 'class-validator';
-import RequestWithError from 'interfaces/request.error.interface';
+import RequestWithError from '../interfaces/request.error.interface';
+import DeviceDTO from '../dto/device.dto';
 
 export default class ValidationMiddleware implements Validation {
 
 
+  public device(): RequestHandler {
+    return async (request: RequestWithError, response: Response, next) =>{
+      let message: string;
+      try {
+        const deviceDTO: DeviceDTO = request.body;
+        await transformAndValidate(DeviceDTO,deviceDTO);
+      } catch (err) {
+        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+      }
+      if(message){
+        request.error = message;
+      }
+      next();
+    }
+  }
   public email(): RequestHandler {
     return async (request: RequestWithError, response: Response, next) =>{
       let message: string;

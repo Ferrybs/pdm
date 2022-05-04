@@ -14,11 +14,11 @@ export default class Sessions{
     public description?: string;
 
     @Column({nullable:false})
-    public iat: number;
+    public iat?: number;
 
     @Column({nullable:false})
-    public expiresIn: number;
+    public expiresIn?: number;
 
-    @ManyToOne(() => Client, client => client.id)
+    @ManyToOne(() => Client, client => client.sessions)
     public client?: Client;
 }

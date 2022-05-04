@@ -4,7 +4,7 @@ import Client from "./client.entity";
 @Entity()
 export default class Credentials{
     @PrimaryColumn()
-    public email: string;
+    public email?: string;
 
     @Column({nullable:false})
     public password?: string;

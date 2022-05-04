@@ -4,14 +4,14 @@ import Client from './client.entity';
 @Entity()
 export default class Person{    
     @PrimaryGeneratedColumn("uuid")
-    public id: string;
+    public id?: string;
 
     @Column({nullable:false})
-    public name: string;
+    public name?: string;
 
     @Column({nullable:false})
-    public lastName: string;
+    public lastName?: string;
 
     @OneToOne(() => Client, client => client.id)
-    public client: Client;
+    public client?: Client;
 }

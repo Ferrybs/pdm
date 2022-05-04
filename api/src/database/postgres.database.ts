@@ -9,7 +9,8 @@ import Sessions from "../entity/sessions.entity";
 import ClientDTO from "../dto/client.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import EmailFoundHttpException from "../exceptions/email.found.http.exception";
-import NotFoundHttpException from "../exceptions/not.found.http.exception";
+import Device from "../entity/device.entiy";
+import DeviceDTO from "dto/device.dto";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -20,6 +21,24 @@ export default class PostgresDatabase implements Database{
     }
     private async initializeDatabase(){
         await this._appDataSource.initialize();
+    }
+    public async insertDevice(deviceDTO: DeviceDTO): Promise<Device> {
+        try {
+            const device = this._appDataSource.manager.create(Device,deviceDTO);
+            device.client = deviceDTO.clientDTO;          
+            return await this._appDataSource.manager.save(device);
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+    public async findDeviceById(id: string): Promise<Device> {
+        try {
+            const device = await this._appDataSource.manager.findOne(
+                Device,{where:{id: id}, relations: ['measures', 'client']});
+            return device; 
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
     }
 
     public async updateCredentials(credentialsDTO: credentialsDto): Promise<boolean>{

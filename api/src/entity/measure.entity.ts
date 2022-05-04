@@ -6,15 +6,18 @@ import TypeMeasure from "./type.measure.entity";
 export default class Measure{
 
     @PrimaryColumn()
-    public id: string;
+    public id?: string;
 
     @Column({type: "timestamptz", nullable: false})
     public date?: Date;
 
-    @ManyToOne(() => Device, device => device.id)
+    @Column({nullable: false})
+    public value?: string;
+
+    @ManyToOne(() => Device, device => device.measures)
     public device?: Device;
 
-    @OneToMany(() => TypeMeasure, (type: TypeMeasure) => type.measure, {cascade: true})
-    public types?: TypeMeasure[]; 
+    @ManyToOne(() => TypeMeasure, type => type.id)
+    public type?: TypeMeasure; 
 
 }

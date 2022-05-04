@@ -8,10 +8,10 @@ export default class ClientDTO {
     public id?: string 
 
     @ValidateNested()  
-    public personDTO: PersonDTO;
+    public personDTO?: PersonDTO;
 
     @ValidateNested()
-    public credentialsDTO: CredentialsDTO;
+    public credentialsDTO?: CredentialsDTO;
 
     public sessionsDTO?: SessionsDTO[];
 }
