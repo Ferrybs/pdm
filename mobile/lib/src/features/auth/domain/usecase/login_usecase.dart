@@ -7,6 +7,7 @@ import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/domain/model/login_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/validators/validator.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import '../repository/login_interface.dart';
@@ -28,7 +29,7 @@ class LoginUseCase {
     return null;
   }
 
-  Future<bool> register(
+  Future<String?> register(
       CredentialsDto credentialsDto, PersonDto personDto) async {
     var credetialsModel = CredentialsModel(
         email: credentialsDto.email, password: credentialsDto.password);
@@ -36,7 +37,31 @@ class LoginUseCase {
         PersonModel(name: personDto.name, lastName: personDto.lastName);
     var clientModel =
         ClientModel(credentials: credetialsModel, person: personModel);
-    return repository.register(clientModel);
+    try {
+      if (await repository.register(clientModel)) {
+        return null;
+      } else {
+        final requestOptions = RequestOptions(path: "/auth/register");
+        throw DioError(requestOptions: requestOptions);
+      }
+    } on DioError catch (e) {
+      if (e.response != null) {
+        switch (e.response?.statusCode) {
+          case 403:
+            return "user-registered".i18n();
+          case 400:
+            return "invalid-field".i18n();
+          default:
+            if (e.response?.data) {
+              var data = e.response?.data;
+              if (data["message"] != null) {
+                return data["message"];
+              }
+            }
+        }
+      }
+      return "server-error".i18n();
+    }
   }
 
   String? passwordMatch(String? password, String? rPassword) {

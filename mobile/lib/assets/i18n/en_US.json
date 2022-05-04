@@ -32,5 +32,8 @@
     "email-send-success": "Email send with success!",
     "create-account-failed": "Ooops, something went wrong!",
     "continue": "Continue",
-    "try-agin": "Try again"
+    "try-agin": "Try again",
+    "user-registered": "User is already registed",
+    "invalid-field": "At least one of the fields is invalid",
+    "server-error": "Server error"
 }

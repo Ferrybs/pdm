@@ -44,7 +44,7 @@ class LoginRepository extends Repository implements ILogin {
       }
       return false;
     } catch (e) {
-      return false;
+      rethrow;
     }
   }
 

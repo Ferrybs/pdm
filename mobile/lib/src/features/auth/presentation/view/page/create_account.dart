@@ -107,19 +107,19 @@ class _CreateAccount extends State<CreateAccount> {
   }
 
   void _signUp() async {
-    var result = false;
+    String? result;
     _setFieldsState();
     if (_viewModel.signUpValidation()) {
       result = await _register();
-      if (result) {
+      if (result == null) {
         _dialog("create-account-success".i18n(), "continue".i18n(), "/");
       } else {
-        _dialog("create-account-failed".i18n(), "try-agin".i18n(), "/signup");
+        _dialog(result, "try-agin".i18n(), "/signup");
       }
     }
   }
 
-  Future<bool> _register() async {
+  Future<String?> _register() async {
     SmartDialog.showLoading(background: _theme.backgroundColor);
     var result = await _viewModel.register();
     SmartDialog.dismiss();

@@ -75,7 +75,7 @@ abstract class _LoginViewModelBase with Store {
     return client;
   }
 
-  Future<bool> register() async {
+  Future<String?> register() async {
     var person = PersonDto(name, lastName);
     var credentials = CredentialsDto(email, password);
     return _usecase.register(credentials, person);
