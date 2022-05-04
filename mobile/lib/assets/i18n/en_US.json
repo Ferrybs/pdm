@@ -35,5 +35,6 @@
     "try-agin": "Try again",
     "user-registered": "User is already registed",
     "invalid-field": "At least one of the fields is invalid",
-    "server-error": "Server error"
+    "server-error": "Server error",
+    "not-found": "Not found"
 }

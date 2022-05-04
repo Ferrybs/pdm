@@ -96,10 +96,10 @@ class _LoginPageState extends State<LoginPage> {
     _validateFields();
     if (_viewModel.signInValidation()) {
       var result = await _doLogin();
-      if (result != null) {
+      if (result == null) {
         Modular.to.navigate('/auth/home');
       } else {
-        _dialog("create-account-failed".i18n(), "try-agin".i18n());
+        _dialog(result, "try-agin".i18n());
       }
     }
   }
@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-  Future<ClientModel?> _doLogin() async {
+  Future<String?> _doLogin() async {
     SmartDialog.showLoading(background: _theme.backgroundColor);
     var result = await _viewModel.login();
     SmartDialog.dismiss();

@@ -104,7 +104,7 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
       ActionController(name: '_LoginViewModelBase');
 
   @override
-  dynamic updateClient(ClientModel value) {
+  dynamic updateClient(ClientModel? value) {
     final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
         name: '_LoginViewModelBase.updateClient');
     try {

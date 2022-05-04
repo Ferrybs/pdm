@@ -34,7 +34,7 @@ abstract class _LoginViewModelBase with Store {
   String confirmPassword = '';
 
   @action
-  updateClient(ClientModel value) {
+  updateClient(ClientModel? value) {
     client = value;
   }
 
@@ -67,12 +67,10 @@ abstract class _LoginViewModelBase with Store {
     return _usecase.resetPassword(email);
   }
 
-  Future<ClientModel?> login() async {
-    var client = await _usecase.login(email, password);
-    if (client != null) {
-      updateClient(client);
-    }
-    return client;
+  Future<String?> login() async {
+    var result = await _usecase.login(email, password);
+    updateClient(_usecase.get());
+    return result;
   }
 
   Future<String?> register() async {

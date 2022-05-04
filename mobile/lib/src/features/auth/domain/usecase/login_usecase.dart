@@ -14,19 +14,52 @@ import '../repository/login_interface.dart';
 
 class LoginUseCase {
   final repository = Modular.get<ILogin>();
+  ClientModel? _client;
+
+  ClientModel? get() {
+    return _client;
+  }
+
+  void set(ClientModel? client) {
+    _client = client;
+  }
 
   Future<bool> resetPassword(String email) async {
     var credentials = CredentialsModel(email: email);
     return await repository.resetPassword(credentials);
   }
 
-  Future<ClientModel?> login(String email, String password) async {
-    LoginModel? loginModel = await repository
-        .login(CredentialsModel(email: email, password: password));
-    if (loginModel != null) {
-      return loginModel.client;
+  Future<String?> login(String email, String password) async {
+    try {
+      LoginModel? loginModel = await repository
+          .login(CredentialsModel(email: email, password: password));
+      if (loginModel != null && loginModel.client != null) {
+        set(loginModel.client);
+      }
+      if (_client != null) {
+        return null;
+      } else {
+        final requestOptions = RequestOptions(path: "/auth/login");
+        throw DioError(requestOptions: requestOptions);
+      }
+    } on DioError catch (e) {
+      if (e.response != null) {
+        switch (e.response?.statusCode) {
+          case 400:
+            return "invalid-field".i18n();
+          case 401:
+            return "not-found".i18n();
+          default:
+            if (e.response?.data) {
+              var data = e.response?.data;
+              if (data["message"] != null) {
+                return data["message"];
+              }
+            }
+        }
+      }
+      return "server-error".i18n();
     }
-    return null;
   }
 
   Future<String?> register(
