@@ -12,6 +12,7 @@ import SessionHttpException from "../exceptions/session.http.exception";
 import ServerErrorHttpException from "../exceptions/server.error.http.exception";
 import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
+import TypeSession from "entity/type.session.entity";
 
 export default class AuthService extends Services{
   constructor(){
@@ -28,9 +29,15 @@ export default class AuthService extends Services{
     throw new DatabaseHttpException(error.message);
     }
   }
-  public createSession(type: string,description: string = ' ', tokenData: TokenData,sessionId: string): Sessions{
-    const session: Sessions = new Sessions;
-    session.type = type;
+
+  public async createSession(type: TypeSession,description: string = ' ', tokenData: TokenData,sessionId: string): Promise<Sessions>{
+    const session = new Sessions();
+    type.type = type.type.toUpperCase();
+    if(await this.database.findTypeSession(type)){
+      session.type = type;
+    }else{
+      throw new NotFoundHttpException("TYPE_SESSION");
+    }
     session.description = description;
     session.expiresIn = tokenData.expiresIn;
     session.iat = tokenData.iat;
@@ -38,32 +45,24 @@ export default class AuthService extends Services{
     return session;
   }
 
-  public async register(clientData: ClientDTO): Promise<boolean>{
-    var client: Client;
-    clientData.credentialsDTO.email = clientData.credentialsDTO.email.toLowerCase();
-    try {
-      client = await this.database.findClientByEmail(clientData.credentialsDTO);
-    } catch (error) {
-      throw new DatabaseHttpException(error.message);
-    }
-    if(client){
-      throw new EmailFoundHttpException(clientData.credentialsDTO.email);
+  public async register(clientDTO: ClientDTO): Promise<boolean>{
+    clientDTO.credentialsDTO.email = clientDTO.credentialsDTO.email.toLowerCase();
+    
+    if(await this.database.findClientByEmail(clientDTO.credentialsDTO)){
+      throw new EmailFoundHttpException(clientDTO.credentialsDTO.email);
     }
     try {
-      const hashedPassword = await bcrypt.hash(clientData.credentialsDTO.password, 10);
-      clientData.credentialsDTO.password = hashedPassword;
+      const hashedPassword = await bcrypt.hash(clientDTO.credentialsDTO.password, 10);
+      clientDTO.credentialsDTO.password = hashedPassword;
     } catch (error) {
       throw new HashHttpException(error.message);
     }
-    try {
-      const result = await this.database.insertClient(clientData);
-      if(result){
-        return true;
-      }
-      return false
-    } catch (error) {
-      throw new DatabaseHttpException(error.message);
+
+    const result = await this.database.insertClient(clientDTO);
+    if(result){
+      return true;
     }
+    return false;
   }
   public async getNewRefreshToken(sessionId: string ): Promise<TokenData>{
     var client: Client;
@@ -91,11 +90,8 @@ export default class AuthService extends Services{
       
     client = await this.database.findClientById(id);
     if (client) {
-      try{
-        await this.updateClientSessions(client);
-      }catch (error) {
-        throw new DatabaseHttpException(error.message);
-      }
+      await this.updateClientSessions(client);
+    
       try {
         sessionId = this.generateSessionId();
       } catch (error) {
@@ -110,7 +106,7 @@ export default class AuthService extends Services{
       
       try {
         if(accessToken){
-          session = this.createSession("LOGIN"," ",accessToken,sessionId);
+          session = await this.createSession(this.getLoginTypesession()," ",accessToken,sessionId);
         }
       } catch (error) {
         throw new SessionHttpException("CREATE", error.message);
@@ -129,7 +125,7 @@ export default class AuthService extends Services{
   public async updateClientSessions(client: Client){
       const time: number = Math.floor(Date.now() / 1000);
       client.sessions.forEach( async (session) => {
-        if (session.expiresIn < time || session.type == "RESET_PASSWORD") {
+        if (session.expiresIn < time || session.type.type.toUpperCase() == "RESET_PASSWORD") {
           try{
             await this.database.deleteClientSessions(session);
           } catch (error) {
@@ -160,7 +156,7 @@ export default class AuthService extends Services{
     const client = await this.database.findClientById(id);
     const time: number = Math.floor(Date.now() / 1000);
     client.sessions.forEach( async (session) => {
-      if (session.expiresIn < time || session.type == "RESET_PASSWORD") {
+      if (session.expiresIn < time || session.type.type == "RESET_PASSWORD") {
         try{
           await this.database.deleteClientSessions(session);
         } catch (error) {
@@ -176,11 +172,9 @@ export default class AuthService extends Services{
     var accessToken: TokenData;
     var session: Sessions;
     credentialsDTO.email = credentialsDTO.email.toLowerCase();
-    try {
-      client = await this.database.findClientByEmail(credentialsDTO);
-    } catch (error) {
-      throw new DatabaseHttpException(error.message);
-    }
+
+    client = await this.database.findClientByEmail(credentialsDTO);
+    
     if(client){
       try {
         isMatch = await bcrypt.compare(
@@ -200,7 +194,7 @@ export default class AuthService extends Services{
         try {
           const sessionId = this.generateSessionId();
           accessToken = this.jwt.createAccessToken(sessionId);
-          session = this.createSession("LOGIN"," ",accessToken,sessionId);
+          session = await this.createSession(this.getLoginTypesession()," ",accessToken,sessionId);
           session.client= client;
         } catch (error) {
           throw new HashHttpException(error.message);
@@ -244,7 +238,7 @@ export default class AuthService extends Services{
       
       const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
       try {
-        session = this.createSession("RESET_PASSWORD"," ",accessToken,sessionId);
+        session = await this.createSession(this.getResetPasswordTypesession()," ",accessToken,sessionId);
       } catch (error) {
         throw new SessionHttpException("CREATE", error.message);
       }

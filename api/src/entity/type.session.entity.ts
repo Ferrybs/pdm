@@ -1,14 +1,14 @@
 import { Column, Entity,OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import Measure from "./measure.entity";
+import Sessions from "./sessions.entity";
 
 @Entity()
-export default class TypeMeasure{
+export default class TypeSession{
     @PrimaryGeneratedColumn("increment")
     public id?: string;
 
     @Column({unique: true})
     public type?: string;
 
-    @OneToMany(() => Measure, measure => measure.type, {cascade: true})
-    public measures: Measure[];
+    @OneToMany(() => Sessions, sessions => sessions.type, {cascade: true})
+    public sessions: Sessions[];
 }

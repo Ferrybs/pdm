@@ -17,7 +17,7 @@ export default class Measure{
     @ManyToOne(() => Device, device => device.measures)
     public device?: Device;
 
-    @ManyToOne(() => TypeMeasure, type => type.id)
+    @ManyToOne(() => TypeMeasure, type => type.type)
     public type?: TypeMeasure; 
 
 }

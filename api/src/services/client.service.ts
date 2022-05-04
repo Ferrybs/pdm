@@ -35,7 +35,7 @@ export default class ClientService extends Services{
                 }
             });
             if(sessions){
-                return sessions.type;
+                return sessions.type.type;
             }
         }
         return null;
@@ -48,6 +48,7 @@ export default class ClientService extends Services{
             clientDTO.personDTO = result.person;
             clientDTO.credentialsDTO = result.credentials;
             clientDTO.sessionsDTO = result.sessions;
+            clientDTO.devices = result.devices;
             return clientDTO;
         }
         throw new NotFoundHttpException("TOKEN","Try with another token!");
