@@ -58,10 +58,10 @@ class _ResetPassord extends State<ResetPassword> {
     _validateFields();
     if (_viewModel.resetPasswordValidation()) {
       var result = await _sendReset();
-      if (result) {
+      if (result == null) {
         _dialog("email-send-success".i18n(), "continue".i18n(), "/");
       } else {
-        _dialog("create-account-failed".i18n(), "try-agin".i18n(), null);
+        _dialog(result, "try-agin".i18n(), null);
       }
     }
   }
@@ -80,7 +80,7 @@ class _ResetPassord extends State<ResetPassword> {
     ));
   }
 
-  Future<bool> _sendReset() async {
+  Future<String?> _sendReset() async {
     SmartDialog.showLoading(
         msg: "loading".i18n(), background: _theme.backgroundColor);
     var result = await _viewModel.resetPassword();

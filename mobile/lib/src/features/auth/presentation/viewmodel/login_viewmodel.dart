@@ -63,7 +63,7 @@ abstract class _LoginViewModelBase with Store {
     confirmPassword = value;
   }
 
-  Future<bool> resetPassword() async {
+  Future<String?> resetPassword() async {
     return _usecase.resetPassword(email);
   }
 

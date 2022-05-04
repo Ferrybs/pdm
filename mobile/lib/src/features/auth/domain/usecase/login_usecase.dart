@@ -24,9 +24,31 @@ class LoginUseCase {
     _client = client;
   }
 
-  Future<bool> resetPassword(String email) async {
+  Future<String?> resetPassword(String email) async {
     var credentials = CredentialsModel(email: email);
-    return await repository.resetPassword(credentials);
+    try {
+      if (await repository.resetPassword(credentials)) {
+        return null;
+      } else {
+        final requestOptions = RequestOptions(path: "/auth/reset-password");
+        throw DioError(requestOptions: requestOptions);
+      }
+    } on DioError catch (e) {
+      if (e.response != null) {
+        switch (e.response?.statusCode) {
+          case 401:
+            return "not-found".i18n();
+          default:
+            if (e.response?.data) {
+              var data = e.response?.data;
+              if (data["message"] != null) {
+                return data["message"];
+              }
+            }
+        }
+      }
+      return "server-error".i18n();
+    }
   }
 
   Future<String?> login(String email, String password) async {

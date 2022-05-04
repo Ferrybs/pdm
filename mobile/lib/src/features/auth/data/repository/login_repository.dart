@@ -51,12 +51,10 @@ class LoginRepository extends Repository implements ILogin {
   @override
   Future<bool> resetPassword(CredentialsModel credentials) async {
     try {
-      print(credentials.toJson());
       Response response;
       var dio = Dio(options);
       response =
           await dio.post("/auth/reset-password", data: credentials.toJson());
-      print(response.statusCode);
       if (response.statusCode == 200) {
         final recive = ResponseModel.fromJson(response.data);
         if (recive.ok == true) {
@@ -65,8 +63,7 @@ class LoginRepository extends Repository implements ILogin {
       }
       return false;
     } catch (e) {
-      print(e);
-      return false;
+      rethrow;
     }
   }
 }
