@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Credentials from './credentials.entity';
+import Device from "./device.entiy";
 import Person from "./person.entity"
 import Sessions from "./sessions.entity";
 
@@ -10,12 +11,15 @@ export default class Client{
 
     @OneToOne(() => Person, (person: Person) => person.client)
     @JoinColumn()
-    public person: Person;
+    public person?: Person;
 
     @OneToOne(() => Credentials, (credentials: Credentials) => credentials.client)
     @JoinColumn()
-    public credentials: Credentials;
+    public credentials?: Credentials;
 
     @OneToMany(() => Sessions, (sessions: Sessions) => sessions.client, {cascade: true})
     public sessions?: Sessions[];
+
+    @OneToMany(() => Device, (device: Device) => device.client, {cascade: true})
+    public devices?: Device[];
 }
