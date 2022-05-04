@@ -4,6 +4,8 @@ import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmode
 import 'package:basearch/src/features/onboarding/onboarding_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import 'features/home/home_module.dart';
+
 class AppModule extends Module {
   @override
   List<Bind> get binds => [Bind(((i) => LoginViewModel()))];
@@ -12,5 +14,6 @@ class AppModule extends Module {
   List<ModularRoute> get routes => [
         ModuleRoute('/', module: OnboardingModule()),
         ModuleRoute('/auth', module: AuthModule()),
+        ModuleRoute('/home', module: HomeModule()),
       ];
 }

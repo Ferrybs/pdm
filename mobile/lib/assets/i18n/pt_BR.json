@@ -37,5 +37,6 @@
     "invalid-field": "Ao menos um dos campos está inválido",
     "server-error": "Erro de servidor",
     "not-found": "Não encontrado",
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "home_title": "suas plants"
 }

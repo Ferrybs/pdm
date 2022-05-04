@@ -7,15 +7,16 @@ class ThemeBuilder {
   ThemeBuilder(this._baseTheme, this._colorScheme);
   getTheme() {
     return _baseTheme.copyWith(
-      colorScheme: _colorScheme,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      appBarTheme: appBarTheme,
-      textSelectionTheme: textSelectionTheme,
-      inputDecorationTheme: inputDecorationTheme,
-      elevatedButtonTheme: elevatedButtonTheme,
-      textTheme: textTheme,
-      textButtonTheme: textButtonTheme,
-    )..setOnboardingTheme(onboardingThemeData);
+        colorScheme: _colorScheme,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        appBarTheme: appBarTheme,
+        textSelectionTheme: textSelectionTheme,
+        inputDecorationTheme: inputDecorationTheme,
+        elevatedButtonTheme: elevatedButtonTheme,
+        textTheme: textTheme,
+        textButtonTheme: textButtonTheme,
+        scaffoldBackgroundColor: _colorScheme.background)
+      ..setOnboardingTheme(onboardingThemeData);
   }
 
   get onboardingThemeData {
@@ -99,6 +100,7 @@ class ThemeBuilder {
   get appBarTheme {
     return _baseTheme.appBarTheme.copyWith(
       backgroundColor: _colorScheme.background,
+      elevation: 0,
       iconTheme: IconThemeData(
         color: _colorScheme.tertiary,
       ),
@@ -107,6 +109,8 @@ class ThemeBuilder {
 
   get bodyLarge {
     return _baseTheme.textTheme.bodyLarge?.copyWith(
+      color: _colorScheme.tertiary,
+      fontSize: 20,
       fontFamily: "Poppins",
     );
   }
@@ -150,24 +154,30 @@ class ThemeBuilder {
 
   get headlineMedium {
     return _baseTheme.textTheme.headlineMedium?.copyWith(
+      fontSize: 30,
+      fontStyle: FontStyle.normal,
+      color: _colorScheme.tertiary,
       fontFamily: "Poppins",
     );
   }
 
   get headlineSmall {
     return _baseTheme.textTheme.headlineSmall?.copyWith(
+      color: _colorScheme.onPrimary,
       fontFamily: "Poppins",
     );
   }
 
   get labelLarge {
     return _baseTheme.textTheme.labelLarge?.copyWith(
+      color: _colorScheme.onPrimary,
       fontFamily: "Poppins",
     );
   }
 
   get labelMedium {
     return _baseTheme.textTheme.labelMedium?.copyWith(
+      color: _colorScheme.tertiary,
       fontFamily: "Poppins",
     );
   }
