@@ -81,7 +81,8 @@ class _ResetPassord extends State<ResetPassword> {
   }
 
   Future<bool> _sendReset() async {
-    SmartDialog.showLoading(background: _theme.backgroundColor);
+    SmartDialog.showLoading(
+        msg: "loading".i18n(), background: _theme.backgroundColor);
     var result = await _viewModel.resetPassword();
     SmartDialog.dismiss();
     return result;

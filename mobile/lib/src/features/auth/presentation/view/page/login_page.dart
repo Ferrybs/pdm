@@ -116,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<String?> _doLogin() async {
-    SmartDialog.showLoading(background: _theme.backgroundColor);
+    SmartDialog.showLoading(
+        msg: "loading".i18n(), background: _theme.backgroundColor);
     var result = await _viewModel.login();
     SmartDialog.dismiss();
     return result;

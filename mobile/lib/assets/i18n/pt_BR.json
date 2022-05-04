@@ -36,5 +36,6 @@
     "user-registered": "Usuário já está registrado",
     "invalid-field": "Ao menos um dos campos está inválido",
     "server-error": "Erro de servidor",
-    "not-found": "Não encontrado"
+    "not-found": "Não encontrado",
+    "loading": "Carregando..."
 }

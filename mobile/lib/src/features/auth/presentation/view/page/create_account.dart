@@ -120,7 +120,8 @@ class _CreateAccount extends State<CreateAccount> {
   }
 
   Future<String?> _register() async {
-    SmartDialog.showLoading(background: _theme.backgroundColor);
+    SmartDialog.showLoading(
+        msg: "loading".i18n(), background: _theme.backgroundColor);
     var result = await _viewModel.register();
     SmartDialog.dismiss();
     return result;
