@@ -159,12 +159,8 @@ export default class AuthController extends Controller{
       try {
         const body: CredentialsDTO = request.body;
         if (body) {
-          try {
-            await this.authService.sendEmail(body);
-            response.status(200).send({ok:true});
-          } catch (error) {
-            throw new EmailNotSendHttpException(error.message);
-          }
+          await this.authService.sendEmail(body);
+          response.status(200).send({ok:true});
         }
       } catch (error) {
         if(error instanceof(HttpException)){
