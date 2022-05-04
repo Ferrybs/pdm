@@ -70,6 +70,9 @@ abstract class _LoginViewModelBase with Store {
   Future<String?> login() async {
     var result = await _usecase.login(email, password);
     updateClient(_usecase.get());
+    if (result != null) {
+      Modular.to.navigate("/home");
+    }
     return result;
   }
 

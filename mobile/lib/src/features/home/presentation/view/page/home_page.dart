@@ -1,4 +1,3 @@
-import 'package:basearch/components/hud/modal_progress_hud.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -21,19 +20,16 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return ModalProgressHUD(
-      inAsyncCall: showSpinner,
-      child: Scaffold(
-        appBar: const HomeAppBar(),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Column(
-              children: [
-                _createTitle(),
-                ..._createPlantList(),
-              ],
-            ),
+    return Scaffold(
+      appBar: const HomeAppBar(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            children: [
+              _createTitle(),
+              ..._createPlantList(),
+            ],
           ),
         ),
       ),
@@ -44,7 +40,7 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Text(
-        store.name + ", " + "home_title".i18n(),
+        store.userName + ", " + "home_title".i18n(),
         style: _theme.textTheme.headlineMedium,
       ),
     );

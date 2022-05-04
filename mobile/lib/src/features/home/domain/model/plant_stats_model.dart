@@ -1,7 +1,7 @@
 import 'package:basearch/src/features/home/domain/model/chart_serie.dart';
 
-class PlantStats {
-  const PlantStats(
+class PlantStatsModel {
+  const PlantStatsModel(
     this.name,
     this.temperature,
     this.moisture,

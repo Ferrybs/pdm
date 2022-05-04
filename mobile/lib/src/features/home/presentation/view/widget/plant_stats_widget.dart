@@ -1,10 +1,10 @@
 import 'package:basearch/src/features/home/domain/model/chart_serie.dart';
-import 'package:basearch/src/features/home/domain/model/plant_stats.dart';
+import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class PlantStatsWidget extends StatelessWidget {
-  final PlantStats plantStats;
+  final PlantStatsModel plantStats;
 
   const PlantStatsWidget({
     Key? key,
@@ -57,14 +57,14 @@ class PlantStatsWidget extends StatelessWidget {
           children: [
             Column(
               children: [
-                _stats("23", "Temperature", textTheme),
-                _stats("12", "Water Tank", textTheme),
+                _stats("23", "Cº", "Temperature", textTheme),
+                _stats("12", "%", "Water Tank", textTheme),
               ],
             ),
             Column(
               children: [
-                _stats("41", "Moisture", textTheme),
-                _stats("99", "Luminosity", textTheme),
+                _stats("41", "%", "Moisture", textTheme),
+                _stats("99", "%", "Luminosity", textTheme),
               ],
             ),
           ],
@@ -73,13 +73,22 @@ class PlantStatsWidget extends StatelessWidget {
     );
   }
 
-  _stats(String value, String label, TextTheme textTheme) {
+  _stats(String value, String sufix, String label, TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          value,
-          style: textTheme.bodyLarge,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              value,
+              style: textTheme.bodyLarge,
+            ),
+            Text(
+              sufix,
+              style: textTheme.bodySmall,
+            ),
+          ],
         ),
         Text(label, style: textTheme.labelMedium),
       ],

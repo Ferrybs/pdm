@@ -12,28 +12,28 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   final _$nameAtom = Atom(name: '_HomeViewModelBase.name');
 
   @override
-  String get name {
+  String get userName {
     _$nameAtom.reportRead();
-    return super.name;
+    return super.userName;
   }
 
   @override
-  set name(String value) {
-    _$nameAtom.reportWrite(value, super.name, () {
-      super.name = value;
+  set userName(String value) {
+    _$nameAtom.reportWrite(value, super.userName, () {
+      super.userName = value;
     });
   }
 
   final _$plantListAtom = Atom(name: '_HomeViewModelBase.plantList');
 
   @override
-  List<PlantStats> get plantList {
+  List<PlantStatsModel> get plantList {
     _$plantListAtom.reportRead();
     return super.plantList;
   }
 
   @override
-  set plantList(List<PlantStats> value) {
+  set plantList(List<PlantStatsModel> value) {
     _$plantListAtom.reportWrite(value, super.plantList, () {
       super.plantList = value;
     });
@@ -42,7 +42,7 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   @override
   String toString() {
     return '''
-name: ${name},
+name: ${userName},
 plantList: ${plantList}
     ''';
   }
