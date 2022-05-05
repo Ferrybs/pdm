@@ -1,6 +1,6 @@
-import HttpException from "exceptions/http.exceptions";
+import HttpException from "../exceptions/http.exceptions";
 import { Response } from "express";
-import RequestWithToken from "interfaces/request.token.interface";
+import RequestWithToken from "../interfaces/request.token.interface";
 import Controller from "./controller";
 
 export default class ClientController extends Controller{
@@ -11,6 +11,7 @@ export default class ClientController extends Controller{
             try {
               const dataStoreToken  = request.dataStoreToken;
               const result = await this.clientService.getClientBySessionId(dataStoreToken.id);
+              result.credentialsDTO.password = null;
               response.status(200).send({ok: true,result});
             } catch (error) {
               if(error instanceof(HttpException)){

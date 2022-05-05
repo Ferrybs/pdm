@@ -7,6 +7,7 @@ import PersonDTO from "../dto/person.dto";
 import SessionsDTO from "../dto/sessions.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
+import Credentials from "../entity/credentials.entity";
 
 
 export default class ClientService extends Services{
@@ -27,16 +28,9 @@ export default class ClientService extends Services{
         }
     }
     public async sessionType(id: string): Promise<string> {
-        const client = await this.database.findClientBySessionId(id);
-        if (client) {
-            const sessions = client.sessions.find((session)=>{
-                if(session.id === id){
-                    return session;
-                }
-            });
-            if(sessions){
-                return sessions.type.type;
-            }
+        const session = await this.database.findSessionBySessionId(id);
+        if (session) {
+            return session.type.id;
         }
         return null;
     }
@@ -57,7 +51,8 @@ export default class ClientService extends Services{
         try {
             const hashedPassword =  await bcrypt.hash(credentialsDTO.password,10);
             credentialsDTO.password = hashedPassword;
-            return  await this.database.updateCredentials(credentialsDTO);
+            const credentials = plainToInstance(Credentials,credentialsDTO);
+            return  await this.database.updateCredentials(credentials);
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }

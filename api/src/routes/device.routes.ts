@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import DeviceController from "../controllers/device.controler";
 import ValidationMiddleware from "../middlewares/validation.middleware";
 import AuthMiddleware from "../middlewares/auth.middleware";
+import AuthController from "controllers/auth.controller";
 
 
 export default class DeviceRoutes {
@@ -19,8 +20,14 @@ export default class DeviceRoutes {
         this.router.post(
             `${this.path}`,
             this._validationMiddleware.device(),
-            this._authMiddleware.verifyByBody(),
+            this._authMiddleware.verifyAccesToken(),
             this._controller.addDevice.bind(this._controller)
+            );
+        this.router.get(
+            `${this.path}`,
+            this._validationMiddleware.device(),
+            this._authMiddleware.verifyAccesToken(),
+            this._controller.getDevices.bind(this._controller)
             );
     }
 

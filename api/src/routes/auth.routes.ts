@@ -31,12 +31,12 @@ export default class AuthRoutes {
                 );
             this.router.post(
                 `${this.path}/refresh-token`,
-                this._authMiddleware.verifyByBody(),
+                this._authMiddleware.verifyAccesToken(),
                 this._controller.newRefreshToken.bind(this._controller)
                 );
             this.router.get(
                 `${this.path}/access-token`,
-                this._authMiddleware.refreshToken(),
+                this._authMiddleware.verifyRefreshToken(),
                 this._controller.newAccessToken.bind(this._controller)
                 );
             this.router.post(
@@ -46,14 +46,19 @@ export default class AuthRoutes {
             )
             this.router.get(
                 `${this.path}/reset-password/:token`,
-                this._authMiddleware.verifyByParam(),
+                this._authMiddleware.verifyPasswordReset(),
                 this._controller.resetPasswordPage.bind(this._controller)
             )
             this.router.post(
                 `${this.path}/change-password`,
-                this._authMiddleware.verifyByBody(),
+                this._authMiddleware.verifyPasswordReset(),
                 this._validationMiddleware.password(),
                 this._controller.changePasswordPage.bind(this._controller)
+            )
+            this.router.get(
+                `${this.path}/sessions`,
+                this._authMiddleware.verifyAccesToken(),
+                this._controller.getSessions.bind(this._controller)
             )
     }
 

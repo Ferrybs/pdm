@@ -9,10 +9,14 @@ import EmailFoundHttpException from "../exceptions/email.found.http.exception";
 import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import SessionHttpException from "../exceptions/session.http.exception";
-import ServerErrorHttpException from "../exceptions/server.error.http.exception";
 import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
-import TypeSession from "entity/type.session.entity";
+import TypeSession from "../entity/type.session.entity";
+import SessionsDTO from "../dto/sessions.dto";
+import Credentials from "../entity/credentials.entity";
+import { plainToInstance } from "class-transformer";
+import Person from "../entity/person.entity";
+import DataStoreToken from "../interfaces/data.store.token.interface";
 
 export default class AuthService extends Services{
   constructor(){
@@ -28,6 +32,11 @@ export default class AuthService extends Services{
     }catch (error) {
     throw new DatabaseHttpException(error.message);
     }
+  }
+
+  public async getSessions(id: string): Promise<SessionsDTO[]>{
+    const client = await this.database.findClientBySessionId(id);
+    return await this.database.findSessionsByClient(client);
   }
 
   public async createSession(type: TypeSession,description: string = ' ', tokenData: TokenData,sessionId: string): Promise<Sessions>{
@@ -46,36 +55,58 @@ export default class AuthService extends Services{
   }
 
   public async register(clientDTO: ClientDTO): Promise<boolean>{
-    clientDTO.credentialsDTO.email = clientDTO.credentialsDTO.email.toLowerCase();
+    const credentials = new Credentials();
+    credentials.email = clientDTO.credentialsDTO.email.toLowerCase();
+    credentials.password = clientDTO.credentialsDTO.password;
     
-    if(await this.database.findClientByEmail(clientDTO.credentialsDTO)){
-      throw new EmailFoundHttpException(clientDTO.credentialsDTO.email);
+    if(await this.database.findClientByEmail(credentials)){
+      throw new EmailFoundHttpException(credentials.email);
     }
     try {
-      const hashedPassword = await bcrypt.hash(clientDTO.credentialsDTO.password, 10);
-      clientDTO.credentialsDTO.password = hashedPassword;
+      credentials.password = await bcrypt.hash(credentials.password, 10); 
     } catch (error) {
       throw new HashHttpException(error.message);
     }
-
-    const result = await this.database.insertClient(clientDTO);
+    const client = new Client();
+    client.person = plainToInstance(Person,clientDTO.personDTO);
+    client.credentials = credentials;
+    const result = await this.database.insertClient(client);
     if(result){
       return true;
     }
     return false;
   }
-  public async getNewRefreshToken(sessionId: string ): Promise<TokenData>{
+  public async getNewRefreshToken(dataStoreToken: DataStoreToken ): Promise<TokenData>{
     var client: Client;
-    if(await this.isValidSession(sessionId)){
-      client = await this.database.findClientBySessionId(sessionId);
+    var session: Sessions;
+    var refreshToken: TokenData;
+    if(await this.isValidLoginSession(dataStoreToken)){
+      client = await this.database.findClientBySessionId(dataStoreToken.id);
 
       if(client){
-        await this.updateClientSessionByClientId(client.id);
+        await this.updateClientSessionsByClientId(client.id);
+
+        const sessionId = this.generateSessionId();
+        const sessionType = this.getRefreshTokenTypesession();
         try {
-          return this.jwt.createRefreshToken(client.id);
+          refreshToken = this.jwt.createRefreshToken(client.id,sessionType.id);
         } catch (error) {
           throw new HashHttpException(error.message);
         }
+        
+        if(refreshToken){
+          session = await this.createSession(sessionType," ",refreshToken,sessionId);
+        }else{
+          throw new SessionHttpException("CREATE","Refresh Token is Null!");
+        }
+        
+        if(session){
+          session.client = client;
+          await this._addSession(session);
+        }else{
+          throw new SessionHttpException("CREATE","Failed to assign client to session");
+        }
+        return refreshToken;
       }
     }else{
       throw new NotFoundHttpException("CLIENT");
@@ -90,23 +121,19 @@ export default class AuthService extends Services{
       
     client = await this.database.findClientById(id);
     if (client) {
-      await this.updateClientSessions(client);
+      await this.updateClientSessionsByClientId(client.id);
     
+      sessionId = this.generateSessionId();
+      const sessionType = this.getLoginTypesession();
       try {
-        sessionId = this.generateSessionId();
-      } catch (error) {
-        throw new SessionHttpException("GENERATE", error.message);
-      }
-    
-      try {
-        accessToken = this.jwt.createAccessToken(sessionId);
+        accessToken = this.jwt.createAccessToken(sessionId,sessionType.id);
       } catch (error) {
         throw new HashHttpException(error.message);
       }
       
       try {
         if(accessToken){
-          session = await this.createSession(this.getLoginTypesession()," ",accessToken,sessionId);
+          session = await this.createSession(sessionType," ",accessToken,sessionId);
         }
       } catch (error) {
         throw new SessionHttpException("CREATE", error.message);
@@ -122,29 +149,26 @@ export default class AuthService extends Services{
     throw new NotFoundHttpException("CLIENT");
   }
 
-  public async updateClientSessions(client: Client){
-      const time: number = Math.floor(Date.now() / 1000);
-      client.sessions.forEach( async (session) => {
-        if (session.expiresIn < time || session.type.type.toUpperCase() == "RESET_PASSWORD") {
-          try{
-            await this.database.deleteClientSessions(session);
-          } catch (error) {
-            throw new DatabaseHttpException(error.message);
-          }
+  public async updateClientSessionsBySessionId(id: string){
+    const client = await this.database.findClientBySessionId(id);
+    const sessions = await this.database.findSessionsByClientid(client.id);
+    const time: number = Math.floor(Date.now() / 1000);
+    sessions.forEach( async (session) => {
+      if (session.expiresIn < time || session.type.id == "2") {
+        try{
+          await this.database.deleteClientSessions(session);
+        } catch (error) {
+          throw new DatabaseHttpException(error.message);
         }
-      });
+      }
+    });
     }
   
-  public async isValidSession(sessionId: string): Promise<boolean> {
-    const client = await this.database.findClientBySessionId(sessionId);
+  public async isValidLoginSession(dataStoreToken: DataStoreToken): Promise<boolean> {
+    const session = await this.database.findSessionBySessionId(dataStoreToken.id);
     const time: number = Math.floor(Date.now() / 1000);
-    if (client) {
-      const session =  client.sessions.find((session)=>{
-        if(session.id === sessionId && session.expiresIn > time){
-          return session;
-        }
-      });
-      if(session){
+    if (session) {
+      if (session.type.id == "1" && session.expiresIn > time) {
         return true;
       }
     }else{
@@ -152,11 +176,11 @@ export default class AuthService extends Services{
     }
     return false;
   }   
-  public async updateClientSessionByClientId(id: string){
-    const client = await this.database.findClientById(id);
+  public async updateClientSessionsByClientId(id: string){
+    const sessions = await this.database.findSessionsByClientid(id);
     const time: number = Math.floor(Date.now() / 1000);
-    client.sessions.forEach( async (session) => {
-      if (session.expiresIn < time || session.type.type == "RESET_PASSWORD") {
+    sessions.forEach( async (session) => {
+      if (session.expiresIn < time || session.type.id == "2") {
         try{
           await this.database.deleteClientSessions(session);
         } catch (error) {
@@ -186,15 +210,16 @@ export default class AuthService extends Services{
       }
       if(isMatch){
         try{
-          await this.updateClientSessions(client);
+          await this.updateClientSessionsByClientId(client.id);
         } catch (error) {
           throw new SessionHttpException("UPDATE",error.message);
         }
         
         try {
           const sessionId = this.generateSessionId();
-          accessToken = this.jwt.createAccessToken(sessionId);
-          session = await this.createSession(this.getLoginTypesession()," ",accessToken,sessionId);
+          const sessionType = this.getLoginTypesession();
+          accessToken = this.jwt.createAccessToken(sessionId,sessionType.id);
+          session = await this.createSession(sessionType," ",accessToken,sessionId);
           session.client= client;
         } catch (error) {
           throw new HashHttpException(error.message);
@@ -221,34 +246,27 @@ export default class AuthService extends Services{
     var sessionId: string;
     var session: Sessions;
     var sessions: Sessions;
-    var result: boolean = false;
     const client = await this.database.findClientByEmail(credentialsDTO);
     if(client){
-      try {
-        await this.updateClientSessions(client);
-      } catch (error) {
-        throw new DatabaseHttpException(error.message);
-      }
+      await this.updateClientSessionsByClientId(client.id);
+      
       
       try {
         sessionId = this.generateSessionId();
       } catch (error) {
         throw new SessionHttpException("GENERATE", error.message);
       }
-      
-      const accessToken: TokenData = this.jwt.createAccessToken(sessionId);
+      const sessionType = this.getResetPasswordTypesession();
+      const accessToken: TokenData = this.jwt.createAccessToken(sessionId,sessionType.id);
       try {
-        session = await this.createSession(this.getResetPasswordTypesession()," ",accessToken,sessionId);
+        session = await this.createSession(sessionType," ",accessToken,sessionId);
       } catch (error) {
         throw new SessionHttpException("CREATE", error.message);
       }
       
       session.client = client;
-      try {
-        sessions = await this._addSession(session);
-      } catch (error) {
-        throw new DatabaseHttpException(error.message);
-      }
+      sessions = await this._addSession(session);
+      
       
       const clientDTO = new ClientDTO();
       clientDTO.id =  client.id;

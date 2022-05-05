@@ -1,8 +1,6 @@
 import express, { Router } from "express";
-import DeviceController from "../controllers/device.controler";
-import ValidationMiddleware from "../middlewares/validation.middleware";
 import AuthMiddleware from "../middlewares/auth.middleware";
-import ClientController from "controllers/client.controller";
+import ClientController from "../controllers/client.controller";
 
 
 export default class ClientRoutes {
@@ -18,7 +16,7 @@ export default class ClientRoutes {
     private initializeRoutes() {
         this.router.get(
             `${this.path}`,
-            this._authMiddleware.verifyByBody(),
+            this._authMiddleware.verifyAccesToken(),
             this._controller.getClient.bind(this._controller)
             );
     }

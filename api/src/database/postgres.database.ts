@@ -1,16 +1,12 @@
-import credentialsDto from "../dto/credentials.dto";
 import Credentials from "../entity/credentials.entity";
-import Person from "../entity/person.entity";
 import Database from "../interfaces/database.interface";
 import Client from "../entity/client.entity";
 import { DataSource, DeleteResult, UpdateResult } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
-import Sessions from "../entity/sessions.entity";
-import ClientDTO from "../dto/client.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import Device from "../entity/device.entiy";
-import DeviceDTO from "../dto/device.dto";
 import TypeSession from "../entity/type.session.entity";
+import Sessions from "../entity/sessions.entity";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -21,6 +17,41 @@ export default class PostgresDatabase implements Database{
     }
     private async initializeDatabase(){
         await this._appDataSource.initialize();
+    }
+    public async findSessionBySessionId(id: string): Promise<Sessions> {
+        try {
+            return await this._appDataSource.manager.findOne(
+                Sessions,
+                {where:{id: id}, 
+                relations:['type']
+            });
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+    public async findSessionsByClientid(id: string): Promise<Sessions[]> {
+        try {
+            const client = new Client()
+            client.id = id;
+            return await this._appDataSource.manager.find(
+                Sessions,
+                {where:{client: client}, 
+                relations:['type']
+            });
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+    public async findSessionsByClient(client: Client): Promise<Sessions[]> {
+        try {
+            return await this._appDataSource.manager.find(
+                Sessions,
+                {where:{client: client}, 
+                relations:['type']
+            });
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
     }
     public async insertTypeSession(typeSession: TypeSession): Promise<TypeSession> {
         try {
@@ -34,16 +65,23 @@ export default class PostgresDatabase implements Database{
         try {
             return await this._appDataSource.manager.findOne(
                 TypeSession,
-                {where: {type: typeSession.type},});
+                {where: {type: typeSession.type},relations: ['sessions']});
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }
     }
-    public async insertDevice(deviceDTO: DeviceDTO): Promise<Device> {
-        try {
-            const device = this._appDataSource.manager.create(Device,deviceDTO);
-            device.client = deviceDTO.clientDTO;          
+    public async insertDevice(device: Device): Promise<Device> {
+        try {       
             return await this._appDataSource.manager.save(device);
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+    public async findDevicesByClient(client: Client): Promise<Device[]> {
+        try {
+            const devices = await this._appDataSource.manager.find(
+                Device,{where:{client: client}});
+            return devices; 
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }
@@ -51,16 +89,15 @@ export default class PostgresDatabase implements Database{
     public async findDeviceById(id: string): Promise<Device> {
         try {
             const device = await this._appDataSource.manager.findOne(
-                Device,{where:{id: id}, relations: ['measures', 'client']});
+                Device,{where:{id: id}, relations: ['measures']});
             return device; 
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }
     }
 
-    public async updateCredentials(credentialsDTO: credentialsDto): Promise<boolean>{
+    public async updateCredentials(credentials: Credentials): Promise<boolean>{
         try {
-            const credentials = this._appDataSource.manager.create(Credentials,credentialsDTO);
             const result: UpdateResult = await this._appDataSource.manager.update(Credentials,credentials.email,credentials);
             if(result.affected != null && result.affected>0){
                 return true;
@@ -73,7 +110,7 @@ export default class PostgresDatabase implements Database{
     public async findClientById(id: string): Promise<Client>{
         try {
             const client = await this._appDataSource.manager.findOne(
-                Client,{where:{id: id}, relations: ['credentials', 'person','sessions']});
+                Client,{where:{id: id}, relations: ['credentials', 'person']});
             return client;
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
@@ -83,11 +120,11 @@ export default class PostgresDatabase implements Database{
     public async findClientBySessionId(sessionId: string): Promise<Client>{
         var client: Client;
         try {
-            const session = await this._appDataSource.manager.findOne(Sessions,{where:{id:sessionId}})
+            const session = await this._appDataSource.manager.findOne(Sessions,{where:{id:sessionId}});
             if(session){
                 client = await this._appDataSource.manager.findOne(Client,
                     {where:{sessions: session}, 
-                    relations: ['credentials', 'person','sessions', 'devices']});
+                    relations: ['credentials', 'person']});
             }
             return client;
             
@@ -95,21 +132,19 @@ export default class PostgresDatabase implements Database{
             throw (new DatabaseHttpException(error.message));
         }
     }
-    public async findClientByEmail(credentialsDTO: credentialsDto): Promise<Client>{
+    public async findClientByEmail(credentials: Credentials): Promise<Client>{
         var client: Client;
         try {
             const credentialsClient = await this._appDataSource.manager.findOne(Credentials,
             {where: 
                 {
-                email: credentialsDTO.email
+                email: credentials.email
                 }
             });
             if (credentialsClient) {
                 client = await this._appDataSource.manager.findOne(
                 Client,{where:{credentials: credentialsClient}, 
-                relations: ['credentials', 'person','devices']});
-
-                client.sessions = await this._appDataSource.manager.find(Sessions,{where:{client: client}, relations: ['type']});
+                relations: ['credentials', 'person']});
             }
         
             return client;
@@ -117,15 +152,10 @@ export default class PostgresDatabase implements Database{
             throw(new DatabaseHttpException(error.message));
         }
       }
-    public async insertClient(clientDTO: ClientDTO): Promise<Client>{
+    public async insertClient(client: Client): Promise<Client>{
         try {
-            const person = this._appDataSource.manager.create(Person,clientDTO.personDTO);
-            const cred = this._appDataSource.manager.create(Credentials,clientDTO.credentialsDTO);
-            const client = new Client();
-            client.credentials = cred;
-            client.person = person;
-            await this._appDataSource.manager.save(person);
-            await this._appDataSource.manager.save(cred);
+            await this._appDataSource.manager.save(client.person);
+            await this._appDataSource.manager.save(client.credentials);
             return await this._appDataSource.manager.save(client);
         } catch (error) {
             throw (new DatabaseHttpException(error.message));

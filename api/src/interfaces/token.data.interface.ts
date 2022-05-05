@@ -1,6 +1,7 @@
 interface TokenData {
     token: string;
-    iat: number
+    type:string;
+    iat: number;
     expiresIn: number;
 }
   

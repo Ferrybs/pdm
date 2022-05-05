@@ -35,6 +35,12 @@ export default class Services {
         typeSession.type = 'LOGIN';
         return typeSession;
     }
+    public getRefreshTokenTypesession(){
+        const typeSession = new TypeSession();
+        typeSession.id ='3';
+        typeSession.type = 'REFRESH_TOKEN';
+        return typeSession;
+    }
     public getResetPasswordTypesession(){
         const typeSession = new TypeSession();
         typeSession.id ='2';

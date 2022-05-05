@@ -1,4 +1,4 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { NextFunction,Response } from "express";
 import Controller from "./controller";
 import ClientDTO from "../dto/client.dto";
 import CredentialsDTO from "../dto/credentials.dto";
@@ -6,9 +6,27 @@ import RequesWithToken from "../interfaces/request.token.interface";
 import { validate } from "class-validator";
 import RequestWithError from "../interfaces/request.error.interface";
 import HttpException from "../exceptions/http.exceptions";
-import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
 
 export default class AuthController extends Controller{
+
+  public async getSessions(request: RequesWithToken, response: Response){
+    if (request.error) {
+      response.status(400).send({ ok: false, message: request.error});
+    }else{
+      try {
+        const dataStoreToken = request.dataStoreToken;
+        const result = await this.authService.getSessions(dataStoreToken.id);
+        response.status(200).send({ok: true,result});
+      } catch (error) {
+        if(error instanceof(HttpException)){
+          response.status(error.status).send(error.data);
+        }else{
+          response.status(500).send({ ok: false, message: error.message});
+        }
+      
+      }
+    }
+  }
 
   public async register(request: RequestWithError, response: Response){
     if (request.error) {
@@ -34,8 +52,8 @@ export default class AuthController extends Controller{
     }else{
       try {
         const data = request.dataStoreToken;
-        const refreshToken = await this.authService.getNewRefreshToken(data.id);
-        response.status(200).send({ok: true,data: refreshToken})
+        const refreshToken = await this.authService.getNewRefreshToken(data);
+        response.status(200).send({ok: true,refreshToken});
       } catch (error) {
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
@@ -53,7 +71,7 @@ export default class AuthController extends Controller{
         const data = request.dataStoreToken;
         const tokenData = await this.authService.getNewAccessToken(data.id);
         if (tokenData) {
-          response.status(200).send({ok: true, data:tokenData});
+          response.status(200).send({ok: true,tokenData});
         }else{
           response.status(401).send({ ok: false, message: "Not Found"});
         }
@@ -101,7 +119,8 @@ export default class AuthController extends Controller{
         if (clientDTO) {
           name = clientDTO.personDTO.name;
           token = request.body.token;
-          await this.authService.updateClientSessionByClientId(clientDTO.id);
+
+          await this.authService.updateClientSessionsByClientId(clientDTO.id);
           const credentialsDTO = clientDTO.credentialsDTO;
           credentialsDTO.password = password;
           await validate(credentialsDTO);
@@ -131,20 +150,13 @@ export default class AuthController extends Controller{
     }else{
       try {
         const dataStoreToken = request.dataStoreToken;
-        const sessionType = await this.clientService.sessionType(dataStoreToken.id);
-        if(sessionType && sessionType == 'RESET_PASSWORD')
-        {
-          const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
-          if(clientDTO){
-            const data = {
-              token: request.params.token,
-              name: clientDTO.personDTO.name
-            }
-            response.render('pages/redefinePassword',{data});
+        const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
+        if(clientDTO){
+          const data = {
+            token: request.params.token,
+            name: clientDTO.personDTO.name
           }
-        }
-        else{
-          response.render('pages/invalidLink');
+          response.render('pages/redefinePassword',{data});
         }
       } catch (error) {
         response.render('pages/invalidLink',{message: error.message});
