@@ -8,21 +8,21 @@ export default class AuthMiddleware implements Auth{
   verifyPasswordReset(): RequestHandler {
     return async(request: RequestWithToken, response: Response, next) =>{
       let message: string;
-      var refreshToken: string;
+      var token: string;
       try {
         const header = request.header("Authorization");
-        refreshToken = header == null ? refreshToken : header.replace("Bearer ", "");
-        refreshToken = request.body.refreshToken == null ? refreshToken : request.body.refreshToken;
-        refreshToken = request.params['refresh-token'] == null ? refreshToken : request.params['refresh-token'];
-        if (refreshToken) {
+        token = header == null ? token : header.replace("Bearer ", "");
+        token = request.body.token == null ? token : request.body.token;
+        token = request.params['token'] == null ? token : request.params['token'];
+        if (token) {
           const secret = validateEnv.JWT_SECRET;
-          const dataStoredInToken = jwt.verify(refreshToken,secret) as DataStoreToken;
+          const dataStoredInToken = jwt.verify(token,secret) as DataStoreToken;
           if(dataStoredInToken.typeId == "2"){
             request.dataStoreToken = dataStoredInToken;
             next();
             return;
           }else{
-            request.error = "Invalid Type of Token!"
+            message = "Invalid Type of Token!"
           }
         }
       } catch (error) {
@@ -44,7 +44,7 @@ export default class AuthMiddleware implements Auth{
         const header = request.header("Authorization");
         refreshToken = header == null ? refreshToken : header.replace("Bearer ", "");
         refreshToken = request.body.refreshToken == null ? refreshToken : request.body.refreshToken;
-        refreshToken = request.params['refresh-token'] == null ? refreshToken : request.params['refresh-token'];
+        refreshToken = request.params['token'] == null ? refreshToken : request.params['token'];
         if (refreshToken) {
           const secret = validateEnv.JWT_SECRET;
           const dataStoredInToken = jwt.verify(refreshToken,secret) as DataStoreToken;
@@ -53,7 +53,7 @@ export default class AuthMiddleware implements Auth{
             next();
             return;
           }else{
-            request.error = "Invalid Type of Token!"
+            message = "Invalid Type of Token!"
           }
         }
       } catch (error) {
@@ -84,7 +84,7 @@ export default class AuthMiddleware implements Auth{
               next();
               return;
             }else{
-              request.error = "Invalid Type of Token!"
+              message = "Invalid Type of Token!"
             }
           }
         } catch (error) {
