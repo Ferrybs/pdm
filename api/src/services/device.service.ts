@@ -25,7 +25,7 @@ export default class DeviceService extends Services{
         client.id = id;
         if (client) {
 
-            return this.database.findDevicesByClient(client);
+            return await this.database.findDevicesByClient(client);
         }else{
             throw new NotFoundHttpException("CLIENT");
         }

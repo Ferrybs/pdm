@@ -35,7 +35,7 @@ export default class DeviceController extends Controller{
         try {
           const dataStoreToken = request.dataStoreToken;
           const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
-          const devices = this.deviceService.getDevices(clientDTO.id);
+          const devices = await this.deviceService.getDevices(clientDTO.id);
           response.status(200).send({ok: true,devices});
         } catch (error) {
           if(error instanceof(HttpException)){

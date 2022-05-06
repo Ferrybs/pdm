@@ -80,7 +80,6 @@ export default class AuthService extends Services{
     var client: Client;
     var session: Sessions;
     var refreshToken: TokenData;
-    if(await this.isValidLoginSession(dataStoreToken)){
       client = await this.database.findClientBySessionId(dataStoreToken.id);
 
       if(client){
@@ -108,10 +107,8 @@ export default class AuthService extends Services{
         }
         return refreshToken;
       }
-    }else{
       throw new NotFoundHttpException("CLIENT");
-    }
-    
+
   }
   public async getNewAccessToken(id: string ): Promise<TokenData> {
     var client: Client;
@@ -148,34 +145,7 @@ export default class AuthService extends Services{
     }
     throw new NotFoundHttpException("CLIENT");
   }
-
-  public async updateClientSessionsBySessionId(id: string){
-    const client = await this.database.findClientBySessionId(id);
-    const sessions = await this.database.findSessionsByClientid(client.id);
-    const time: number = Math.floor(Date.now() / 1000);
-    sessions.forEach( async (session) => {
-      if (session.expiresIn < time || session.type.id == "2") {
-        try{
-          await this.database.deleteClientSessions(session);
-        } catch (error) {
-          throw new DatabaseHttpException(error.message);
-        }
-      }
-    });
-    }
   
-  public async isValidLoginSession(dataStoreToken: DataStoreToken): Promise<boolean> {
-    const session = await this.database.findSessionBySessionId(dataStoreToken.id);
-    const time: number = Math.floor(Date.now() / 1000);
-    if (session) {
-      if (session.type.id == "1" && session.expiresIn > time) {
-        return true;
-      }
-    }else{
-      throw new NotFoundHttpException("CLIENT");
-    }
-    return false;
-  }   
   public async updateClientSessionsByClientId(id: string){
     const sessions = await this.database.findSessionsByClientid(id);
     const time: number = Math.floor(Date.now() / 1000);
