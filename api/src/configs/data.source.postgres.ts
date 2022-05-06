@@ -1,13 +1,13 @@
 import { DataSource } from "typeorm";
 import validateEnv from "../utils/validateEnv";
-import Person from "../entity/person.entity";
-import Credentials from "../entity/credentials.entity";
-import Client from "../entity/client.entity";
-import Sessions from "../entity/sessions.entity";
-import Device from "../entity/device.entiy";
-import Measure from "../entity/measure.entity";
-import TypeMeasure from "../entity/type.measure.entity";
-import TypeSession from "../entity/type.session.entity";
+import Person from "../models/person.entity";
+import Credentials from "../models/credentials.entity";
+import Client from "../models/client.entity";
+import Sessions from "../models/sessions.entity";
+import Device from "../models/device.entiy";
+import Measure from "../models/measure.entity";
+import TypeMeasure from "../models/type.measure.entity";
+import TypeSession from "../models/type.session.entity";
 
 export default class PostgresDataSource{
     appDataSource: DataSource;

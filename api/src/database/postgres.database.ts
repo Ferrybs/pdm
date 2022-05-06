@@ -1,12 +1,12 @@
-import Credentials from "../entity/credentials.entity";
+import Credentials from "../models/credentials.entity";
 import Database from "../interfaces/database.interface";
-import Client from "../entity/client.entity";
+import Client from "../models/client.entity";
 import { DataSource, DeleteResult, UpdateResult } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
 import DatabaseHttpException from "../exceptions/database.http.exception";
-import Device from "../entity/device.entiy";
-import TypeSession from "../entity/type.session.entity";
-import Sessions from "../entity/sessions.entity";
+import Device from "../models/device.entiy";
+import TypeSession from "../models/type.session.entity";
+import Sessions from "../models/sessions.entity";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;

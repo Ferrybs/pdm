@@ -1,8 +1,8 @@
-import Credentials from "entity/credentials.entity";
-import Device from "entity/device.entiy";
-import Sessions from "entity/sessions.entity";
-import TypeSession from "entity/type.session.entity";
-import Client from "../entity/client.entity";
+import Credentials from "models/credentials.entity";
+import Device from "models/device.entiy";
+import Sessions from "models/sessions.entity";
+import TypeSession from "models/type.session.entity";
+import Client from "../models/client.entity";
 
 export default interface Database{
 

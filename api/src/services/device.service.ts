@@ -1,9 +1,9 @@
 import { plainToInstance } from "class-transformer";
-import Device from "../entity/device.entiy";
+import Device from "../models/device.entiy";
 import DeviceDTO from "../dto/device.dto";
 import DeviceFoundHttpException from "../exceptions/device.found.http.exception";
 import Services from "./services";
-import Client from "../entity/client.entity";
+import Client from "../models/client.entity";
 import ClientDTO from "../dto/client.dto";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
 
