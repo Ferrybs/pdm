@@ -2,11 +2,10 @@ import express, { Router } from "express";
 import DeviceController from "../controllers/device.controller";
 import ValidationMiddleware from "../middlewares/validation.middleware";
 import AuthMiddleware from "../middlewares/auth.middleware";
-import AuthController from "controllers/auth.controller";
 
 
-export default class DeviceRoutes {
-    public path : string = '/device';
+export default class Measure {
+    public path : string = '/measure';
     public router : Router = express.Router();
     private _controller: DeviceController = new DeviceController();
     private _validationMiddleware = new ValidationMiddleware();;
