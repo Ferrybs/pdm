@@ -1,12 +1,12 @@
 import DeviceDTO from "../dto/device.dto";
 import HttpException from "../exceptions/http.exceptions";
-import { NextFunction, Request, Response } from "express";
+import { Response } from "express";
 import RequestWithToken from "../interfaces/request.token.interface";
-import DeviceService from "../services/device.service";
 import Controller from "./controller";
+import MeasureDTO from "../dto/measure.dto";
+import NotFoundHttpException from "../exceptions/not.found.http.exception";
 
 export default class DeviceController extends Controller{
-    private deviceService: DeviceService = new DeviceService();
 
     public async addDevice(request: RequestWithToken, response: Response){
       if (request.error) {
@@ -27,7 +27,55 @@ export default class DeviceController extends Controller{
             
             }
           }
+    }
+    public async addMeasure(request: RequestWithToken, response: Response){
+      if (request.error) {
+            response.status(400).send({ ok: false, message: request.error});
+          }else{
+            try {
+              var result: boolean;
+              const measureDTO: MeasureDTO = request.body;
+              const dataStoreToken = request.dataStoreToken;
+              if(await this.deviceService.isMatchSessionDevice(dataStoreToken.id,measureDTO.deviceDTO.id)){
+                result = await this.deviceService.addMeasure(measureDTO);
+                response.status(200).send({ok: result});
+              }else{
+                throw new NotFoundHttpException("DEVICE");
+              }
+              
+            } catch (error) {
+              if(error instanceof(HttpException)){
+                response.status(error.status).send(error.data);
+              }else{
+                response.status(500).send({ ok: false, message: error.message});
+              }
+            
+            }
+          }
     } 
+    public async getMeasures(request: RequestWithToken, response: Response){
+      if (request.error) {
+        response.status(400).send({ ok: false, message: request.error});
+      }else{
+        try {
+          const dataStoreToken = request.dataStoreToken;
+          const deviceId: string = request.params.id;
+          if (await this.deviceService.isMatchSessionDevice(dataStoreToken.id,deviceId)) {
+            const measureDTO = await this.deviceService.getMeasures(deviceId);
+            response.status(200).send({ok: true,measureDTO});
+          }else{
+            throw new NotFoundHttpException("DEVICE");
+          }
+        } catch (error) {
+          if(error instanceof(HttpException)){
+            response.status(error.status).send(error.data);
+          }else{
+            response.status(500).send({ ok: false, message: error.message});
+          }
+        
+        }
+      }
+    }
     public async getDevices(request: RequestWithToken, response: Response){
       if (request.error) {
         response.status(400).send({ ok: false, message: request.error});

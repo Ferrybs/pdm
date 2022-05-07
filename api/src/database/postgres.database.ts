@@ -1,12 +1,13 @@
-import Credentials from "../models/credentials.entity";
+import Credentials from "../entity/credentials.entity";
 import Database from "../interfaces/database.interface";
-import Client from "../models/client.entity";
+import Client from "../entity/client.entity";
 import { DataSource, DeleteResult, UpdateResult } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
 import DatabaseHttpException from "../exceptions/database.http.exception";
-import Device from "../models/device.entiy";
-import TypeSession from "../models/type.session.entity";
-import Sessions from "../models/sessions.entity";
+import Device from "../entity/device.entiy";
+import TypeSession from "../entity/type.session.entity";
+import Sessions from "../entity/sessions.entity";
+import Measure from "../entity/measure.entity";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -17,6 +18,17 @@ export default class PostgresDatabase implements Database{
     }
     private async initializeDatabase(){
         await this._appDataSource.initialize();
+    }
+    public async findMeasuresByDevice(device: Device): Promise<Measure[]> {
+        try {
+            return await this._appDataSource.manager.find(
+                Measure,
+                {where: {device: device},
+                relations: ['type']
+            });
+        } catch (error) {
+            
+        }
     }
     public async findSessionBySessionId(id: string): Promise<Sessions> {
         try {
@@ -53,6 +65,13 @@ export default class PostgresDatabase implements Database{
             throw( new DatabaseHttpException(error.message));
         }
     }
+    public async insertMeasure(measure: Measure): Promise<Measure> {
+        try {
+            return await this._appDataSource.manager.save(measure);
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
     public async insertTypeSession(typeSession: TypeSession): Promise<TypeSession> {
         try {
             return await this._appDataSource.manager.save(typeSession);
@@ -77,6 +96,16 @@ export default class PostgresDatabase implements Database{
             throw( new DatabaseHttpException(error.message));
         }
     }
+    public async findDevicesBySessionId(sessionId: string): Promise<Device[]> {
+        try {
+            const client = await this.findClientBySessionId(sessionId);
+            const devices = await this._appDataSource.manager.find(
+                Device,{where:{client: client}});
+            return devices; 
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
     public async findDevicesByClient(client: Client): Promise<Device[]> {
         try {
             const devices = await this._appDataSource.manager.find(
@@ -89,7 +118,7 @@ export default class PostgresDatabase implements Database{
     public async findDeviceById(id: string): Promise<Device> {
         try {
             const device = await this._appDataSource.manager.findOne(
-                Device,{where:{id: id}, relations: ['measures']});
+                Device,{where:{id: id}});
             return device; 
         } catch (error) {
             throw( new DatabaseHttpException(error.message));

@@ -4,7 +4,7 @@ import PostgresDatabase from "../database/postgres.database";
 import AuthJwt from "../auth/auth.jwt";
 import SendMail from "../interfaces/send.email.interface";
 import Crypto from "crypto";
-import TypeSession from "../models/type.session.entity";
+import TypeSession from "../entity/type.session.entity";
 export default class Services {
     private _database: Database;
     private _jwt: AuthJwt = new AuthJwt();

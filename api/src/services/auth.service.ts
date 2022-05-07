@@ -1,21 +1,21 @@
 import Services from "./services";
 import bcrypt from "bcrypt"
 import ClientDTO from "../dto/client.dto";
-import Client from "../models/client.entity";
+import Client from "../entity/client.entity";
 import CredentialsDTO from "../dto/credentials.dto";
 import TokenData from "../interfaces/token.data.interface";
-import Sessions from "../models/sessions.entity";
+import Sessions from "../entity/sessions.entity";
 import EmailFoundHttpException from "../exceptions/email.found.http.exception";
 import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import SessionHttpException from "../exceptions/session.http.exception";
 import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
-import TypeSession from "../models/type.session.entity";
+import TypeSession from "../entity/type.session.entity";
 import SessionsDTO from "../dto/sessions.dto";
-import Credentials from "../models/credentials.entity";
+import Credentials from "../entity/credentials.entity";
 import { plainToInstance } from "class-transformer";
-import Person from "../models/person.entity";
+import Person from "../entity/person.entity";
 import DataStoreToken from "../interfaces/data.store.token.interface";
 
 export default class AuthService extends Services{

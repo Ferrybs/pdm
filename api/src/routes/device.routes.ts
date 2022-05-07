@@ -2,7 +2,6 @@ import express, { Router } from "express";
 import DeviceController from "../controllers/device.controller";
 import ValidationMiddleware from "../middlewares/validation.middleware";
 import AuthMiddleware from "../middlewares/auth.middleware";
-import AuthController from "controllers/auth.controller";
 
 
 export default class DeviceRoutes {
@@ -25,9 +24,19 @@ export default class DeviceRoutes {
             );
         this.router.get(
             `${this.path}`,
-            this._validationMiddleware.device(),
             this._authMiddleware.verifyAccesToken(),
             this._controller.getDevices.bind(this._controller)
+            );
+        this.router.post(
+            `${this.path}/measure`,
+            this._validationMiddleware.measure(),
+            this._authMiddleware.verifyAccesToken(),
+            this._controller.addMeasure.bind(this._controller)
+            );
+        this.router.get(
+            `${this.path}/measure/:id`,
+            this._authMiddleware.verifyAccesToken(),
+            this._controller.getMeasures.bind(this._controller)
             );
     }
 

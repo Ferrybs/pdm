@@ -1,11 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import Device from "./device.entiy";
 import TypeMeasure from "./type.measure.entity";
 
 @Entity()
 export default class Measure{
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn('increment')
     public id?: string;
 
     @Column({type: "timestamptz", nullable: false})

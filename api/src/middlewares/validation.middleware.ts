@@ -7,7 +7,8 @@ import Validation from '../interfaces/validation.interface';
 import { ValidationError } from 'class-validator';
 import RequestWithError from '../interfaces/request.error.interface';
 import DeviceDTO from '../dto/device.dto';
-
+import MeasureDTO from '../dto/measure.dto';
+import TypeMeasureDTO from '../dto/type.measure.dto';
 export default class ValidationMiddleware implements Validation {
 
 
@@ -17,6 +18,23 @@ export default class ValidationMiddleware implements Validation {
       try {
         const deviceDTO: DeviceDTO = request.body;
         await transformAndValidate(DeviceDTO,deviceDTO);
+      } catch (err) {
+        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+      }
+      if(message){
+        request.error = message;
+      }
+      next();
+    }
+  }
+  public measure(): RequestHandler {
+    return async (request: RequestWithError, response: Response, next) =>{
+      let message: string;
+      try {
+        const measureDTO: MeasureDTO = request.body;
+        await transformAndValidate(MeasureDTO,measureDTO);
+        await transformAndValidate(DeviceDTO,measureDTO.deviceDTO);
+        await transformAndValidate(TypeMeasureDTO,measureDTO.typeDTO);
       } catch (err) {
         message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
       }

@@ -7,7 +7,7 @@ import PersonDTO from "../dto/person.dto";
 import SessionsDTO from "../dto/sessions.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
-import Credentials from "../models/credentials.entity";
+import Credentials from "../entity/credentials.entity";
 
 
 export default class ClientService extends Services{

@@ -1,8 +1,9 @@
-import Credentials from "models/credentials.entity";
-import Device from "models/device.entiy";
-import Sessions from "models/sessions.entity";
-import TypeSession from "models/type.session.entity";
-import Client from "../models/client.entity";
+import Credentials from "entity/credentials.entity";
+import Device from "entity/device.entiy";
+import Measure from "entity/measure.entity";
+import Sessions from "entity/sessions.entity";
+import TypeSession from "entity/type.session.entity";
+import Client from "../entity/client.entity";
 
 export default interface Database{
 
@@ -15,10 +16,13 @@ export default interface Database{
     findSessionsByClient(client: Client): Promise<Sessions[]>;
     findSessionsByClientid(id: string): Promise<Sessions[]>;
     findSessionBySessionId(id: string): Promise<Sessions>;
+    findMeasuresByDevice(device: Device): Promise<Measure[]>;
+    findDevicesBySessionId(sessionId: string): Promise<Device[]>;
 
     insertClient(client: Client): Promise<Client>;
     insertClientSessions(session: Sessions): Promise<Sessions>;
     insertDevice(device: Device): Promise<Device>;
+    insertMeasure(measure: Measure): Promise<Measure>;
     insertTypeSession(typeSession: TypeSession): Promise<TypeSession>;
 
     updateCredentials(credentiats: Credentials): Promise<boolean>;

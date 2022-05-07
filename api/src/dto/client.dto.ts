@@ -1,5 +1,5 @@
 import { ValidateNested } from 'class-validator';
-import Device from '../models/device.entiy';
+import Device from '../entity/device.entiy';
 import CredentialsDTO from './credentials.dto';
 import PersonDTO from "./person.dto"
 import SessionsDTO from './sessions.dto';
