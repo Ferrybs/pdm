@@ -42,7 +42,7 @@ export default class ClientService extends Services{
             clientDTO.personDTO = result.person;
             clientDTO.credentialsDTO = result.credentials;
             clientDTO.sessionsDTO = result.sessions;
-            clientDTO.devices = result.devices;
+            clientDTO.devicesDTO = result.devices;
             return clientDTO;
         }
         throw new NotFoundHttpException("TOKEN","Try with another token!");
