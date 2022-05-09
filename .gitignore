@@ -9,6 +9,12 @@ mobile/.buildlog/
 .history
 mobile/.svn/
 
+mqtt/.pio
+mqtt/.vscode/.browse.c_cpp.db*
+mqtt/.vscode/c_cpp_properties.json
+mqtt/.vscode/launch.json
+mqtt/.vscode/ipch
+
 # IntelliJ related
 *.iml
 *.ipr
