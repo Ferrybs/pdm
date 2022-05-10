@@ -1,4 +1,3 @@
-import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
 import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
