@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:basearch/src/features/auth/data/dto/client_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
-import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
-import 'package:basearch/src/features/auth/domain/model/login_model.dart';
+import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
 import 'package:basearch/src/validators/validator.dart';
@@ -55,10 +53,10 @@ class AuthUseCase {
 
   Future<String?> login(String email, String password) async {
     try {
-      LoginModel? loginModel = await repository
+      TokenDataModel? tokenData = await repository
           .login(CredentialsModel(email: email, password: password));
-      if (loginModel?.tokenData != null) {
-        setAccessToken(loginModel?.tokenData);
+      if (tokenData?.token != null) {
+        setAccessToken(tokenData);
         return null;
       } else {
         final requestOptions = RequestOptions(path: "/auth/login");

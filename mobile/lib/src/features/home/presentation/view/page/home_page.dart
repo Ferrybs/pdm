@@ -1,6 +1,7 @@
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/colored_print/print_color.dart';
 import 'package:localization/localization.dart';
 
 import '../../viewmodel/home_viewmodel.dart';
@@ -14,33 +15,73 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends ModularState<HomePage, HomeViewModel> {
   final _viewModel = Modular.get<HomeViewModel>();
-  bool showSpinner = false;
   late ThemeData _theme;
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: const HomeAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            children: [
-              _createTitle(),
-              ..._createPlantList(),
-            ],
-          ),
-        ),
+      body: FutureBuilder(
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '${snapshot.error} occured',
+                  style: const TextStyle(fontSize: 18),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              final data = snapshot.data as String;
+              return SingleChildScrollView(
+                  child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  children: [_createTitle(data)],
+                ),
+              ));
+            }
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        future: getData(),
       ),
-    );
+    ));
   }
 
-  _createTitle() {
+  Future<String> getData() {
+    return _viewModel.gethomeTittle();
+  }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   _theme = Theme.of(context);
+  //   return Scaffold(
+  //     appBar: const HomeAppBar(),
+  //     body: SingleChildScrollView(
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(18.0),
+  //         child: Column(
+  //           children: [
+  //             _createTitle(),
+  //             ..._createPlantList(),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  _createTitle(String tittle) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Text(
-        store.userName + ", " + "home_title".i18n(),
+        tittle,
         style: _theme.textTheme.headlineMedium,
       ),
     );

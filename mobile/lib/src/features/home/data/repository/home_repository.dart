@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:basearch/src/features/home/data/repository/home_repository_base.dart';
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
+import 'package:basearch/src/features/home/domain/model/response_model.dart';
 import 'package:dio/dio.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import '../../domain/model/chart_serie.dart';
 import '../../domain/repository/home_interface.dart';
 
@@ -29,10 +31,23 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   }
 
   @override
-  Future<ClientModel> getClient() async {
-    Response response;
-    var dio = Dio(APIoptions);
-    response = await dio.post("/auth/login", data: credentials.toJson());
-    throw Error();
+  Future<ClientModel?> getClient() async {
+    try {
+      EncryptedSharedPreferences encrypt = EncryptedSharedPreferences();
+      String? token = await encrypt.getString("AccessToken");
+      Response response;
+      var dio = Dio(APIoptions);
+      response = await dio.get("/client/",
+          options: Options(headers: {"Authorization": "Bearer " + token}));
+      if (response.statusCode == 200) {
+        final data = ResponseModel.fromJson(response.data);
+        if (data.ok == true) {
+          return ClientModel.fromJson(response.data["result"]);
+        }
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:basearch/src/features/auth/data/repository/repository.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
-import 'package:basearch/src/features/auth/domain/model/login_model.dart';
 import 'package:basearch/src/features/auth/domain/model/response_model.dart';
+import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/repository/auth_interface.dart';
 
 class AuthRepository extends AtuhRepositoryBase implements IAuth {
   @override
-  Future<LoginModel?> login(CredentialsModel credentials) async {
+  Future<TokenDataModel?> login(CredentialsModel credentials) async {
     try {
       Response response;
       var dio = Dio(options);
@@ -17,7 +17,8 @@ class AuthRepository extends AtuhRepositoryBase implements IAuth {
       if (response.statusCode == 200) {
         final data = ResponseModel.fromJson(response.data);
         if (data.ok == true) {
-          return LoginModel.fromJson(response.data);
+          var token = TokenDataModel.fromJson(response.data['tokenData']);
+          return token;
         }
       }
       return null;
