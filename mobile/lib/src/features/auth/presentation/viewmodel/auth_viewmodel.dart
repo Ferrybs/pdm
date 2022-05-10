@@ -1,22 +1,17 @@
 import 'dart:async';
 import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
-import 'package:basearch/src/features/auth/domain/model/client_model.dart';
-import 'package:basearch/src/features/auth/presentation/view/page/reset_password.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../domain/usecase/login_usecase.dart';
+import '../../domain/usecase/auth_usecase.dart';
 
-part 'login_viewmodel.g.dart';
+part 'auth_viewmodel.g.dart';
 
-class LoginViewModel = _LoginViewModelBase with _$LoginViewModel;
+class AuthViewModel = _AuthViewModelBase with _$AuthViewModel;
 
-abstract class _LoginViewModelBase with Store {
-  final _usecase = Modular.get<LoginUseCase>();
-
-  @observable
-  ClientModel? client;
+abstract class _AuthViewModelBase with Store {
+  final _usecase = Modular.get<AuthUseCase>();
 
   @observable
   String name = '';
@@ -32,11 +27,6 @@ abstract class _LoginViewModelBase with Store {
 
   @observable
   String confirmPassword = '';
-
-  @action
-  updateClient(ClientModel? value) {
-    client = value;
-  }
 
   @action
   updateName(String value) {
@@ -69,9 +59,8 @@ abstract class _LoginViewModelBase with Store {
 
   Future<String?> login() async {
     var result = await _usecase.login(email, password);
-    updateClient(_usecase.get());
-    if (result != null) {
-      Modular.to.navigate("/home");
+    if (result == null) {
+      Modular.to.navigate("/home/");
     }
     return result;
   }
@@ -125,5 +114,9 @@ abstract class _LoginViewModelBase with Store {
       return true;
     }
     return false;
+  }
+
+  void navigateTOLoginPage() {
+    Modular.to.navigate("/auth/");
   }
 }

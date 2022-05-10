@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:basearch/src/features/home/domain/model/user_model.dart';
+import 'package:basearch/src/features/home/data/repository/home_repository_base.dart';
+import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/model/chart_serie.dart';
 import '../../domain/repository/home_interface.dart';
 
-class HomeRepository implements IHome {
+class HomeRepository extends HomeRepositoryBase implements IHome {
   @override
   Future<List<PlantStatsModel>> getPlantStats() {
     return [
@@ -28,7 +29,10 @@ class HomeRepository implements IHome {
   }
 
   @override
-  Future<UserModel?> getUsuario() {
-    return UserModel("Rafael") as Future<UserModel>;
+  Future<ClientModel> getClient() async {
+    Response response;
+    var dio = Dio(APIoptions);
+    response = await dio.post("/auth/login", data: credentials.toJson());
+    throw Error();
   }
 }

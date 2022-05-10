@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_viewmodel.dart';
+part of 'auth_viewmodel.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,23 +8,8 @@ part of 'login_viewmodel.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$LoginViewModel on _LoginViewModelBase, Store {
-  final _$clientAtom = Atom(name: '_LoginViewModelBase.client');
-
-  @override
-  ClientModel? get client {
-    _$clientAtom.reportRead();
-    return super.client;
-  }
-
-  @override
-  set client(ClientModel? value) {
-    _$clientAtom.reportWrite(value, super.client, () {
-      super.client = value;
-    });
-  }
-
-  final _$nameAtom = Atom(name: '_LoginViewModelBase.name');
+mixin _$AuthViewModel on _AuthViewModelBase, Store {
+  final _$nameAtom = Atom(name: '_AuthViewModelBase.name');
 
   @override
   String get name {
@@ -39,7 +24,7 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
-  final _$lastNameAtom = Atom(name: '_LoginViewModelBase.lastName');
+  final _$lastNameAtom = Atom(name: '_AuthViewModelBase.lastName');
 
   @override
   String get lastName {
@@ -54,7 +39,7 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
-  final _$emailAtom = Atom(name: '_LoginViewModelBase.email');
+  final _$emailAtom = Atom(name: '_AuthViewModelBase.email');
 
   @override
   String get email {
@@ -69,7 +54,7 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
-  final _$passwordAtom = Atom(name: '_LoginViewModelBase.password');
+  final _$passwordAtom = Atom(name: '_AuthViewModelBase.password');
 
   @override
   String get password {
@@ -85,7 +70,7 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
   }
 
   final _$confirmPasswordAtom =
-      Atom(name: '_LoginViewModelBase.confirmPassword');
+      Atom(name: '_AuthViewModelBase.confirmPassword');
 
   @override
   String get confirmPassword {
@@ -100,79 +85,67 @@ mixin _$LoginViewModel on _LoginViewModelBase, Store {
     });
   }
 
-  final _$_LoginViewModelBaseActionController =
-      ActionController(name: '_LoginViewModelBase');
-
-  @override
-  dynamic updateClient(ClientModel? value) {
-    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
-        name: '_LoginViewModelBase.updateClient');
-    try {
-      return super.updateClient(value);
-    } finally {
-      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
+  final _$_AuthViewModelBaseActionController =
+      ActionController(name: '_AuthViewModelBase');
 
   @override
   dynamic updateName(String value) {
-    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
-        name: '_LoginViewModelBase.updateName');
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.updateName');
     try {
       return super.updateName(value);
     } finally {
-      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   dynamic updateLastName(String value) {
-    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
-        name: '_LoginViewModelBase.updateLastName');
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.updateLastName');
     try {
       return super.updateLastName(value);
     } finally {
-      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   dynamic updateEmail(String value) {
-    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
-        name: '_LoginViewModelBase.updateEmail');
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.updateEmail');
     try {
       return super.updateEmail(value);
     } finally {
-      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   dynamic updatePassword(String value) {
-    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
-        name: '_LoginViewModelBase.updatePassword');
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.updatePassword');
     try {
       return super.updatePassword(value);
     } finally {
-      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   dynamic updateConfirmPassword(String value) {
-    final _$actionInfo = _$_LoginViewModelBaseActionController.startAction(
-        name: '_LoginViewModelBase.updateConfirmPassword');
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.updateConfirmPassword');
     try {
       return super.updateConfirmPassword(value);
     } finally {
-      _$_LoginViewModelBaseActionController.endAction(_$actionInfo);
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   String toString() {
     return '''
-client: ${client},
 name: ${name},
 lastName: ${lastName},
 email: ${email},

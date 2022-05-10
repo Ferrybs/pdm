@@ -1,17 +1,13 @@
 import 'dart:async';
 
 import 'package:basearch/src/features/auth/data/repository/repository.dart';
-import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/login_model.dart';
-import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/features/auth/domain/model/response_model.dart';
-import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
-import '../../domain/repository/login_interface.dart';
+import '../../domain/repository/auth_interface.dart';
 
-class LoginRepository extends Repository implements ILogin {
+class AuthRepository extends AtuhRepositoryBase implements IAuth {
   @override
   Future<LoginModel?> login(CredentialsModel credentials) async {
     try {
