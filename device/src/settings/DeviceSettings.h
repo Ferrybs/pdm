@@ -3,6 +3,7 @@
 #include "connections/WifiAccessPoint.h"
 #include "connections/WifiNetwork.h"
 #include "server/HttpServer.h"
+#include "core/Console.h"
 
 
 class DeviceSettings
@@ -12,6 +13,7 @@ private:
     WifiAccessPoint ap;
     WifiNetwork network;
     HttpServer http; 
+    Console console;
 public:
     void configure();
     bool isConnected();
@@ -20,33 +22,32 @@ bool DeviceSettings::isConnected(){
     return network.isConnected();
 }
 void DeviceSettings::configure(){
-    
+    console.ledOn();
+    console.log("Starting configuration!");
     if (!preferences.isConfigured())
     {
-        digitalWrite(2,HIGH);
+        console.blink();
         ap.start();
         http.start();
-        digitalWrite(2,LOW);
-        delay(500);
-        digitalWrite(2,HIGH);
-        Serial.println("Starting Access Point...");
+        console.blink();
+        console.blink();
+        console.log("Starting Access Point...");
         while (!preferences.isConfigured()){
             http.run();
         }
-        digitalWrite(2,LOW);
+        console.blink();
         ap.stop();
         http.stop();
-        digitalWrite(2,HIGH);
     }
     if (!network.start())
     {
-        digitalWrite(2,LOW);
-        Serial.println("Failed to connect!");
+        console.blink();
+        console.log("Failed to connect!");
         preferences.putConfigured(false);
-        digitalWrite(2,HIGH);
+        console.blink();
         configure();
     }
-    digitalWrite(2,LOW);
-    Serial.println("Device configured successfully!");
+    console.log("Device configured successfully!");
+    console.ledOff();
 
 }

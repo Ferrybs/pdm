@@ -1,8 +1,10 @@
 #include <WiFi.h>
 #include "settings/ClientSettings.h"
+#include "core/Console.h"
 class WifiNetwork{
 private:
     ClientSettings preferences;
+    Console console;
 public:
     bool start();
     bool isConnected();
@@ -15,28 +17,28 @@ bool WifiNetwork::start(){
     String ssid, password;
     digitalWrite(2,LOW);
     WiFi.mode(WIFI_MODE_STA);
-    delay(300);
+    console.blink();
     ssid = preferences.getSSID();
     password = preferences.getPassword();
     WiFi.begin(ssid.c_str(),password.c_str());
-    Serial.print("Try to connect to WiFi ..");
+    console.log("Try to connect to WiFi ..",false);
     digitalWrite(2,HIGH);
-    while (WiFi.status() != WL_CONNECTED && count < 40) {
-        Serial.print('.');
+    while (WiFi.status() != WL_CONNECTED && count < 30) {
+        console.log(".",false);
         digitalWrite(2,HIGH);
-        delay(rand() % 500);
+        console.blink(2,300);
         digitalWrite(2,LOW);
-        delay(rand() % 500);
+        console.blink(2,300);
         count++;
     }
-    Serial.println();
-    if (count == 40 && WiFi.status() != WL_CONNECTED)
+    console.log();
+    if (count == 30 && WiFi.status() != WL_CONNECTED)
     {
         return false;
     }else{
-        Serial.println("Connected!");
-        Serial.print("IP: ");
-        Serial.println(WiFi.localIP());
+        console.log("Connected!",false);
+        console.log("IP: ",false);
+        console.log(WiFi.localIP());
         return true;
     }
 }

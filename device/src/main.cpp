@@ -11,20 +11,13 @@ Humidity humidity;
 
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(2,OUTPUT);
-  Serial.println();
-  device.configure();
-  Serial.println("IS CONNECTED");
-  Serial.println(device.isConnected());
-
+    device.configure();
 }
 
 void loop() {
-  if (device.isConnected()){
-    humidity.getHumidity();
-  }else{
-    device.configure();
-  }
-  
+    if (device.isConnected())
+    {
+        humidity.getHumidity();
+    }
+    
 }
