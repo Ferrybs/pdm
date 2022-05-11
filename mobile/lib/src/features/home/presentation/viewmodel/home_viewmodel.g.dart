@@ -9,18 +9,18 @@ part of 'home_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$HomeViewModel on _HomeViewModelBase, Store {
-  final _$nameAtom = Atom(name: '_HomeViewModelBase.name');
+  final _$clientNameAtom = Atom(name: '_HomeViewModelBase.clientName');
 
   @override
-  String get userName {
-    _$nameAtom.reportRead();
-    return super.userName;
+  String? get clientName {
+    _$clientNameAtom.reportRead();
+    return super.clientName;
   }
 
   @override
-  set userName(String value) {
-    _$nameAtom.reportWrite(value, super.userName, () {
-      super.userName = value;
+  set clientName(String? value) {
+    _$clientNameAtom.reportWrite(value, super.clientName, () {
+      super.clientName = value;
     });
   }
 
@@ -39,10 +39,24 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+  final _$_HomeViewModelBaseActionController =
+      ActionController(name: '_HomeViewModelBase');
+
+  @override
+  void updateClientName(String name) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateClientName');
+    try {
+      return super.updateClientName(name);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-name: ${userName},
+clientName: ${clientName},
 plantList: ${plantList}
     ''';
   }

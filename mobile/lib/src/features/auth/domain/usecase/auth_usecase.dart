@@ -1,27 +1,27 @@
 import 'dart:async';
-import 'package:basearch/src/features/auth/data/dto/client_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
-import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
-import 'package:basearch/src/features/auth/domain/model/login_model.dart';
+import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
+import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
 import 'package:basearch/src/validators/validator.dart';
 import 'package:dio/dio.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
-import '../repository/login_interface.dart';
+import '../repository/auth_interface.dart';
 
-class LoginUseCase {
-  final repository = Modular.get<ILogin>();
-  ClientModel? _client;
+class AuthUseCase {
+  final repository = Modular.get<IAuth>();
 
-  ClientModel? get() {
-    return _client;
-  }
-
-  void set(ClientModel? client) {
-    _client = client;
+  setAccessToken(TokenDataModel? tokeData) async {
+    String? token = tokeData?.token;
+    if (token != null) {
+      EncryptedSharedPreferences encryptedSharedPreferences =
+          EncryptedSharedPreferences();
+      encryptedSharedPreferences.setString("AccessToken", token);
+    }
   }
 
   Future<String?> resetPassword(String email) async {
@@ -53,12 +53,10 @@ class LoginUseCase {
 
   Future<String?> login(String email, String password) async {
     try {
-      LoginModel? loginModel = await repository
+      TokenDataModel? tokenData = await repository
           .login(CredentialsModel(email: email, password: password));
-      if (loginModel != null && loginModel.client != null) {
-        set(loginModel.client);
-      }
-      if (_client != null) {
+      if (tokenData?.token != null) {
+        setAccessToken(tokenData);
         return null;
       } else {
         final requestOptions = RequestOptions(path: "/auth/login");

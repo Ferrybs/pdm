@@ -1,12 +1,15 @@
 import 'dart:async';
 
-import 'package:basearch/src/features/home/domain/model/user_model.dart';
+import 'package:basearch/src/features/home/data/repository/home_repository_base.dart';
+import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
+import 'package:basearch/src/features/home/domain/model/response_model.dart';
 import 'package:dio/dio.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import '../../domain/model/chart_serie.dart';
 import '../../domain/repository/home_interface.dart';
 
-class HomeRepository implements IHome {
+class HomeRepository extends HomeRepositoryBase implements IHome {
   @override
   Future<List<PlantStatsModel>> getPlantStats() {
     return [
@@ -28,7 +31,23 @@ class HomeRepository implements IHome {
   }
 
   @override
-  Future<UserModel?> getUsuario() {
-    return UserModel("Rafael") as Future<UserModel>;
+  Future<ClientModel?> getClient() async {
+    try {
+      EncryptedSharedPreferences encrypt = EncryptedSharedPreferences();
+      String? token = await encrypt.getString("AccessToken");
+      Response response;
+      var dio = Dio(APIoptions);
+      response = await dio.get("/client/",
+          options: Options(headers: {"Authorization": "Bearer " + token}));
+      if (response.statusCode == 200) {
+        final data = ResponseModel.fromJson(response.data);
+        if (data.ok == true) {
+          return ClientModel.fromJson(response.data["clientDTO"]);
+        }
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

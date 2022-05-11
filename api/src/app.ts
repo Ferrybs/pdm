@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import routes from './interfaces/routes.interface';
 import Routes from './interfaces/routes.interface';
  
 class App {
@@ -30,7 +29,7 @@ class App {
       console.log(`App listening on the port ${this.port}`);
     });
   }
-  private initializeroutes(routes: routes[]) {
+  private initializeroutes(routes: Routes[]) {
     routes.forEach((routes) => {
       this.app.use('/api/v1/', routes.router);
     });
