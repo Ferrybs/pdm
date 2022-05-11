@@ -1,11 +1,12 @@
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 #include <DHT_U.h>
-DHT_Unified dht(4, DHT11);
 
+DHT_Unified dht(4, DHT11);
 class Humidity
 {
 private:
+    Console console;
     const int delayMS = 1500;
 public:
     float getHumidity();
@@ -18,13 +19,13 @@ float Humidity::getHumidity(){
 
     dht.humidity().getEvent(&event);
     if (isnan(event.relative_humidity)) {
-        Serial.println(F("Error reading humidity!"));
+        console.log(F("Error reading humidity!"));
         return NAN;
     }
     else {
-        Serial.print(F("Humidity: "));
-        Serial.print(event.relative_humidity);
-        Serial.println(F("%"));
+        console.log(F("Humidity: "),false);
+        console.log(String(event.relative_humidity),false);
+        console.log(F("%"));
         return event.relative_humidity;
     }
 }

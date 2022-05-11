@@ -1,9 +1,11 @@
 #include <WebServer.h>
 #include <ArduinoJson.h>
+#include "core/Console.h"
 WebServer _server(80);
-char buffer[512];
-StaticJsonDocument<512> jsonDocument;
+char buffer[4096];
+StaticJsonDocument<4096> jsonDocument;
 ClientSettings _preferences;
+Console console;
 class HttpServer{
 private:
 public:
@@ -12,10 +14,10 @@ public:
     void run();
     void stop();
     static void getId();
-    static void postWifiSettings();
+    static void postDeviceSettings();
     static void response_id_to_json(bool ok, String id); 
     static void response_message_to_json(bool ok, String message);
-    static void json_to_credentials_wifi();
+    static bool json_to_device_setup();
     
 };
 void HttpServer::stop(){
@@ -27,33 +29,65 @@ void HttpServer::start(){
     
 }
 void HttpServer::getId() {
-    digitalWrite(2,LOW);
+    console.blink();
     response_id_to_json(true,_preferences.getId());
-    digitalWrite(2,HIGH);
     _server.send(200, "application/json",buffer);
 }
 
-void HttpServer::json_to_credentials_wifi(){
-    jsonDocument.clear(); 
-    digitalWrite(2,LOW);
+bool HttpServer::json_to_device_setup(){
+    jsonDocument.clear();
+    console.blink();
+    bool result = true;
     String body = _server.arg("plain");
     deserializeJson(jsonDocument, body);
-    String ssid = jsonDocument["ssid"];
-    String password = jsonDocument["password"];
-    Serial.println("Reciving Wifi Settings...");
-    Serial.println(password);
+    String ssid = jsonDocument["wifiDTO"]["ssid"];
+    String password = jsonDocument["wifiDTO"]["password"];
+    String mqtt_server = jsonDocument["mqttDTO"]["server"];
+    String mqtt_user = jsonDocument["mqttDTO"]["user"];
+    String mqtt_password = jsonDocument["mqttDTO"]["password"];
+    String mqtt_port = jsonDocument["mqttDTO"]["port"];
+    String mqtt_cert = jsonDocument["mqttDTO"]["CA"];
+    console.log("Reciving Wifi Settings...");
+    result = ssid == NULL ? false : result;
+    result = password == NULL ? false : result;
+    result = mqtt_server == NULL ? false : result;
+    result = mqtt_user == NULL ? false : result;
+    result = mqtt_password == NULL ? false : result;
+    result = mqtt_port == NULL ? false : result;
+    result = mqtt_cert == NULL ? false : result;
+    console.log(ssid);
+    console.log(password);
+    console.log(mqtt_server);
+    console.log(mqtt_user);
+    console.log(mqtt_password);
+    console.log(mqtt_port);
+    console.log(mqtt_cert);
+    _preferences.putMqttServer(mqtt_server);
+    _preferences.putMqttUser(mqtt_user);
+    _preferences.putMqttPassword(mqtt_password);
+    _preferences.putMqttPort(mqtt_port.toInt());
+    _preferences.putMqttCert(mqtt_cert);
     _preferences.putWifiSettings(ssid,password);
-    digitalWrite(2,HIGH);
+    console.log("Setting Configured!");
+    return result;
+    
+    
 }
 
-void HttpServer::postWifiSettings() {
+void HttpServer::postDeviceSettings() {
     if (_server.hasArg("plain") == true) {
-        Serial.println();
-        json_to_credentials_wifi();
-        Serial.println("Setting Configured!");
-        _preferences.putConfigured(true);
-        response_message_to_json(true,"Device Configured!");
-        _server.send(200, "application/json",buffer);
+        console.log();
+        if (json_to_device_setup())
+        {
+            _preferences.putConfigured(true);
+            response_message_to_json(true,"Device Configured!");
+            _server.send(200, "application/json",buffer);
+        }else{
+            _preferences.putConfigured(false);
+            response_message_to_json(false,"Error!");
+            _server.send(400, "application/json",buffer);
+        }
+        
     }else{
         response_message_to_json(false,"Body not Found!");
         _server.send(400, "application/json",buffer);
@@ -61,7 +95,7 @@ void HttpServer::postWifiSettings() {
 }
 void HttpServer::routes(){
     _server.on("/",HTTP_GET,getId);
-    _server.on("/",HTTP_POST,postWifiSettings);
+    _server.on("/",HTTP_POST,postDeviceSettings);
 }
 void HttpServer::run(){
     _server.handleClient();
