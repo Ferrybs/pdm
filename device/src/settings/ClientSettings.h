@@ -2,7 +2,6 @@
 #include <Preferences.h>
 #include <iostream>
 using namespace std;
-
 class ClientSettings{
 private:
     Preferences _preferences;
@@ -11,7 +10,6 @@ private:
     const char *_password = "PASSWORD";
     const char *_configured = "CONFIGURED";
     const String _id = "3e14e9a9-6378-4c72-876e-ddc43d0a0fd5";
-    const char *_mqtt_Cert = "MQTT_CERT";
     const char *_mqtt_user = "MQTT_USER";
     const char *_mqtt_server = "MQTT_SERVER";
     const char *_mqtt_password = "MQTT_PASSWORD";
@@ -19,7 +17,6 @@ private:
 public:
     void putWifiSettings(String ssid, String password);
     void putConfigured(bool status);
-    void putMqttCert(String cert);
     void putMqttUser(String user);
     void putMqttServer(String server);
     void putMqttPassword(String password);
@@ -31,9 +28,9 @@ public:
     int getMqttPort();
     bool isConfigured();
     String getPassword();
+    String getCaCertificate();
     String getId();
-    String getMqttCert();
-};
+    };
 void ClientSettings::putConfigured(bool status){
     _preferences.begin(this->_appName,false);
     _preferences.putBool(this->_configured,status);
@@ -56,18 +53,13 @@ void ClientSettings::putMqttPassword(String password){
 }
 void ClientSettings::putMqttPort(int port){
     _preferences.begin(this->_appName,false);
-    _preferences.putInt(this->_mqtt_server,port);
+    _preferences.putInt(this->_mqtt_port,port);
     _preferences.end();
 }
 void ClientSettings::putWifiSettings(String ssid, String password){
     _preferences.begin(this->_appName,false);
     _preferences.putString(this->_ssid,ssid);
     _preferences.putString(this->_password,password);
-    _preferences.end();
-}
-void ClientSettings::putMqttCert(String cert){
-    _preferences.begin(this->_appName,false);
-    _preferences.putString(this->_mqtt_Cert,cert);
     _preferences.end();
 }
 String ClientSettings::getSSID(){
@@ -111,20 +103,17 @@ String ClientSettings::getId(){
     return this->_id;
 }
 
+String ClientSettings::getCaCertificate(){
+    return "root_ca";
+}
+
+
 bool ClientSettings::isConfigured(){
     bool status;
     _preferences.begin(this->_appName,false);
     status = _preferences.getBool(this->_configured,false);
     _preferences.end();
     return status;
-}
-
-String ClientSettings::getMqttCert(){
-    String cert;
-    _preferences.begin(this->_appName,false);
-    cert = _preferences.getString(this->_mqtt_Cert);
-    _preferences.end();
-    return cert;
 }
 
 String ClientSettings::getPassword(){

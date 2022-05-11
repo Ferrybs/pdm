@@ -1,23 +1,23 @@
-#include <Arduino.h>
-#include <WiFi.h>
+/*
+ * Virtuino MQTT getting started example
+ * Broker: HiveMQ (Secure connection)
+ * Supported boards: ESP8266 / ESP32 
+ * Created by Ilias Lamprou
+ * Jul 13 2021
+ */
+#include <PubSubClient.h>
+#include <WiFiClientSecure.h>
+#include "server/MqttServer.h"
 #include "settings/DeviceSettings.h"
-#include "measures/Humidity.h"
 
-
-using namespace std;
-
-DeviceSettings  device;
-Humidity humidity;
-
+MqttServer mqtt;
+DeviceSettings device;
 
 void setup() {
-    device.configure();
+  device.configure();
+  mqtt.setup();
+  mqtt.connect();
 }
 
 void loop() {
-    if (device.isConnected())
-    {
-        humidity.getHumidity();
-    }
-    
 }

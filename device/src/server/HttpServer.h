@@ -46,7 +46,6 @@ bool HttpServer::json_to_device_setup(){
     String mqtt_user = jsonDocument["mqttDTO"]["user"];
     String mqtt_password = jsonDocument["mqttDTO"]["password"];
     String mqtt_port = jsonDocument["mqttDTO"]["port"];
-    String mqtt_cert = jsonDocument["mqttDTO"]["CA"];
     console.log("Reciving Wifi Settings...");
     result = ssid == NULL ? false : result;
     result = password == NULL ? false : result;
@@ -54,19 +53,16 @@ bool HttpServer::json_to_device_setup(){
     result = mqtt_user == NULL ? false : result;
     result = mqtt_password == NULL ? false : result;
     result = mqtt_port == NULL ? false : result;
-    result = mqtt_cert == NULL ? false : result;
     console.log(ssid);
     console.log(password);
     console.log(mqtt_server);
     console.log(mqtt_user);
     console.log(mqtt_password);
-    console.log(mqtt_port);
-    console.log(mqtt_cert);
+    console.log(mqtt_port.toInt());
     _preferences.putMqttServer(mqtt_server);
     _preferences.putMqttUser(mqtt_user);
     _preferences.putMqttPassword(mqtt_password);
     _preferences.putMqttPort(mqtt_port.toInt());
-    _preferences.putMqttCert(mqtt_cert);
     _preferences.putWifiSettings(ssid,password);
     console.log("Setting Configured!");
     return result;
