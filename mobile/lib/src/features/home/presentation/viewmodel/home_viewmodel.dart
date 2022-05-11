@@ -49,4 +49,8 @@ abstract class _HomeViewModelBase with Store {
   void navigateToLogin() {
     Modular.to.navigate("/auth/");
   }
+
+  void navigateToMap() {
+    Modular.to.navigate('/map/');
+  }
 }

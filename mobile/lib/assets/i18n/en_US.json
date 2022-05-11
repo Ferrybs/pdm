@@ -43,6 +43,7 @@
     "temperature": "Temperature",
     "water_tank": "Water Tank",
     "moisture": "Moisture",
-    "luminosity": "Luminosity"
+    "luminosity": "Luminosity",
+    "map-title": "Current location"
 
 }
