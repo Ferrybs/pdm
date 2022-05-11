@@ -18,8 +18,7 @@ class HomeUseCase {
     }
   }
 
-  Future<List<PlantStatsModel>> getPlantList() async {
-    List<PlantStatsModel>? plantList = await repository.getPlantStats();
-    return plantList ?? [];
+  Future<List<PlantStatsModel>?> getPlantList() async {
+    return await repository.getPlantStats();
   }
 }

@@ -1,8 +1,5 @@
-import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
-import 'package:basearch/src/features/home/domain/model/chart_serie.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:mobx/mobx.dart';
 import 'package:localization/localization.dart';
 import '../../domain/usecase/home_usecase.dart';
@@ -25,10 +22,19 @@ abstract class _HomeViewModelBase with Store {
     clientName = name;
   }
 
-  getClientName() async {
+  @action
+  void updatePlantList(List<PlantStatsModel> list) {
+    plantList = list;
+  }
+
+  getHomeData() async {
     String? name = await _usecase.getUserName();
     if (name != null) {
       updateClientName(name);
+    }
+    List<PlantStatsModel>? list = await _usecase.getPlantList();
+    if (list != null) {
+      updatePlantList(list);
     }
   }
 

@@ -39,6 +39,10 @@
     "not-found": "Not found",
     "loading": "Loading...",
     "home-tittle": "your plants",
-    "error-home-tittle": "Client not Found!"
+    "error-home-tittle": "Client not Found!",
+    "temperature": "Temperature",
+    "water_tank": "Water Tank",
+    "moisture": "Moisture",
+    "luminosity": "Luminosity"
 
 }

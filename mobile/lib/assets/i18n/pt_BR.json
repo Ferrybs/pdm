@@ -39,5 +39,9 @@
     "not-found": "Não encontrado",
     "loading": "Carregando...",
     "home-tittle": "suas plants",
-    "error-home-tittle": "Cliente não encontrado"
+    "error-home-tittle": "Cliente não encontrado",
+    "temperature": "Temperatura",
+    "water_tank": "Água",
+    "moisture": "Humidade",
+    "luminosity": "Luminosidade"
 }

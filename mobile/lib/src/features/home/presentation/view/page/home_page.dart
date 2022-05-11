@@ -2,8 +2,6 @@ import 'package:basearch/src/features/home/presentation/view/widget/dialog_conta
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:localization/colored_print/print_color.dart';
 import 'package:localization/localization.dart';
 
 import '../../viewmodel/home_viewmodel.dart';
@@ -16,7 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends ModularState<HomePage, HomeViewModel> {
-  final _viewModel = Modular.get<HomeViewModel>();
   late ThemeData _theme;
 
   @override
@@ -38,14 +35,17 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
                   message: snapshot.error.toString(),
                   buttonText: "try-agin".i18n(),
                   onClick: () {
-                    _viewModel.navigateToLogin();
+                    store.navigateToLogin();
                   });
             } else {
               return SingleChildScrollView(
                   child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Column(
-                  children: [_createTitle(_viewModel.gethomeTittle())],
+                  children: [
+                    _createTitle(store.gethomeTittle()),
+                    ..._createPlantList(),
+                  ],
                 ),
               ));
             }
@@ -55,7 +55,7 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
             child: CircularProgressIndicator(),
           );
         },
-        future: _viewModel.getClientName(),
+        future: store.getHomeData(),
       ),
     ));
   }
