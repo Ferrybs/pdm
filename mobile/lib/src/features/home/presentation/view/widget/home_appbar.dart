@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({Key? key}) : super(key: key);
@@ -35,8 +36,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   _createAction() {
     return IconButton(
-      icon: const Icon(Icons.cloud),
-      onPressed: () => {},
+      icon: const Icon(Icons.map),
+      onPressed: () => {Modular.to.navigate('/map/')},
     );
   }
 }
