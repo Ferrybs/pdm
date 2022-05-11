@@ -45,6 +45,7 @@ flutter:
     - lib/assets/
     - lib/assets/i18n/
     - lib/assets/images/
+    - lib/assets/styles/
 
   fonts:
      - family: Poppins

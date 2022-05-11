@@ -1,6 +1,8 @@
+import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/colored_print/print_color.dart';
 import 'package:localization/localization.dart';
 
@@ -20,7 +22,6 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
   @override
   void initState() {
     super.initState();
-    print("ENNNNTREI INIT");
   }
 
   @override
@@ -34,9 +35,13 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               return Center(
-                child: Text(
-                  '${snapshot.error} occured',
-                  style: const TextStyle(fontSize: 18),
+                child: DialogContainer(
+                  message: snapshot.error.toString(),
+                  buttonText: "try-agin".i18n(),
+                  onClick: () {
+                    _viewModel.navigateToLogin();
+                    SmartDialog.dismiss();
+                  },
                 ),
               );
             } else {

@@ -1,6 +1,8 @@
+import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/home/domain/model/chart_serie.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:mobx/mobx.dart';
 import 'package:localization/localization.dart';
 import '../../domain/usecase/home_usecase.dart';
@@ -24,7 +26,6 @@ abstract class _HomeViewModelBase with Store {
   }
 
   getClientName() async {
-    print("Enteei getClient");
     String? name = await _usecase.getUserName();
     if (name != null) {
       updateClientName(name);
@@ -37,5 +38,9 @@ abstract class _HomeViewModelBase with Store {
     } else {
       return "error-home-tittle".i18n();
     }
+  }
+
+  void navigateToLogin() {
+    Modular.to.navigate("/auth/");
   }
 }
