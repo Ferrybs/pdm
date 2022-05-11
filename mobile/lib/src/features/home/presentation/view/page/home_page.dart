@@ -34,16 +34,12 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              return Center(
-                child: DialogContainer(
+              return DialogContainer(
                   message: snapshot.error.toString(),
                   buttonText: "try-agin".i18n(),
                   onClick: () {
                     _viewModel.navigateToLogin();
-                    SmartDialog.dismiss();
-                  },
-                ),
-              );
+                  });
             } else {
               return SingleChildScrollView(
                   child: Padding(

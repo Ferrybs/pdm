@@ -42,7 +42,7 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
       if (response.statusCode == 200) {
         final data = ResponseModel.fromJson(response.data);
         if (data.ok == true) {
-          return ClientModel.fromJson(response.data["result"]);
+          return ClientModel.fromJson(response.data["clientDTO"]);
         }
       }
       return null;

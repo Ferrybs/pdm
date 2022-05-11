@@ -6,22 +6,25 @@ import RequesWithToken from "../interfaces/request.token.interface";
 import { validate } from "class-validator";
 import RequestWithError from "../interfaces/request.error.interface";
 import HttpException from "../exceptions/http.exceptions";
+import HttpData from "interfaces/http.data.interface";
 
 export default class AuthController extends Controller{
 
   public async getSessions(request: RequesWithToken, response: Response){
     if (request.error) {
-      response.status(400).send({ ok: false, message: request.error});
+      const httpData: HttpData = { ok: false, message: request.error};
+      response.status(400).send(httpData);
     }else{
       try {
         const dataStoreToken = request.dataStoreToken;
-        const result = await this.authService.getSessions(dataStoreToken.id);
-        response.status(200).send({ok: true,result});
+        const sessionsDTO = await this.authService.getSessions(dataStoreToken.id);
+        response.status(200).send({ok: true,sessionsDTO});
       } catch (error) {
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
         }else{
-          response.status(500).send({ ok: false, message: error.message});
+          const httpData: HttpData = { ok: false, message: error.message};
+          response.status(500).send(httpData);
         }
       
       }
@@ -40,7 +43,8 @@ export default class AuthController extends Controller{
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
         }else{
-          response.status(500).send({ ok: false, message: error.message});
+          const httpData: HttpData = { ok: false, message: error.message};
+          response.status(500).send(httpData);
         }
       
       }
@@ -48,24 +52,27 @@ export default class AuthController extends Controller{
   }
   public async newRefreshToken(request: RequesWithToken, response: Response, next: NextFunction){
     if (request.error) {
-      response.status(400).send({ ok: false, message: request.error});
+      const httpData: HttpData = { ok: false, message: request.error};
+      response.status(400).send(httpData);
     }else{
       try {
         const data = request.dataStoreToken;
-        const refreshToken = await this.authService.getNewRefreshToken(data);
-        response.status(200).send({ok: true,refreshToken});
+        const tokenData = await this.authService.getNewRefreshToken(data);
+        response.status(200).send({ok: true,tokenData});
       } catch (error) {
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
         }else{
-          response.status(500).send({ ok: false, message: error.message});
+          const httpData: HttpData = { ok: false, message: error.message};
+          response.status(500).send(httpData);
         }
       }
     }
   }
   public async newAccessToken(request: RequesWithToken, response: Response, next: NextFunction){
     if (request.error) {
-      response.status(400).send({ ok: false, message: request.error});
+      const httpData: HttpData = { ok: false, message: request.error};
+      response.status(400).send(httpData);
     }else{
       try {
         const data = request.dataStoreToken;
@@ -73,13 +80,15 @@ export default class AuthController extends Controller{
         if (tokenData) {
           response.status(200).send({ok: true,tokenData});
         }else{
-          response.status(401).send({ ok: false, message: "Not Found"});
+          const httpData: HttpData = { ok: false, message: "Not Found"};
+          response.status(401).send(httpData);
         }
       } catch (error) {
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
         }else{
-          response.status(500).send({ ok: false, message: error.message});
+          const httpData: HttpData = { ok: false, message: error.message};
+          response.status(500).send(httpData);
         }
       }
     }
@@ -92,14 +101,13 @@ export default class AuthController extends Controller{
       try {
         const credentialsData: CredentialsDTO = request.body;
         const tokenData = await this.authService.login(credentialsData);
-        const clientDTO = await this.clientService.getClientByEmail(credentialsData);
-        clientDTO.credentialsDTO.password = null;
-        response.status(200).send({ok:true,clientDTO,tokenData});
+        response.status(200).send({ok:true,tokenData});
       } catch (error) {
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
         }else{
-          response.status(500).send({ ok: false, message: error.message});
+          const httpData: HttpData = { ok: false, message: error.message};
+          response.status(500).send(httpData);
         }
       }
     }
@@ -165,7 +173,8 @@ export default class AuthController extends Controller{
   }
   public async resetPasswordSendEmail(request: RequestWithError, response: Response){
     if (request.error){
-      response.status(400).send({ ok: false, message: request.error});
+      const httpData: HttpData = { ok: false, message:request.error};
+      response.status(400).send(httpData);
     }else{
       try {
         const body: CredentialsDTO = request.body;
@@ -177,7 +186,8 @@ export default class AuthController extends Controller{
         if(error instanceof(HttpException)){
           response.status(error.status).send(error.data);
         }else{
-          response.status(500).send({ ok: false, message: error.message});
+          const httpData: HttpData = { ok: false, message: error.message};
+          response.status(500).send({ ok: false, message: httpData});
         }
       }
     }
