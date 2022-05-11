@@ -39,6 +39,7 @@
     "not-found": "Not found",
     "loading": "Loading...",
     "home-tittle": "your plants",
-    "error-home-tittle": "Client not Found!"
+    "error-home-tittle": "Client not Found!",
+    "map-title": "Current location"
 
 }
