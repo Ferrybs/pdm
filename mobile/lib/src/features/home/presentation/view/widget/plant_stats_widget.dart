@@ -2,6 +2,7 @@ import 'package:basearch/src/features/home/domain/model/chart_serie.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:localization/localization.dart';
 
 class PlantStatsWidget extends StatelessWidget {
   final PlantStatsModel plantStats;
@@ -15,6 +16,7 @@ class PlantStatsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData _theme = Theme.of(context);
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         color: _theme.colorScheme.primary,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -33,7 +35,7 @@ class PlantStatsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Flexible(flex: 6, child: _createStatsGroup(_theme.textTheme)),
-                Flexible(flex: 5, child: _createChart(_theme)),
+                Flexible(flex: 4, child: _createChart(_theme)),
               ],
             ),
           ],
@@ -48,7 +50,7 @@ class PlantStatsWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Text(
-            "#Plant",
+            plantStats.name,
             style: textTheme.headlineSmall,
           ),
         ),
@@ -56,15 +58,37 @@ class PlantStatsWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _stats("23", "Cº", "Temperature", textTheme),
-                _stats("12", "%", "Water Tank", textTheme),
+                _stats(
+                  plantStats.temperature.toString(),
+                  "Cº",
+                  "temperature".i18n(),
+                  textTheme,
+                ),
+                _stats(
+                  plantStats.waterTank.toString(),
+                  "%",
+                  "water_tank".i18n(),
+                  textTheme,
+                ),
               ],
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _stats("41", "%", "Moisture", textTheme),
-                _stats("99", "%", "Luminosity", textTheme),
+                _stats(
+                  plantStats.moisture.toString(),
+                  "%",
+                  "moisture".i18n(),
+                  textTheme,
+                ),
+                _stats(
+                  plantStats.luminosity.toString(),
+                  "%",
+                  "luminosity".i18n(),
+                  textTheme,
+                ),
               ],
             ),
           ],
@@ -98,7 +122,7 @@ class PlantStatsWidget extends StatelessWidget {
   _createChart(ThemeData theme) {
     List<charts.Series<ChartSerie, num>> timeline = [
       charts.Series(
-        id: "Luminosity",
+        id: "luminosity".i18n(),
         data: plantStats.luminosityChart,
         seriesColor:
             charts.ColorUtil.fromDartColor(theme.colorScheme.onPrimary),
@@ -113,10 +137,14 @@ class PlantStatsWidget extends StatelessWidget {
           height: 110,
           child: charts.LineChart(
             timeline,
+            primaryMeasureAxis: const charts.NumericAxisSpec(
+              tickProviderSpec: charts.BasicNumericTickProviderSpec(
+                  zeroBound: true, desiredMinTickCount: 4),
+            ),
             animate: true,
           ),
         ),
-        Text("Luminosity", style: theme.textTheme.labelLarge),
+        Text("luminosity".i18n(), style: theme.textTheme.labelLarge),
       ],
     );
   }

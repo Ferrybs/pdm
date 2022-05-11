@@ -1,7 +1,6 @@
 import 'package:basearch/src/features/auth/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
-import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
-import 'package:basearch/src/Theme/theme.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -14,7 +13,7 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccount extends State<CreateAccount> {
-  final _viewModel = Modular.get<LoginViewModel>();
+  final _viewModel = Modular.get<AuthViewModel>();
   bool showSpinner = false;
   late ThemeData _theme;
   String? nameError;
@@ -112,7 +111,8 @@ class _CreateAccount extends State<CreateAccount> {
     if (_viewModel.signUpValidation()) {
       result = await _register();
       if (result == null) {
-        _dialog("create-account-success".i18n(), "continue".i18n(), "/");
+        _dialog("create-account-success".i18n(), "continue".i18n(),
+            _viewModel.navigateTOLoginPage);
       } else {
         _dialog(result, "try-agin".i18n(), null);
       }
@@ -127,14 +127,14 @@ class _CreateAccount extends State<CreateAccount> {
     return result;
   }
 
-  void _dialog(String message, String buttonText, String? page) {
+  void _dialog(String message, String buttonText, Function? fn) {
     SmartDialog.show(
         widget: DialogContainer(
       message: message,
       buttonText: buttonText,
       onClick: () {
-        if (page != null) {
-          Modular.to.navigate(page);
+        if (fn != null) {
+          fn();
         }
         SmartDialog.dismiss();
       },

@@ -38,5 +38,10 @@
     "server-error": "Erro de servidor",
     "not-found": "Não encontrado",
     "loading": "Carregando...",
-    "home_title": "suas plants"
+    "home-tittle": "suas plants",
+    "error-home-tittle": "Cliente não encontrado",
+    "temperature": "Temperatura",
+    "water_tank": "Água",
+    "moisture": "Humidade",
+    "luminosity": "Luminosidade"
 }

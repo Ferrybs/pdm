@@ -1,6 +1,6 @@
 import 'package:basearch/src/features/auth/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
-import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _viewModel = Modular.get<LoginViewModel>();
+  final _viewModel = Modular.get<AuthViewModel>();
   late ThemeData _theme;
   String? emailError;
   String? passwordError;
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
         body: SingleChildScrollView(
           child: Column(children: [
             _logo(),
-            _login(context),
+            _loginText(context),
             _signIn(),
             TextInputAuth(
               errorText: emailError,
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 obscureText: true,
                 label: 'password'.i18n()),
-            _button(_getClient, Text('login'.i18n().toUpperCase())),
+            _button(_login, Text('login'.i18n().toUpperCase())),
             Center(
               child: TextButton(
                 child: Text('forgot-password'.i18n()),
@@ -91,13 +91,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _getClient() async {
+  void _login() async {
     _validateFields();
     if (_viewModel.signInValidation()) {
       var result = await _doLogin();
-      if (result == null) {
-        Modular.to.navigate('/auth/home');
-      } else {
+      if (result != null) {
         _dialog(result, "try-agin".i18n());
       }
     }
@@ -141,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Padding _login(BuildContext context) {
+  Padding _loginText(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 15, 20, 8),
       child: Text(

@@ -6,19 +6,22 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
     return AppBar(
-      leading: _createLeading(),
+      leading: _createLeading(themeData.brightness),
       title: _createTitle(),
-      actions: [_createAction()],
+      actions: [_createAction(themeData.brightness)],
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-  _createLeading() {
+  _createLeading(Brightness brightness) {
     return IconButton(
-      icon: const Icon(Icons.format_align_left),
+      icon: brightness == Brightness.light
+          ? SvgPicture.asset('lib/assets/images/align_right_light.svg')
+          : SvgPicture.asset('lib/assets/images/align_right_dark.svg'),
       onPressed: () => {},
     );
   }
@@ -33,9 +36,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  _createAction() {
+  _createAction(Brightness brightness) {
     return IconButton(
-      icon: const Icon(Icons.cloud),
+      icon: brightness == Brightness.light
+          ? SvgPicture.asset('lib/assets/images/cloud_thunder_light.svg')
+          : SvgPicture.asset('lib/assets/images/cloud_thunder_dark.svg'),
       onPressed: () => {},
     );
   }

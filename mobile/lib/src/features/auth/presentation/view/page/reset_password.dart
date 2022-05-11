@@ -1,6 +1,6 @@
 import 'package:basearch/src/features/auth/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
-import 'package:basearch/src/features/auth/presentation/viewmodel/login_viewmodel.dart';
+import 'package:basearch/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -14,7 +14,7 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPassord extends State<ResetPassword> {
-  final _viewModel = Modular.get<LoginViewModel>();
+  final _viewModel = Modular.get<AuthViewModel>();
   late ThemeData _theme;
   String? emailError;
   @override
@@ -59,21 +59,22 @@ class _ResetPassord extends State<ResetPassword> {
     if (_viewModel.resetPasswordValidation()) {
       var result = await _sendReset();
       if (result == null) {
-        _dialog("email-send-success".i18n(), "continue".i18n(), "/");
+        _dialog("email-send-success".i18n(), "continue".i18n(),
+            _viewModel.navigateTOLoginPage);
       } else {
         _dialog(result, "try-agin".i18n(), null);
       }
     }
   }
 
-  void _dialog(String message, String buttonText, String? path) {
+  void _dialog(String message, String buttonText, Function? fn) {
     SmartDialog.show(
         widget: DialogContainer(
       message: message,
       buttonText: buttonText,
       onClick: () {
-        if (path != null) {
-          Modular.to.navigate(path);
+        if (fn != null) {
+          fn();
         }
         SmartDialog.dismiss();
       },

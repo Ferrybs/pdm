@@ -38,8 +38,11 @@
     "server-error": "Server error",
     "not-found": "Not found",
     "loading": "Loading...",
+    "home-tittle": "your plants",
+    "error-home-tittle": "Client not Found!",
+    "temperature": "Temperature",
+    "water_tank": "Water Tank",
+    "moisture": "Moisture",
+    "luminosity": "Luminosity"
 
-
-
-    "home_title": "your plants"
 }

@@ -5,12 +5,14 @@ import RequestWithToken from "../interfaces/request.token.interface";
 import Controller from "./controller";
 import MeasureDTO from "../dto/measure.dto";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
+import HttpData from "interfaces/http.data.interface";
 
 export default class DeviceController extends Controller{
 
     public async addDevice(request: RequestWithToken, response: Response){
       if (request.error) {
-            response.status(400).send({ ok: false, message: request.error});
+            const httpData: HttpData = { ok: false, message: request.error};
+            response.status(400).send(httpData);
           }else{
             try {
               const deviceDTO: DeviceDTO = request.body;
@@ -22,7 +24,8 @@ export default class DeviceController extends Controller{
               if(error instanceof(HttpException)){
                 response.status(error.status).send(error.data);
               }else{
-                response.status(500).send({ ok: false, message: error.message});
+                const httpData: HttpData = { ok: false, message: error.message};
+                response.status(500).send(httpData);
               }
             
             }
@@ -30,7 +33,8 @@ export default class DeviceController extends Controller{
     }
     public async addMeasure(request: RequestWithToken, response: Response){
       if (request.error) {
-            response.status(400).send({ ok: false, message: request.error});
+            const httpData: HttpData = { ok: false, message: request.error};
+            response.status(400).send(httpData);
           }else{
             try {
               var result: boolean;
@@ -47,7 +51,8 @@ export default class DeviceController extends Controller{
               if(error instanceof(HttpException)){
                 response.status(error.status).send(error.data);
               }else{
-                response.status(500).send({ ok: false, message: error.message});
+                const httpData: HttpData = { ok: false, message: error.message};
+                response.status(500).send(httpData);
               }
             
             }
@@ -55,7 +60,8 @@ export default class DeviceController extends Controller{
     } 
     public async getMeasures(request: RequestWithToken, response: Response){
       if (request.error) {
-        response.status(400).send({ ok: false, message: request.error});
+        const httpData: HttpData = { ok: false, message: request.error};
+        response.status(400).send(httpData);
       }else{
         try {
           const dataStoreToken = request.dataStoreToken;
@@ -70,7 +76,8 @@ export default class DeviceController extends Controller{
           if(error instanceof(HttpException)){
             response.status(error.status).send(error.data);
           }else{
-            response.status(500).send({ ok: false, message: error.message});
+            const httpData: HttpData = { ok: false, message: error.message};
+            response.status(500).send(httpData);
           }
         
         }
@@ -78,7 +85,8 @@ export default class DeviceController extends Controller{
     }
     public async getDevices(request: RequestWithToken, response: Response){
       if (request.error) {
-        response.status(400).send({ ok: false, message: request.error});
+        const httpData: HttpData = { ok: false, message: request.error};
+        response.status(400).send(httpData);
       }else{
         try {
           const dataStoreToken = request.dataStoreToken;
@@ -89,7 +97,8 @@ export default class DeviceController extends Controller{
           if(error instanceof(HttpException)){
             response.status(error.status).send(error.data);
           }else{
-            response.status(500).send({ ok: false, message: error.message});
+            const httpData: HttpData = { ok: false, message: error.message};
+            response.status(500).send(httpData);
           }
         
         }
