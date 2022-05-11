@@ -18,6 +18,12 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
   late ThemeData _theme;
 
   @override
+  void initState() {
+    super.initState();
+    print("ENNNNTREI INIT");
+  }
+
+  @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return SafeArea(
@@ -33,13 +39,12 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
                   style: const TextStyle(fontSize: 18),
                 ),
               );
-            } else if (snapshot.hasData) {
-              final data = snapshot.data as String;
+            } else {
               return SingleChildScrollView(
                   child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Column(
-                  children: [_createTitle(data)],
+                  children: [_createTitle(_viewModel.gethomeTittle())],
                 ),
               ));
             }
@@ -49,33 +54,10 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
             child: CircularProgressIndicator(),
           );
         },
-        future: getData(),
+        future: _viewModel.getClientName(),
       ),
     ));
   }
-
-  Future<String> getData() {
-    return _viewModel.gethomeTittle();
-  }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   _theme = Theme.of(context);
-  //   return Scaffold(
-  //     appBar: const HomeAppBar(),
-  //     body: SingleChildScrollView(
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(18.0),
-  //         child: Column(
-  //           children: [
-  //             _createTitle(),
-  //             ..._createPlantList(),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   _createTitle(String tittle) {
     return Padding(

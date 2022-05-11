@@ -38,5 +38,6 @@
     "server-error": "Erro de servidor",
     "not-found": "Não encontrado",
     "loading": "Carregando...",
-    "home_title": "suas plants"
+    "home-tittle": "suas plants",
+    "error-home-tittle": "Cliente não encontrado"
 }

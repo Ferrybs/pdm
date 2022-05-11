@@ -39,6 +39,20 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+  final _$_HomeViewModelBaseActionController =
+      ActionController(name: '_HomeViewModelBase');
+
+  @override
+  void updateClientName(String name) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateClientName');
+    try {
+      return super.updateClientName(name);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

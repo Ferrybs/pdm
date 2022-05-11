@@ -18,12 +18,24 @@ abstract class _HomeViewModelBase with Store {
   @observable
   List<PlantStatsModel> plantList = [];
 
-  Future<String> gethomeTittle() async {
-    clientName = await _usecase.getUserName();
+  @action
+  void updateClientName(String name) {
+    clientName = name;
+  }
+
+  getClientName() async {
+    print("Enteei getClient");
+    String? name = await _usecase.getUserName();
+    if (name != null) {
+      updateClientName(name);
+    }
+  }
+
+  String gethomeTittle() {
     if (clientName != null) {
-      return clientName! + ", " + "home_title".i18n();
+      return clientName! + ", " + "home-tittle".i18n();
     } else {
-      return "error".i18n();
+      return "error-home-tittle".i18n();
     }
   }
 }
