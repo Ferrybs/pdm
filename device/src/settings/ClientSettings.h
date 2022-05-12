@@ -28,7 +28,6 @@ public:
     int getMqttPort();
     bool isConfigured();
     String getPassword();
-    String getCaCertificate();
     String getId();
     };
 void ClientSettings::putConfigured(bool status){
@@ -101,10 +100,6 @@ int ClientSettings::getMqttPort(){
 
 String ClientSettings::getId(){
     return this->_id;
-}
-
-String ClientSettings::getCaCertificate(){
-    return "root_ca";
 }
 
 

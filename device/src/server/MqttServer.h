@@ -84,24 +84,29 @@ void MqttServer::postMeasure(float value,int type){
     serializeJson(json, buffer);
 }
 void MqttServer::setup(){
-    espClient.setCACert(root_ca);      // enable this line and the the "certificate" code for secure connection
-    client.setServer("4a1a00eee6ae4fca88ad167ee40e2e87.s1.eu.hivemq.cloud", 8883);
+    espClient.setCACert(root_ca);
+    String host = preferences.getMqttServer();
+    static char pHost[64] = {0};
+    strcpy(pHost, host.c_str());
+    client.setServer(pHost, preferences.getMqttPort());
     client.setCallback(callback);
 }
 bool MqttServer::connect(){
     while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    
-    if (client.connect(preferences.getId().c_str(),preferences.getMqttUser().c_str(), preferences.getMqttPassword().c_str())) {
-      Serial.println("connected"); // subscribe the topics here
-      //client.subscribe(command2_topic);   // subscribe the topics here
-      return true;
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");   // Wait 5 seconds before retrying
-      delay(5000);
-    }
+        console.log("Attempting MQTT connection...",false);
+        if (client.connect(preferences.getId().c_str(),
+        preferences.getMqttUser().c_str(),
+         preferences.getMqttPassword().c_str())
+         ) {
+            Serial.println("connected");
+            //client.subscribe(command2_topic);   // subscribe the topics here
+            return true;
+        } else {
+            console.log("failed, rc=",false);
+            console.log(client.state());
+            console.log("try again in 5 seconds");   // Wait 5 seconds before retrying
+            console.blink(10);
+        }
   }
 }
 void MqttServer::loop(){

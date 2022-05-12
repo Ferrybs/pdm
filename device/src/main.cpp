@@ -2,7 +2,6 @@
 #include "settings/DeviceSettings.h"
 
 MqttServer mqtt;
-ClientSettings prefer;
 DeviceSettings device;
 
 void setup() {
