@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 #include "core/Console.h"
 
-WiFiClientSecure espClient;   // for no secure connection use WiFiClient instead of WiFiClientSecure 
+WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
 DynamicJsonDocument json(4096);
@@ -50,7 +50,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     for (int i = 0; i < length; i++) incommingMessage+=(char)payload[i];
     json["ok"] = true;
     json["topic"] = String(topic);
-    json["message"] = incommingMessage;
+    json["message"] = "["+String(topic)+"]: " +incommingMessage;
     serializeJson(json, buffer_call);
     Serial.println("Message arrived ["+String(topic)+"]"+incommingMessage);
 }
@@ -84,31 +84,25 @@ void MqttServer::postMeasure(float value,int type){
     serializeJson(json, buffer);
 }
 void MqttServer::setup(){
-    espClient.setCACert(root_ca);   
-    client.setServer(preferences.getMqttServer().c_str(), preferences.getMqttPort());
+    espClient.setCACert(root_ca);      // enable this line and the the "certificate" code for secure connection
+    client.setServer("4a1a00eee6ae4fca88ad167ee40e2e87.s1.eu.hivemq.cloud", 8883);
     client.setCallback(callback);
 }
 bool MqttServer::connect(){
-    int count = 0;
-    while (!client.connected() && count <10)
-    {
-        if (
-        client.connect(preferences.getId().c_str(),
-        preferences.getMqttUser().c_str(),
-        preferences.getMqttPassword().c_str())
-        )
-        {
-            console.log("Mqtt Connected!");
-            return true;
-        }else{
-            Serial.print("failed, rc=");
-            Serial.print(client.state());
-            Serial.println(" try again in 5 seconds");   // Wait 5 seconds before retrying
-            delay(5000);
-            count++;
-        }
+    while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    
+    if (client.connect(preferences.getId().c_str(),preferences.getMqttUser().c_str(), preferences.getMqttPassword().c_str())) {
+      Serial.println("connected"); // subscribe the topics here
+      //client.subscribe(command2_topic);   // subscribe the topics here
+      return true;
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");   // Wait 5 seconds before retrying
+      delay(5000);
     }
-    return true;
+  }
 }
 void MqttServer::loop(){
     client.loop();
