@@ -192,10 +192,8 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   }
 
   @override
-  Future<ClientModel?> getClient() async {
+  Future<ClientModel?> getClient(String token) async {
     try {
-      EncryptedSharedPreferences encrypt = EncryptedSharedPreferences();
-      String? token = await encrypt.getString("AccessToken");
       Response response;
       var dio = Dio(APIoptions);
       response = await dio.get("/client/",

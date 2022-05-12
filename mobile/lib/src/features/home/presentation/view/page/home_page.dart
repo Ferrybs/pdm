@@ -2,6 +2,7 @@ import 'package:basearch/src/features/home/presentation/view/widget/dialog_conta
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
 
 import '../../viewmodel/home_viewmodel.dart';
@@ -15,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends ModularState<HomePage, HomeViewModel> {
   late ThemeData _theme;
-
   @override
   void initState() {
     super.initState();
@@ -24,40 +24,43 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return SafeArea(
-        child: Scaffold(
-      appBar: const HomeAppBar(),
-      body: FutureBuilder(
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return DialogContainer(
-                  message: snapshot.error.toString(),
-                  buttonText: "try-agin".i18n(),
-                  onClick: () {
-                    store.navigateToLogin();
-                  });
-            } else {
-              return SingleChildScrollView(
-                  child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  children: [
-                    _createTitle(store.gethomeTittle()),
-                    ..._createPlantList(),
-                  ],
-                ),
-              ));
-            }
+    return FutureBuilder(
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError || store.error != null) {
+            return Container(
+              color: _theme.colorScheme.background,
+              child: DialogContainer(
+                message: store.error ?? "error-get-client".i18n(),
+                buttonText: "try-again".i18n(),
+                onClick: () {
+                  store.navigateToLogin();
+                },
+              ),
+            );
+          } else {
+            return SafeArea(
+                child: Scaffold(
+                    appBar: const HomeAppBar(),
+                    body: SingleChildScrollView(
+                        child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        children: [
+                          _createTitle(store.gethomeTittle()),
+                          ..._createPlantList(),
+                        ],
+                      ),
+                    ))));
           }
+        }
 
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        future: store.getHomeData(),
-      ),
-    ));
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+      future: store.getHomeData(),
+    );
   }
 
   _createTitle(String tittle) {

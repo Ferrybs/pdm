@@ -1,20 +1,32 @@
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:dio/dio.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 
 import '../repository/home_interface.dart';
 
 class HomeUseCase {
   final repository = Modular.get<IHome>();
+  final encrypt_preferes = Modular.get<EncryptedSharedPreferences>();
   ClientModel? _clientModel;
 
-  Future<String?> getUserName() async {
+  String? getUserName() {
+    return _clientModel?.person?.name;
+  }
+
+  Future<String?> getClient() async {
     try {
-      _clientModel = await repository.getClient();
-      return _clientModel?.person?.name;
-    } on DioError catch (e) {
-      return null;
+      String token = await encrypt_preferes.getString("AccessToken");
+      _clientModel = await repository.getClient(token);
+      if (_clientModel != null) {
+        return null;
+      } else {
+        return "error-home-tittle".i18n();
+      }
+    } on DioError {
+      return "error-home-tittle".i18n();
     }
   }
 
