@@ -44,6 +44,7 @@
     "water_tank": "Water Tank",
     "moisture": "Moisture",
     "luminosity": "Luminosity",
-    "map-title": "Current location"
+    "map-title": "Current location",
+    "error-get-client": "Error To Get Client"
 
 }

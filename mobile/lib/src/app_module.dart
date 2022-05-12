@@ -1,5 +1,6 @@
 import 'package:basearch/src/features/auth/auth_module.dart';
 import 'package:basearch/src/features/onboarding/onboarding_module.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_config/flutter_config.dart';
 
@@ -11,7 +12,8 @@ class AppModule extends Module {
   List<Bind> get binds => [
         Bind((i) async {
           await FlutterConfig.loadEnvVariables();
-        })
+        }),
+        Bind(((i) => EncryptedSharedPreferences()))
       ];
 
   @override

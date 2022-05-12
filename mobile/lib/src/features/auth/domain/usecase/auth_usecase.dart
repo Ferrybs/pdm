@@ -14,13 +14,12 @@ import '../repository/auth_interface.dart';
 
 class AuthUseCase {
   final repository = Modular.get<IAuth>();
+  final encrypt_prefer = Modular.get<EncryptedSharedPreferences>();
 
   setAccessToken(TokenDataModel? tokeData) async {
     String? token = tokeData?.token;
     if (token != null) {
-      EncryptedSharedPreferences encryptedSharedPreferences =
-          EncryptedSharedPreferences();
-      encryptedSharedPreferences.setString("AccessToken", token);
+      await encrypt_prefer.setString("AccessToken", token);
     }
   }
 
@@ -38,6 +37,8 @@ class AuthUseCase {
         switch (e.response?.statusCode) {
           case 401:
             return "not-found".i18n();
+          case 404:
+            return "server-error".i18n();
           default:
             if (e.response?.data) {
               var data = e.response?.data;
@@ -56,7 +57,7 @@ class AuthUseCase {
       TokenDataModel? tokenData = await repository
           .login(CredentialsModel(email: email, password: password));
       if (tokenData?.token != null) {
-        setAccessToken(tokenData);
+        await setAccessToken(tokenData);
         return null;
       } else {
         final requestOptions = RequestOptions(path: "/auth/login");
@@ -69,9 +70,11 @@ class AuthUseCase {
             return "invalid-field".i18n();
           case 401:
             return "not-found".i18n();
+          case 404:
+            return "server-error".i18n();
           default:
-            if (e.response?.data) {
-              var data = e.response?.data;
+            if (e.response?.data != null) {
+              Map<String, dynamic> data = e.response?.data;
               if (data["message"] != null) {
                 return data["message"];
               }

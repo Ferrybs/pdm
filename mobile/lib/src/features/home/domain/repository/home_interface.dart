@@ -3,5 +3,5 @@ import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 
 abstract class IHome {
   Future<List<PlantStatsModel>?> getPlantStats();
-  Future<ClientModel?> getClient();
+  Future<ClientModel?> getClient(String token);
 }

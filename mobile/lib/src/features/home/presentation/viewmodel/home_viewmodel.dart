@@ -15,6 +15,9 @@ abstract class _HomeViewModelBase with Store {
   String? clientName;
 
   @observable
+  String? error;
+
+  @observable
   List<PlantStatsModel> plantList = [];
 
   @action
@@ -23,14 +26,23 @@ abstract class _HomeViewModelBase with Store {
   }
 
   @action
+  void updateError(String? value) {
+    error = value;
+  }
+
+  @action
   void updatePlantList(List<PlantStatsModel> list) {
     plantList = list;
   }
 
   getHomeData() async {
-    String? name = await _usecase.getUserName();
+    updateError(await _usecase.getClient());
+    String? name = _usecase.getUserName();
     if (name != null) {
+      updateError(null);
       updateClientName(name);
+    } else {
+      updateError("error-home-tittle".i18n());
     }
     List<PlantStatsModel>? list = await _usecase.getPlantList();
     if (list != null) {
