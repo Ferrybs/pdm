@@ -26,7 +26,7 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
     _theme = Theme.of(context);
     return SafeArea(
         child: Scaffold(
-      appBar: const HomeAppBar(),
+      appBar: HomeAppBar(onCloudPressed: store.navigateToMap),
       body: FutureBuilder(
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {

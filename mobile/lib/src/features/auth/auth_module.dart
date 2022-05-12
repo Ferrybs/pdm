@@ -12,6 +12,7 @@ class AuthModule extends Module {
   @override
   List<Bind<Object>> get binds => [
         Bind.factory((i) => AuthModule()),
+        Bind.factory((i) => AuthViewModel()),
         Bind.factory((i) => AuthUseCase()),
         Bind.factory<IAuth>((i) => AuthRepository()),
       ];

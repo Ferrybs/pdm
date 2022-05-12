@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppBar({Key? key}) : super(key: key);
+  final void Function()? onCloudPressed;
+
+  const HomeAppBar({Key? key, this.onCloudPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: _createLeading(themeData.brightness),
       title: _createTitle(),
-      actions: [_createAction(themeData.brightness)],
+      actions: [_createAction()],
     );
   }
 
@@ -37,12 +38,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  _createAction(Brightness brightness) {
+  _createAction() {
     return IconButton(
-      icon: brightness == Brightness.light
-          ? SvgPicture.asset('lib/assets/images/cloud_thunder_light.svg')
-          : SvgPicture.asset('lib/assets/images/cloud_thunder_dark.svg'),
-      onPressed: () => {},
+      icon: const Icon(Icons.map),
+      onPressed: onCloudPressed,
     );
   }
 }
