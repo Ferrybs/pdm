@@ -1,12 +1,13 @@
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
+#include <ezTime.h>
 #include "settings/ClientSettings.h"
 #include <ArduinoJson.h>
 #include "core/Console.h"
 
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
-
+Timezone myTZ;
 DynamicJsonDocument json(4096);
 
 static const char *root_ca PROGMEM = R"EOF(
@@ -55,8 +56,8 @@ class MqttServer
 {
 private:
     char buffer[4096];
-    const char *temperature = "temperature";
-    const char *temperature_settings = "temperature/settings";
+    const char *humidity = "humidity";
+    const char *humidity_settings = "humidity/settings";
     ClientSettings preferences;
 public:
     boolean isConnected();
@@ -71,7 +72,7 @@ boolean MqttServer::postMeasure(float value,int type){
     memset(buffer,0,sizeof(buffer));
     json.clear();
     console.log("Posting Measure...");
-    if(isnan(value)){
+    if(!isnan(value)){
         json["ok"] = true;
         JsonObject measureDTO = json.createNestedObject("measureDTO");
         JsonObject typeDTO = measureDTO.createNestedObject("typeDTO");
@@ -79,8 +80,10 @@ boolean MqttServer::postMeasure(float value,int type){
         typeDTO["id"] = type;
         deviceDTO["id"] = preferences.getId();
         measureDTO["value"] = value;
+        waitForSync();
+        measureDTO["date"] = UTC.dateTime(RFC822);
         size_t n = serializeJson(json, buffer);
-        status = client.publish(this->temperature,buffer,n);
+        status = client.publish(this->humidity,buffer,n);
     }
     console.log("Status:",false);
     console.log(status ? "Message send!": "Message was Not Send!");
@@ -113,7 +116,7 @@ boolean MqttServer::connect(){
         preferences.getMqttPassword().c_str())
          ) {
             Serial.println("connected");
-            client.subscribe(this->temperature_settings);
+            client.subscribe(this->humidity_settings);
             //client.subscribe(command2_topic);   // subscribe the topics here
             return true;
         } else {

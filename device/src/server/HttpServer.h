@@ -53,12 +53,6 @@ bool HttpServer::json_to_device_setup(){
     result = mqtt_user == NULL ? false : result;
     result = mqtt_password == NULL ? false : result;
     result = mqtt_port == NULL ? false : result;
-    console.log(ssid);
-    console.log(password);
-    console.log(mqtt_server);
-    console.log(mqtt_user);
-    console.log(mqtt_password);
-    console.log(mqtt_port.toInt());
     _preferences.putMqttServer(mqtt_server);
     _preferences.putMqttUser(mqtt_user);
     _preferences.putMqttPassword(mqtt_password);
