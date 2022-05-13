@@ -4,22 +4,15 @@
 #include "connections/WifiNetwork.h"
 #include "server/HttpServer.h"
 #include "core/Console.h"
-
-
 class DeviceSettings
 {
 private:
-    ClientSettings preferences;
-    WifiAccessPoint ap;
-    WifiNetwork network;
-    HttpServer http; 
-    Console console;
 public:
     void configure();
     bool isConnected();
 };
 bool DeviceSettings::isConnected(){
-    return network.isConnected();
+    return wifiNetwork.isConnected();
 }
 void DeviceSettings::configure(){
     console.ledOn();
@@ -27,7 +20,7 @@ void DeviceSettings::configure(){
     if (!preferences.isConfigured())
     {
         console.blink();
-        ap.start();
+        wifiAccessPoint.start();
         http.start();
         console.blink();
         console.blink();
@@ -36,10 +29,10 @@ void DeviceSettings::configure(){
             http.run();
         }
         console.blink();
-        ap.stop();
+        wifiAccessPoint.stop();
         http.stop();
     }
-    if (!network.start())
+    if (!wifiNetwork.start())
     {
         console.blink();
         console.log("Failed to connect!");
@@ -51,3 +44,5 @@ void DeviceSettings::configure(){
     console.ledOff();
 
 }
+
+DeviceSettings device;

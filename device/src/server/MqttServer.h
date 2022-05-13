@@ -44,75 +44,93 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 )EOF";
 
 void callback(char* topic, byte* payload, unsigned int length) {
-    String incommingMessage = "";
-    char buffer_call[4096];
-    json.clear();
-    for (int i = 0; i < length; i++) incommingMessage+=(char)payload[i];
-    json["ok"] = true;
-    json["topic"] = String(topic);
-    json["message"] = "["+String(topic)+"]: " +incommingMessage;
-    serializeJson(json, buffer_call);
-    Serial.println("Message arrived ["+String(topic)+"]"+incommingMessage);
+    DynamicJsonDocument jsonIn(4096);
+    deserializeJson(jsonIn, payload, length);
+    boolean ok = jsonIn["ok"];
+    String message = jsonIn["message"];
+    console.log("OK: " + ok ? "TRUE" : "FALSE");
+    console.log("Message arrived ["+String(topic)+"]:"+message);
 }
 class MqttServer
 {
 private:
     char buffer[4096];
+    const char *temperature = "temperature";
+    const char *temperature_settings = "temperature/settings";
     ClientSettings preferences;
-    Console console;
 public:
-    bool isConnected();
+    boolean isConnected();
     void setup();
     void loop();
-    void postMeasure(float value,int type);
-    bool connect();
+    boolean postMeasure(float value,int type);
+    boolean connect();
     };
 
-void MqttServer::postMeasure(float value,int type){
+boolean MqttServer::postMeasure(float value,int type){
+    boolean status = false;
+    memset(buffer,0,sizeof(buffer));
     json.clear();
-    if(value != 0){
+    console.log("Posting Measure...");
+    if(isnan(value)){
         json["ok"] = true;
-        json["value"] = value;
-        JsonObject deviceDTO = json.createNestedObject("measureDTO");
-        JsonObject typeDTO = json.createNestedObject("typeDTO");
+        JsonObject measureDTO = json.createNestedObject("measureDTO");
+        JsonObject typeDTO = measureDTO.createNestedObject("typeDTO");
+        JsonObject deviceDTO = measureDTO.createNestedObject("deviceDTO");
         typeDTO["id"] = type;
         deviceDTO["id"] = preferences.getId();
-    }else{
-        json["ok"] = false;
-        json["message"] = "Value is null!";
+        measureDTO["value"] = value;
+        size_t n = serializeJson(json, buffer);
+        status = client.publish(this->temperature,buffer,n);
     }
-    serializeJson(json, buffer);
+    console.log("Status:",false);
+    console.log(status ? "Message send!": "Message was Not Send!");
+    if (status)
+    {
+        console.log("Message:",false);
+        console.log(buffer);
+    }
+    
+    memset(buffer,0,sizeof(buffer));
+    json.clear();
+    return true;
 }
 void MqttServer::setup(){
     espClient.setCACert(root_ca);
     String host = preferences.getMqttServer();
     static char pHost[64] = {0};
     strcpy(pHost, host.c_str());
+    client.setBufferSize(4096);
     client.setServer(pHost, preferences.getMqttPort());
     client.setCallback(callback);
 }
-bool MqttServer::connect(){
-    while (!client.connected()) {
+boolean MqttServer::connect(){
+    int count = 0;
+    while (!client.connected() && count<50) {
+        count++;
         console.log("Attempting MQTT connection...",false);
         if (client.connect(preferences.getId().c_str(),
         preferences.getMqttUser().c_str(),
-         preferences.getMqttPassword().c_str())
+        preferences.getMqttPassword().c_str())
          ) {
             Serial.println("connected");
+            client.subscribe(this->temperature_settings);
             //client.subscribe(command2_topic);   // subscribe the topics here
             return true;
         } else {
             console.log("failed, rc=",false);
             console.log(client.state());
-            console.log("try again in 5 seconds");   // Wait 5 seconds before retrying
-            console.blink(10);
+            console.log("try again in 2 seconds");
+            console.blink(20);
         }
   }
+  return client.connected();
 }
 void MqttServer::loop(){
     client.loop();
 }
 
-bool MqttServer::isConnected(){
+boolean MqttServer::isConnected(){
     return client.connected();
 }
+
+MqttServer mqtt;

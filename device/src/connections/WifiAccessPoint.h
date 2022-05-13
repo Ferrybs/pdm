@@ -31,3 +31,5 @@ void WifiAccessPoint::stop(){
 bool WifiAccessPoint::status(){
     return WiFi.softAPIP() != IPAddress(0,0,0,0);
 }
+
+WifiAccessPoint wifiAccessPoint;

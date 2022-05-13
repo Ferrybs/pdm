@@ -1,11 +1,11 @@
 #include <WebServer.h>
 #include <ArduinoJson.h>
 #include "core/Console.h"
+
 WebServer _server(80);
 char buffer[4096];
 StaticJsonDocument<4096> jsonDocument;
 ClientSettings _preferences;
-Console console;
 class HttpServer{
 private:
 public:
@@ -110,3 +110,5 @@ void HttpServer::response_message_to_json(bool ok, String message){
     jsonDocument["message"] = message;
     serializeJson(jsonDocument, buffer);
 }
+
+HttpServer http;

@@ -1,16 +1,25 @@
 #include "server/MqttServer.h"
 #include "settings/DeviceSettings.h"
-
-MqttServer mqtt;
-DeviceSettings device;
+#include "measures/Humidity.h"
 
 void setup() {
   device.configure();
   mqtt.setup();
   delay(500);
-  if (!mqtt.isConnected()) mqtt.connect();
-  mqtt.loop();
 }
 
 void loop() {
+  if (device.isConnected())
+  {
+    if (mqtt.isConnected())
+    {
+      mqtt.postMeasure(humidity.getHumidity(),1);
+      mqtt.loop();
+    }else{
+      mqtt.connect();
+    }
+  }else{
+    device.configure();
+  }
+  
 }

@@ -118,3 +118,5 @@ String ClientSettings::getPassword(){
     _preferences.end();
     return password;
 }
+
+ClientSettings preferences;
