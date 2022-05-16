@@ -3,13 +3,13 @@
 #include <DHT_U.h>
 #include "core/Console.h"
 
-DHT_Unified dht(21, DHT11);
+DHT_Unified dht(27, DHT11);
 class Measure
 {
 private:
     const int delayMS = 1500;
-    const int luminosity = 4;
-    const int moisture = 15;
+    const int luminosity = 34;
+    const int moisture = 35;
     void setup();
 public:
     Measure(){

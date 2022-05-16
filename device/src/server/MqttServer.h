@@ -57,8 +57,8 @@ class MqttServer
 {
 private:
     char buffer[4096];
-    const char *humidity = "humidity";
-    const char *settings = "settings";
+    const char *_measure = "measure";
+    const char *_settings = "settings";
     ClientSettings preferences;
 public:
     boolean isConnected();
@@ -84,19 +84,16 @@ boolean MqttServer::postMeasure(float value,int type){
         waitForSync();
         measureDTO["date"] = UTC.dateTime(RFC822);
         size_t n = serializeJson(json, buffer);
-        status = client.publish(this->humidity,buffer,n);
+        console.log("message["+String(type)+"]: ",false);
+        console.log(buffer);
+        status = client.publish(this->_measure,buffer,n);
     }
     console.log("Status:",false);
     console.log(status ? "Message send!": "Message was Not Send!");
-    if (status)
-    {
-        console.log("Message:",false);
-        console.log(buffer);
-    }
     
     memset(buffer,0,sizeof(buffer));
     json.clear();
-    return true;
+    return status;
 }
 void MqttServer::setup(){
     espClient.setCACert(root_ca);
@@ -117,7 +114,7 @@ boolean MqttServer::connect(){
         preferences.getMqttPassword().c_str())
          ) {
             Serial.println("connected");
-            client.subscribe(this->settings);
+            client.subscribe(this->_settings);
             return true;
         } else {
             console.log("failed, rc=",false);
