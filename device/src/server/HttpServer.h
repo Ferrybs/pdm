@@ -5,7 +5,6 @@
 WebServer _server(80);
 char buffer[4096];
 StaticJsonDocument<4096> jsonDocument;
-ClientSettings _preferences;
 class HttpServer{
 private:
 public:
@@ -30,7 +29,7 @@ void HttpServer::start(){
 }
 void HttpServer::getId() {
     console.blink();
-    response_id_to_json(true,_preferences.getId());
+    response_id_to_json(true,preferences.getId());
     _server.send(200, "application/json",buffer);
 }
 
@@ -53,11 +52,11 @@ bool HttpServer::json_to_device_setup(){
     result = mqtt_user == NULL ? false : result;
     result = mqtt_password == NULL ? false : result;
     result = mqtt_port == NULL ? false : result;
-    _preferences.putMqttServer(mqtt_server);
-    _preferences.putMqttUser(mqtt_user);
-    _preferences.putMqttPassword(mqtt_password);
-    _preferences.putMqttPort(mqtt_port.toInt());
-    _preferences.putWifiSettings(ssid,password);
+    preferences.putMqttServer(mqtt_server);
+    preferences.putMqttUser(mqtt_user);
+    preferences.putMqttPassword(mqtt_password);
+    preferences.putMqttPort(mqtt_port.toInt());
+    preferences.putWifiSettings(ssid,password);
     console.log("Setting Configured!");
     return result;
     
@@ -69,11 +68,11 @@ void HttpServer::postDeviceSettings() {
         console.log();
         if (json_to_device_setup())
         {
-            _preferences.putConfigured(true);
+            preferences.putConfigured(true);
             response_message_to_json(true,"Device Configured!");
             _server.send(200, "application/json",buffer);
         }else{
-            _preferences.putConfigured(false);
+            preferences.putConfigured(false);
             response_message_to_json(false,"Error!");
             _server.send(400, "application/json",buffer);
         }

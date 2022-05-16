@@ -47,17 +47,18 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 void callback(char* topic, byte* payload, unsigned int length) {
     DynamicJsonDocument jsonIn(4096);
     deserializeJson(jsonIn, payload, length);
-    boolean ok = jsonIn["ok"];
-    String message = jsonIn["message"];
-    console.log("OK: " + ok ? "TRUE" : "FALSE");
-    console.log("Message arrived ["+String(topic)+"]:"+message);
+    preferences.putHumidity(jsonIn["preferencesDTO"]["humidity"]);
+    preferences.putTemperature(jsonIn["preferencesDTO"]["temperature"]);
+    preferences.putLuminosity(jsonIn["preferencesDTO"]["luminosity"]);
+    preferences.putMoisture(jsonIn["preferencesDTO"]["moisture"]);
+    console.log("["+String(topic)+"]:"+String((char*)payload));
 }
 class MqttServer
 {
 private:
     char buffer[4096];
     const char *humidity = "humidity";
-    const char *humidity_settings = "humidity/settings";
+    const char *settings = "settings";
     ClientSettings preferences;
 public:
     boolean isConnected();
@@ -116,8 +117,7 @@ boolean MqttServer::connect(){
         preferences.getMqttPassword().c_str())
          ) {
             Serial.println("connected");
-            client.subscribe(this->humidity_settings);
-            //client.subscribe(command2_topic);   // subscribe the topics here
+            client.subscribe(this->settings);
             return true;
         } else {
             console.log("failed, rc=",false);

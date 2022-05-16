@@ -14,13 +14,25 @@ private:
     const char *_mqtt_server = "MQTT_SERVER";
     const char *_mqtt_password = "MQTT_PASSWORD";
     const char *_mqtt_port = "MQTT_PORT";
+    const char *_humidity = "humidity";
+    const char *_moisture = "moisture";
+    const char *_temperature = "temperature";
+    const char *_luminosity = "luminosity";
 public:
     void putWifiSettings(String ssid, String password);
     void putConfigured(bool status);
+    void putHumidity(float humidity);
+    void putMoisture(float moisture);
+    void putTemperature(float temperature);
+    void putLuminosity(float luminosity);
     void putMqttUser(String user);
     void putMqttServer(String server);
     void putMqttPassword(String password);
     void putMqttPort(int port);
+    float getTemperature();
+    float getLuminosity();
+    float getHumidity();
+    float getMoisture();
     String getSSID();
     String getMqttServer();
     String getMqttUser();
@@ -30,8 +42,29 @@ public:
     String getPassword();
     String getId();
     };
+void ClientSettings::putHumidity(float humidity){
+    _preferences.begin(this->_appName,false);
+    _preferences.putFloat(this->_humidity,humidity);
+    _preferences.end();
+}
+void ClientSettings::putMoisture(float moisture){
+    _preferences.begin(this->_appName,false);
+    _preferences.putFloat(this->_moisture,moisture);
+    _preferences.end();
+}
+void ClientSettings::putTemperature(float temperature){
+    _preferences.begin(this->_appName,false);
+    _preferences.putFloat(this->_temperature,temperature);
+    _preferences.end();
+}
+void ClientSettings::putLuminosity(float luminosity){
+    _preferences.begin(this->_appName,false);
+    _preferences.putFloat(this->_luminosity,luminosity);
+    _preferences.end();
+}
 void ClientSettings::putConfigured(bool status){
     _preferences.begin(this->_appName,false);
+    delay(500);
     _preferences.putBool(this->_configured,status);
     _preferences.end();
 }
@@ -67,6 +100,34 @@ String ClientSettings::getSSID(){
     SSID = _preferences.getString(this->_ssid);
     _preferences.end();
     return SSID;
+}
+float ClientSettings::getLuminosity(){
+    float luminosity;
+    _preferences.begin(this->_appName,false);
+    luminosity = _preferences.getFloat(this->_luminosity);
+    _preferences.end();
+    return luminosity;
+}
+float ClientSettings::getMoisture(){
+    float moisture;
+    _preferences.begin(this->_appName,false);
+    moisture = _preferences.getFloat(this->_moisture);
+    _preferences.end();
+    return moisture;
+}
+float ClientSettings::getTemperature(){
+    float temperature;
+    _preferences.begin(this->_appName,false);
+    temperature = _preferences.getFloat(this->_temperature);
+    _preferences.end();
+    return temperature;
+}
+float ClientSettings::getHumidity(){
+    float humidity;
+    _preferences.begin(this->_appName,false);
+    humidity = _preferences.getFloat(this->_humidity);
+    _preferences.end();
+    return humidity;
 }
 String ClientSettings::getMqttServer(){
     String server;
