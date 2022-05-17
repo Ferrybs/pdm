@@ -1,6 +1,5 @@
 #pragma once
 #include <Arduino.h>
-
 class Console
 {
 private:
@@ -69,4 +68,5 @@ void Console::blink(int tick, int size){
         count++;
     }
 }
+Console console;
 

@@ -1,23 +1,29 @@
-#include <Arduino.h>
-#include <WiFi.h>
+#include "server/MqttServer.h"
 #include "settings/DeviceSettings.h"
-#include "measures/Humidity.h"
-
-
-using namespace std;
-
-DeviceSettings  device;
-Humidity humidity;
-
+#include "measures/Measure.h"
+#include "controllers/Controller.h"
 
 void setup() {
-    device.configure();
+  device.configure();
+  mqtt.setup();
+  delay(500);
 }
-
 void loop() {
-    if (device.isConnected())
+  float temperature = measure.getTemperature();
+  if (device.isConnected())
+  {
+    if (mqtt.isConnected())
     {
-        humidity.getHumidity();
+      mqtt.postMeasure(temperature,1);
+      //mqtt.postMeasure(measure.getHumidity(),2);
+      //mqtt.postMeasure(measure.getLumiosity(),3);
+      //mqtt.postMeasure(measure.getMoisture(),4);
+      mqtt.loop();
+    }else{
+      mqtt.connect();
     }
-    
+  }else{
+    device.configure();
+  }
+  controller.setTemperature(temperature);
 }

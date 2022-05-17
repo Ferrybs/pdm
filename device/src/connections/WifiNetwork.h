@@ -3,8 +3,6 @@
 #include "core/Console.h"
 class WifiNetwork{
 private:
-    ClientSettings preferences;
-    Console console;
 public:
     bool start();
     bool isConnected();
@@ -42,3 +40,5 @@ bool WifiNetwork::start(){
         return true;
     }
 }
+
+WifiNetwork wifiNetwork;
