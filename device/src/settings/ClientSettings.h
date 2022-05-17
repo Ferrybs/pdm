@@ -118,7 +118,7 @@ float ClientSettings::getMoisture(){
 float ClientSettings::getTemperature(){
     float temperature;
     _preferences.begin(this->_appName,false);
-    temperature = _preferences.getFloat(this->_temperature);
+    temperature = _preferences.getFloat(this->_temperature,NAN);
     _preferences.end();
     return temperature;
 }

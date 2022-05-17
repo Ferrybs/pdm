@@ -46,12 +46,14 @@ emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 
 void callback(char* topic, byte* payload, unsigned int length) {
     DynamicJsonDocument jsonIn(4096);
+    char buffer[4096];
     deserializeJson(jsonIn, payload, length);
     preferences.putHumidity(jsonIn["preferencesDTO"]["humidity"]);
     preferences.putTemperature(jsonIn["preferencesDTO"]["temperature"]);
     preferences.putLuminosity(jsonIn["preferencesDTO"]["luminosity"]);
     preferences.putMoisture(jsonIn["preferencesDTO"]["moisture"]);
-    console.log("["+String(topic)+"]:"+String((char*)payload));
+    serializeJson(jsonIn,buffer);
+    console.log("["+String(topic)+"]:"+ String(buffer));
 }
 class MqttServer
 {
@@ -59,7 +61,6 @@ private:
     char buffer[4096];
     const char *_measure = "measure";
     const char *_settings = "settings";
-    ClientSettings preferences;
 public:
     boolean isConnected();
     void setup();

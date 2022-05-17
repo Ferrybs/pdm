@@ -1,20 +1,29 @@
 #include "settings/ClientSettings.h"
+#include "core/Console.h"
 class Controller
 {
 private:
-    /* data */
+    const int temperature  = 13;
 public:
     Controller(){
         setup();
     }
     void setup();
-    void setHumidiy();
+    void setTemperature(float temperature);
 };
 void Controller::setup(){
+    pinMode(this->temperature,OUTPUT);
+}
+void Controller::setTemperature(float temperature){
+    if(!isnan(preferences.getTemperature())){
+        if (preferences.getTemperature()< temperature)
+        {
+            digitalWrite(this->temperature,1);
+        }else{
+            digitalWrite(this->temperature,0);
+        } 
+    }
     
 }
 
-
-void Controller::setHumidiy(){
-
-}
+Controller controller;
