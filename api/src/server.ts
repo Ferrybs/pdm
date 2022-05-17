@@ -6,9 +6,7 @@ import 'reflect-metadata';
 import 'es6-shim';
 import DeviceRoutes from "./routes/device.routes";
 import ClientRoutes from "./routes/client.routes";
-
-
-
+import { Mqtt } from "./mqtt/mqtt";
 
 const app = new App(
     validateEnv.PORT,
@@ -21,3 +19,8 @@ const app = new App(
     );
     
 app.listen();
+
+
+const mqtt = new  Mqtt();
+mqtt.start();
+

@@ -16,7 +16,7 @@ export default class PostgresDataSource{
             type: "postgres",
             url: validateEnv.DATABASE_URL,
             synchronize: true,
-            logging: true,
+            logging: ["query"],
             entities: [
                 Credentials,Client,Person,Sessions,
                 Device,Measure,TypeMeasure,TypeSession

@@ -23,6 +23,7 @@
     "express": "^4.17.3",
     "helmet": "^5.0.2",
     "jsonwebtoken": "^8.5.1",
+    "mqtt": "^4.3.7",
     "node": "^17.7.2",
     "nodemailer": "^6.7.3",
     "pg": "^8.7.3",
