@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:localization/localization.dart';
 
-import '../viewmodel/map_viewmodel.dart';
+import '../../viewmodel/map_viewmodel.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -23,6 +23,30 @@ class _MapPageState extends ModularState<MapPage, MapViewModel> {
   final _viewModel = Modular.get<MapViewModel>();
 
   late final LatLng _position = const LatLng(-15.8306559, -47.9264053);
+
+  @override
+  Widget build(BuildContext context) {
+    _theme = Theme.of(context);
+    return SafeArea(
+        child: Scaffold(
+      appBar: AppBar(
+          title: _createTitle(_viewModel.getMapTitle()),
+          actions: [_createAction()]),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Container(
+        child: GoogleMap(
+          onMapCreated: onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: _position,
+            zoom: 11.0,
+          ),
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          zoomControlsEnabled: true,
+        ),
+      ),
+    ));
+  }
 
   void onMapCreated(GoogleMapController controller) async {
     mapController = controller;
@@ -73,7 +97,7 @@ class _MapPageState extends ModularState<MapPage, MapViewModel> {
 
       mapController.animateCamera(CameraUpdate.newLatLng(LatLng(lat, long)));
     } catch (e) {
-      //retorna para tela inicial
+      debugPrint(e.toString());
     }
   }
 
@@ -92,29 +116,5 @@ class _MapPageState extends ModularState<MapPage, MapViewModel> {
       icon: const Icon(Icons.home),
       onPressed: () => {_viewModel.navigateToHome()},
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _theme = Theme.of(context);
-    return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-          title: _createTitle(_viewModel.getMapTitle()),
-          actions: [_createAction()]),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Container(
-        child: GoogleMap(
-          onMapCreated: onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _position,
-            zoom: 11.0,
-          ),
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          zoomControlsEnabled: true,
-        ),
-      ),
-    ));
   }
 }

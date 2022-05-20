@@ -74,7 +74,7 @@ class AuthUseCase {
             return "server-error".i18n();
           default:
             if (e.response?.data != null) {
-              Map<String, dynamic> data = e.response?.data;
+              var data = e.response?.data;
               if (data["message"] != null) {
                 return data["message"];
               }

@@ -24,6 +24,21 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+  final _$errorAtom = Atom(name: '_HomeViewModelBase.error');
+
+  @override
+  String? get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String? value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
   final _$plantListAtom = Atom(name: '_HomeViewModelBase.plantList');
 
   @override
@@ -54,9 +69,32 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+  void updateError(String? value) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateError');
+    try {
+      return super.updateError(value);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updatePlantList(List<PlantStatsModel> list) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updatePlantList');
+    try {
+      return super.updatePlantList(list);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 clientName: ${clientName},
+error: ${error},
 plantList: ${plantList}
     ''';
   }
