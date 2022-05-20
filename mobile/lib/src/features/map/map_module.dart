@@ -1,4 +1,4 @@
-import 'package:basearch/src/features/map/presentation/page/map_page.dart';
+import 'package:basearch/src/features/map/presentation/view/page/map_page.dart';
 import 'package:basearch/src/features/map/presentation/viewmodel/map_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
