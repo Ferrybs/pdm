@@ -14,8 +14,14 @@ import DevicePreferences from "../entity/device.preferences.entity";
 import DataStoreToken from "../interfaces/data.store.token.interface";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import DeviceLocalization from "../entity/device.localization.entity";
+import MqttServer from "../mqtt/mqtt.server";
 
 export default class DeviceService extends Services{
+    private _mqtt: MqttServer;
+    constructor(){
+        super();
+        this._mqtt = new MqttServer(this.database);
+    }
     public  async addDevice(deviceDTO: DeviceDTO, clientDTO: ClientDTO): Promise<boolean>{
         if(await this.database.findDeviceById(deviceDTO.id)){
             throw new DeviceFoundHttpException(deviceDTO.id);
@@ -58,7 +64,7 @@ export default class DeviceService extends Services{
                 devicePreferences.id = devicePreferences_old.id;
             }
             if(await this.database.insertDevicePreferences(devicePreferences)){
-                this.mqtt.postDevicePreferences(device.id,devicePreferencesDTO);
+                this._mqtt.postDevicePreferences(device.id,devicePreferencesDTO);
                 return true;
             }
         }

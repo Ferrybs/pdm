@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/login_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -58,7 +58,8 @@ abstract class _AuthViewModelBase with Store {
   }
 
   Future<String?> login() async {
-    var result = await _usecase.login(email, password);
+    var loginDTO = LoginDTO(email, password);
+    var result = await _usecase.login(loginDTO);
     if (result == null) {
       Modular.to.navigate("/home/");
     }
@@ -66,9 +67,9 @@ abstract class _AuthViewModelBase with Store {
   }
 
   Future<String?> register() async {
-    var person = PersonDto(name, lastName);
-    var credentials = CredentialsDto(email, password);
-    return _usecase.register(credentials, person);
+    var personDTO = PersonDTO(name, lastName);
+    var loginDTO = LoginDTO(email, password);
+    return _usecase.register(loginDTO, personDTO);
   }
 
   String? nameValidation() {

@@ -1,5 +1,4 @@
-class CredentialsDto {
-  const CredentialsDto(this.email, this.password);
+class CredentialsDTO {
+  const CredentialsDTO(this.email);
   final String? email;
-  final String? password;
 }

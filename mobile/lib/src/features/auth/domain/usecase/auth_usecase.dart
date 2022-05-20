@@ -1,9 +1,12 @@
 import 'dart:async';
-import 'package:basearch/src/features/auth/data/dto/credentials_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/login_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
+import 'package:basearch/src/features/auth/data/dto/register_dto.dart';
 import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
+import 'package:basearch/src/features/auth/domain/model/login_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
+import 'package:basearch/src/features/auth/domain/model/register_model.dart';
 import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
 import 'package:basearch/src/validators/validator.dart';
 import 'package:dio/dio.dart';
@@ -14,12 +17,12 @@ import '../repository/auth_interface.dart';
 
 class AuthUseCase {
   final repository = Modular.get<IAuth>();
-  final encrypt_prefer = Modular.get<EncryptedSharedPreferences>();
+  final _encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
 
   setAccessToken(TokenDataModel? tokeData) async {
     String? token = tokeData?.token;
     if (token != null) {
-      await encrypt_prefer.setString("AccessToken", token);
+      await _encryptedPreferences.setString("AccessToken", token);
     }
   }
 
@@ -52,10 +55,11 @@ class AuthUseCase {
     }
   }
 
-  Future<String?> login(String email, String password) async {
+  Future<String?> login(LoginDTO loginDTO) async {
     try {
-      TokenDataModel? tokenData = await repository
-          .login(CredentialsModel(email: email, password: password));
+      var loginModel =
+          LoginModel(email: loginDTO.email, password: loginDTO.password);
+      TokenDataModel? tokenData = await repository.login(loginModel);
       if (tokenData?.token != null) {
         await setAccessToken(tokenData);
         return null;
@@ -85,16 +89,14 @@ class AuthUseCase {
     }
   }
 
-  Future<String?> register(
-      CredentialsDto credentialsDto, PersonDto personDto) async {
-    var credetialsModel = CredentialsModel(
-        email: credentialsDto.email, password: credentialsDto.password);
+  Future<String?> register(LoginDTO loginDTO, PersonDTO personDTO) async {
+    var loginModel =
+        LoginModel(email: loginDTO.email, password: loginDTO.password);
     var personModel =
-        PersonModel(name: personDto.name, lastName: personDto.lastName);
-    var clientModel =
-        ClientModel(credentials: credetialsModel, person: personModel);
+        PersonModel(name: personDTO.name, lastName: personDTO.lastName);
+    var registerModel = RegisterModel(login: loginModel, person: personModel);
     try {
-      if (await repository.register(clientModel)) {
+      if (await repository.register(registerModel)) {
         return null;
       } else {
         final requestOptions = RequestOptions(path: "/auth/register");
