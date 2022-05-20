@@ -17,6 +17,9 @@ import Credentials from "../entity/credentials.entity";
 import { plainToInstance } from "class-transformer";
 import Person from "../entity/person.entity";
 import DataStoreToken from "../interfaces/data.store.token.interface";
+import SendEmailDTO from "dto/send.email.dto";
+import LoginDTO from "dto/login.dto";
+import RegisterDTO from "dto/register.dto";
 
 export default class AuthService extends Services{
   constructor(){
@@ -54,10 +57,10 @@ export default class AuthService extends Services{
     return session;
   }
 
-  public async register(clientDTO: ClientDTO): Promise<boolean>{
+  public async register(registerDTO: RegisterDTO): Promise<boolean>{
     const credentials = new Credentials();
-    credentials.email = clientDTO.credentialsDTO.email.toLowerCase();
-    credentials.password = clientDTO.credentialsDTO.password;
+    credentials.email = registerDTO.loginDTO.email.toLowerCase();
+    credentials.password = registerDTO.loginDTO.password;
     
     if(await this.database.findClientByEmail(credentials)){
       throw new EmailFoundHttpException(credentials.email);
@@ -68,7 +71,7 @@ export default class AuthService extends Services{
       throw new HashHttpException(error.message);
     }
     const client = new Client();
-    client.person = plainToInstance(Person,clientDTO.personDTO);
+    client.person = plainToInstance(Person,registerDTO.personDTO);
     client.credentials = credentials;
     const result = await this.database.insertClient(client);
     if(result){
@@ -160,19 +163,19 @@ export default class AuthService extends Services{
     });
   }
 
-  public async login(credentialsDTO: CredentialsDTO): Promise<TokenData> {
+  public async login(loginDTO: LoginDTO): Promise<TokenData> {
     var client: Client;
     var isMatch = false;
     var accessToken: TokenData;
     var session: Sessions;
-    credentialsDTO.email = credentialsDTO.email.toLowerCase();
+    loginDTO.email = loginDTO.email.toLowerCase();
 
-    client = await this.database.findClientByEmail(credentialsDTO);
+    client = await this.database.findClientByEmail(loginDTO);
     
     if(client){
       try {
         isMatch = await bcrypt.compare(
-          credentialsDTO.password,
+          loginDTO.password,
           client.credentials.password
         );
       } catch (error) {
@@ -201,22 +204,14 @@ export default class AuthService extends Services{
     }
     throw( new NotFoundHttpException("CLIENT"));
   }
-
-  public async recoverypassword(credentialsDTO: CredentialsDTO){
-      try {
-        const hashedPassword = await bcrypt.hash(credentialsDTO.password,10);
-        credentialsDTO.password = hashedPassword;
-        this.database.updateCredentials(credentialsDTO);;
-      } catch (error) {
-        throw new DatabaseHttpException(error.message);
-      }
-  }
    
-  public async sendEmail(credentialsDTO: CredentialsDTO){
+  public async sendEmail(sendEmailDTO: SendEmailDTO){
     var sessionId: string;
     var session: Sessions;
     var sessions: Sessions;
-    const client = await this.database.findClientByEmail(credentialsDTO);
+    const credentials = new CredentialsDTO();
+    credentials.email = sendEmailDTO.email;
+    const client = await this.database.findClientByEmail(credentials);
     if(client){
       await this.updateClientSessionsByClientId(client.id);
       
@@ -242,7 +237,6 @@ export default class AuthService extends Services{
       clientDTO.id =  client.id;
       clientDTO.credentialsDTO = client.credentials;
       clientDTO.personDTO = client.person;
-      clientDTO.sessionsDTO= [sessions];
       
       const result = await this.email.sendEmail(clientDTO,accessToken.token);
       if(!result){

@@ -17,9 +17,9 @@ export default class Sessions{
     @Column({nullable:false})
     public expiresIn?: number;
 
-    @ManyToOne(() => TypeSession, type => type.sessions)
+    @ManyToOne(() => TypeSession, type => type.sessions,{nullable:false})
     public type?: TypeSession; 
 
-    @ManyToOne(() => Client, client => client.sessions)
+    @ManyToOne(() => Client, client => client.sessions,{nullable:false})
     public client?: Client;
 }

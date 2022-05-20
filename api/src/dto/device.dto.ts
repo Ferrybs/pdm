@@ -1,6 +1,4 @@
-import { MaxLength, MinLength } from "class-validator";
-import ClientDTO from "./client.dto";
-
+import { Length, MaxLength, MinLength } from "class-validator";
 export default class DeviceDTO {
     @MinLength(6)
     public id?: string;

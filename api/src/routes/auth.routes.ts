@@ -21,12 +21,12 @@ export default class AuthRoutes {
     private initializeRoutes() {
             this.router.post(
                 `${this.path}/register`,
-                this._validationMiddleware.client(),
+                this._validationMiddleware.register(),
                 this._controller.register.bind(this._controller)
                 );
             this.router.post(
                 `${this.path}/login`,
-                this._validationMiddleware.credentials(),
+                this._validationMiddleware.login(),
                 this._controller.login.bind(this._controller)
                 );
             this.router.post(

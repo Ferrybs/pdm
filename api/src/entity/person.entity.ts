@@ -12,6 +12,6 @@ export default class Person{
     @Column({nullable:false})
     public lastName?: string;
 
-    @OneToOne(() => Client, client => client.id)
+    @OneToOne(() => Client, client => client.id, {nullable: false})
     public client?: Client;
 }

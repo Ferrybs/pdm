@@ -14,10 +14,10 @@ export default class Measure{
     @Column({nullable: false})
     public value?: string;
 
-    @ManyToOne(() => Device, device => device.measures)
+    @ManyToOne(() => Device, device => device.measures, {nullable: false})
     public device?: Device;
 
-    @ManyToOne(() => TypeMeasure, type => type.type)
+    @ManyToOne(() => TypeMeasure, type => type.type, {nullable: false})
     public type?: TypeMeasure; 
 
 }

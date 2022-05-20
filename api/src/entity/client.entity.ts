@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 import Credentials from './credentials.entity';
 import Device from "./device.entiy";
 import Person from "./person.entity"
@@ -20,6 +20,6 @@ export default class Client{
     @OneToMany(() => Sessions, sessions => sessions.client, {cascade: true})
     public sessions?: Sessions[];
 
-    @OneToMany(() => Device, device => device.client, {cascade: true})
+    @OneToMany(() => Device, device => device.client)
     public devices?: Device[];
 }

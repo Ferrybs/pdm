@@ -1,13 +1,10 @@
 import { ValidateNested } from 'class-validator';
-import CredentialsDTO from './credentials.dto';
+import LoginDTO from './login.dto';
 import PersonDTO from "./person.dto"
-export default class ClientDTO {
-
-    public id?: string 
-
+export default class RegisterDTO {
     @ValidateNested()  
     public personDTO?: PersonDTO;
 
     @ValidateNested()
-    public credentialsDTO?: CredentialsDTO;
+    public loginDTO?: LoginDTO;
 }

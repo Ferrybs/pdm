@@ -1,6 +1,4 @@
 
-import { plainToInstance, TransformPlainToInstance } from "class-transformer";
-import MeasureDTO from "../dto/measure.dto";
 import mqtt, { MqttClient } from "mqtt";
 import validateEnv from "../utils/validateEnv";
 

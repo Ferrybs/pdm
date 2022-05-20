@@ -13,7 +13,6 @@ export default class ClientController extends Controller{
             try {
               const dataStoreToken  = request.dataStoreToken;
               const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
-              clientDTO.credentialsDTO.password = null;
               response.status(200).send({ok: true,clientDTO});
             } catch (error) {
               if(error instanceof(HttpException)){

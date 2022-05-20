@@ -8,6 +8,7 @@ import SessionsDTO from "../dto/sessions.dto";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import NotFoundHttpException from "../exceptions/not.found.http.exception";
 import Credentials from "../entity/credentials.entity";
+import LoginDTO from "dto/login.dto";
 
 
 export default class ClientService extends Services{
@@ -37,21 +38,20 @@ export default class ClientService extends Services{
     public async getClientBySessionId(sessionid: string){
         const result = await this.database.findClientBySessionId(sessionid);
         if (result) {
+            result.credentials.password = undefined;
             const clientDTO = new ClientDTO();
             clientDTO.id = result.id;
-            clientDTO.personDTO = result.person;
-            clientDTO.credentialsDTO = result.credentials;
-            clientDTO.sessionsDTO = result.sessions;
-            clientDTO.devicesDTO = result.devices;
+            clientDTO.personDTO = plainToInstance(PersonDTO,result.person);
+            clientDTO.credentialsDTO = plainToInstance(CredentialsDTO,result.credentials);
             return clientDTO;
         }
         throw new NotFoundHttpException("TOKEN","Try with another token!");
     }
-    public async updateCredentials(credentialsDTO: CredentialsDTO): Promise<boolean> {
+    public async updateCredentials(loginDTO: LoginDTO): Promise<boolean> {
         try {
-            const hashedPassword =  await bcrypt.hash(credentialsDTO.password,10);
-            credentialsDTO.password = hashedPassword;
-            const credentials = plainToInstance(Credentials,credentialsDTO);
+            const hashedPassword =  await bcrypt.hash(loginDTO.password,10);
+            loginDTO.password = hashedPassword;
+            const credentials = plainToInstance(Credentials,loginDTO);
             return  await this.database.updateCredentials(credentials);
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
@@ -68,7 +68,6 @@ export default class ClientService extends Services{
                 clientDTO.id = client.id;
                 clientDTO.personDTO = personDTO;
                 clientDTO.credentialsDTO =credentialsDTO;
-                clientDTO.sessionsDTO = sessionsDTO;
                 return clientDTO;
             }
             throw new NotFoundHttpException("CLIENT");

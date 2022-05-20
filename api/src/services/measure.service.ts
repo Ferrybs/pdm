@@ -5,7 +5,8 @@ import Measure from "../entity/measure.entity";
 import TypeMeasure from "../entity/type.measure.entity";
 import Services from "./services";
 
-export default class MqttService extends Services{
+export default class MeasureService extends Services{
+    
     public async addMeasure(measureDTO: MeasureDTO): Promise<boolean>{
         const measure = new Measure();
         measure.value = measureDTO.value;

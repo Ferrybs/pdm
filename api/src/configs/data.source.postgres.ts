@@ -8,6 +8,8 @@ import Device from "../entity/device.entiy";
 import Measure from "../entity/measure.entity";
 import TypeMeasure from "../entity/type.measure.entity";
 import TypeSession from "../entity/type.session.entity";
+import DeviceLocalization from "../entity/device.localization.entity";
+import DevicePreferences from "../entity/device.preferences.entity";
 
 export default class PostgresDataSource{
     appDataSource: DataSource;
@@ -19,10 +21,10 @@ export default class PostgresDataSource{
             logging: ["query"],
             entities: [
                 Credentials,Client,Person,Sessions,
-                Device,Measure,TypeMeasure,TypeSession
+                Device,Measure,TypeMeasure,TypeSession,
+                DeviceLocalization, DevicePreferences
               ],
             subscribers: [],
-            migrations: [],
             extra: {
                 ssl: {
                   rejectUnauthorized: false

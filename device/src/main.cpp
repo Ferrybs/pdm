@@ -15,9 +15,9 @@ void loop() {
     if (mqtt.isConnected())
     {
       mqtt.postMeasure(temperature,1);
-      //mqtt.postMeasure(measure.getHumidity(),2);
-      //mqtt.postMeasure(measure.getLumiosity(),3);
-      //mqtt.postMeasure(measure.getMoisture(),4);
+      mqtt.postMeasure(measure.getHumidity(),2);
+      mqtt.postMeasure(measure.getLumiosity(),3);
+      mqtt.postMeasure(measure.getMoisture(),4);
       mqtt.loop();
     }else{
       mqtt.connect();

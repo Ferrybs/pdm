@@ -48,10 +48,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
     DynamicJsonDocument jsonIn(4096);
     char buffer[4096];
     deserializeJson(jsonIn, payload, length);
-    preferences.putHumidity(jsonIn["preferencesDTO"]["humidity"]);
-    preferences.putTemperature(jsonIn["preferencesDTO"]["temperature"]);
-    preferences.putLuminosity(jsonIn["preferencesDTO"]["luminosity"]);
-    preferences.putMoisture(jsonIn["preferencesDTO"]["moisture"]);
+    preferences.putHumidity(jsonIn["humidity"]);
+    preferences.putTemperature(jsonIn["temperature"]);
+    preferences.putLuminosity(jsonIn["luminosity"]);
+    preferences.putMoisture(jsonIn["moisture"]);
     serializeJson(jsonIn,buffer);
     console.log("["+String(topic)+"]:"+ String(buffer));
 }
@@ -115,7 +115,8 @@ boolean MqttServer::connect(){
         preferences.getMqttPassword().c_str())
          ) {
             Serial.println("connected");
-            client.subscribe(this->_settings);
+            String url = preferences.getId()+"/"+this->_settings;
+            client.subscribe(url.c_str());
             return true;
         } else {
             console.log("failed, rc=",false);

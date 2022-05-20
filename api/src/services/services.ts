@@ -5,15 +5,21 @@ import AuthJwt from "../auth/auth.jwt";
 import SendMail from "../interfaces/send.email.interface";
 import Crypto from "crypto";
 import TypeSession from "../entity/type.session.entity";
+import MqttServer from "../mqtt/mqtt.server";
 export default class Services {
     private _database: Database;
-    private _jwt: AuthJwt = new AuthJwt();
+    private _mqtt: MqttServer; 
+    private _jwt = new AuthJwt();
     private _email: SendMail;
     constructor() {
-        this._database = new PostgresDatabase();
+        const databese = new PostgresDatabase();
+        this._database = databese;
+        this._mqtt = new MqttServer(databese);
         this._email = new SendEmail();
     }
-
+    public get mqtt(){
+        return this._mqtt;
+    }
     public get database(){
         return this._database;
     }

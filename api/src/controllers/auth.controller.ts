@@ -1,12 +1,16 @@
 import { NextFunction,Response } from "express";
 import Controller from "./controller";
-import ClientDTO from "../dto/client.dto";
-import CredentialsDTO from "../dto/credentials.dto";
 import RequesWithToken from "../interfaces/request.token.interface";
 import { validate } from "class-validator";
 import RequestWithError from "../interfaces/request.error.interface";
 import HttpException from "../exceptions/http.exceptions";
-import HttpData from "interfaces/http.data.interface";
+import HttpData from "../interfaces/http.data.interface";
+import SendEmailDTO from "../dto/send.email.dto";
+import ResetPasswordDTO from "../dto/reset.password.dto";
+import LoginDTO from "../dto/login.dto";
+import { plainToInstance } from "class-transformer";
+import Credentials from "../entity/credentials.entity";
+import RegisterDTO from "../dto/register.dto";
 
 export default class AuthController extends Controller{
 
@@ -36,8 +40,8 @@ export default class AuthController extends Controller{
       response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
-        const clientDTO: ClientDTO = request.body;
-        const result = await this.authService.register(clientDTO);
+        const registerDTO: RegisterDTO = request.body;
+        const result = await this.authService.register(registerDTO);
         response.status(200).send({ok: result});
       } catch (error) {
         if(error instanceof(HttpException)){
@@ -99,8 +103,8 @@ export default class AuthController extends Controller{
       response.status(400).send({ ok: false, message: request.error});
     }else{
       try {
-        const credentialsData: CredentialsDTO = request.body;
-        const tokenData = await this.authService.login(credentialsData);
+        const loginDTO: LoginDTO = request.body;
+        const tokenData = await this.authService.login(loginDTO);
         response.status(200).send({ok:true,tokenData});
       } catch (error) {
         if(error instanceof(HttpException)){
@@ -121,18 +125,19 @@ export default class AuthController extends Controller{
       response.render('pages/invalidLink',{message: request.error});
     }else{
       try {
-        const password: string = request.body.pass;
+        const resetPasswordDTO: ResetPasswordDTO = request.body;
         const dataStoreToken = request.dataStoreToken;
         const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
         if (clientDTO) {
           name = clientDTO.personDTO.name;
           token = request.body.token;
-
           await this.authService.updateClientSessionsByClientId(clientDTO.id);
-          const credentialsDTO = clientDTO.credentialsDTO;
-          credentialsDTO.password = password;
-          await validate(credentialsDTO);
-          result = await this.clientService.updateCredentials(credentialsDTO);
+          const loginDTO = new LoginDTO();
+          loginDTO.email = clientDTO.credentialsDTO.email;
+          loginDTO.password = resetPasswordDTO.password;
+          await validate(loginDTO);
+          const credentials = plainToInstance(Credentials,loginDTO);
+          result = await this.clientService.updateCredentials(credentials);
           try {
             const data = {
               ok: result,
@@ -177,7 +182,7 @@ export default class AuthController extends Controller{
       response.status(400).send(httpData);
     }else{
       try {
-        const body: CredentialsDTO = request.body;
+        const body: SendEmailDTO = request.body;
         if (body) {
           await this.authService.sendEmail(body);
           response.status(200).send({ok:true});

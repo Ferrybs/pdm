@@ -1,0 +1,12 @@
+INSERT INTO TYPE_MEASURE (ID, TYPE) VALUES 
+         ('1','TEMPERATURE'),
+         ('2','HUMIDITY'),
+         ('3','LUMINOSITY'),
+         ('4','MOISTURE')
+          ON CONFLICT DO NOTHING;
+
+INSERT INTO TYPE_SESSION (ID, TYPE) VALUES 
+        ('1','LOGIN'),
+        ('2','RESET_PASSWORD'),
+        ('3','REFRESH_TOKEN')
+         ON CONFLICT DO NOTHING;
