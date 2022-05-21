@@ -1,4 +1,5 @@
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
+import 'package:basearch/src/features/home/data/dto/person_dto.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -13,10 +14,10 @@ abstract class _HomeViewModelBase with Store {
   final _usecase = Modular.get<HomeUseCase>();
 
   @observable
-  String? clientName;
+  PersonDTO personDTO = PersonDTO();
 
   @observable
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   @observable
   String? error;
@@ -26,12 +27,11 @@ abstract class _HomeViewModelBase with Store {
 
   @action
   void updateClientName(String name) {
-    clientName = name;
+    personDTO.name = name;
   }
 
   @action
   void updateCurrentIndex(int idx) {
-    print(idx);
     currentIndex = idx;
   }
 
@@ -61,16 +61,16 @@ abstract class _HomeViewModelBase with Store {
   }
 
   String gethomeTittle() {
-    if (clientName != null) {
-      return clientName! + ", " + "home-tittle".i18n();
+    if (personDTO.name != null) {
+      return personDTO.name! + ", " + "home-tittle".i18n();
     } else {
       return "error-home-tittle".i18n();
     }
   }
 
   String getDevicehomeTittle() {
-    if (clientName != null) {
-      return clientName! + ", " + "home-device-tittle".i18n();
+    if (personDTO.name != null) {
+      return personDTO.name! + ", " + "home-device-tittle".i18n();
     } else {
       return "error-home-tittle".i18n();
     }

@@ -9,7 +9,7 @@ import '../repository/home_interface.dart';
 
 class HomeUseCase {
   final repository = Modular.get<IHome>();
-  final encrypt_preferes = Modular.get<EncryptedSharedPreferences>();
+  final encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
   ClientModel? _clientModel;
 
   String? getUserName() {
@@ -18,7 +18,7 @@ class HomeUseCase {
 
   Future<String?> getClient() async {
     try {
-      String token = await encrypt_preferes.getString("AccessToken");
+      String token = await encryptedPreferences.getString("AccessToken");
       _clientModel = await repository.getClient(token);
       if (_clientModel != null) {
         return null;

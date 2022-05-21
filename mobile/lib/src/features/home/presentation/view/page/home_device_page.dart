@@ -58,6 +58,7 @@ class _HomeDevicePage extends State<HomeDevicePage> {
     );
   }
 
+  _deviceList() {}
   _createTitle(String tittle) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
