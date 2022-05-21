@@ -2,7 +2,6 @@ import 'package:basearch/src/features/home/presentation/view/widget/dialog_conta
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
 
 import '../../viewmodel/home_viewmodel.dart';
@@ -14,44 +13,43 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
-class _HomePage extends ModularState<HomePage, HomeViewModel> {
+class _HomePage extends State<HomePage> {
   late ThemeData _theme;
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  final _viewModel = Modular.get<HomeViewModel>();
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return FutureBuilder(
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError || store.error != null) {
+          if (snapshot.hasError || _viewModel.error != null) {
             return Container(
               color: _theme.colorScheme.background,
               child: DialogContainer(
-                message: store.error ?? "error-get-client".i18n(),
+                message: _viewModel.error ?? "error-get-client".i18n(),
                 buttonText: "try-again".i18n(),
                 onClick: () {
-                  store.navigateToLogin();
+                  _viewModel.navigateToLogin();
                 },
               ),
             );
           } else {
             return SafeArea(
                 child: Scaffold(
-                    appBar: HomeAppBar(onCloudPressed: store.navigateToMap),
-                    body: SingleChildScrollView(
-                        child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Column(
-                        children: [
-                          _createTitle(store.gethomeTittle()),
-                          ..._createPlantList(),
-                        ],
-                      ),
-                    ))));
+              appBar: HomeAppBar(onCloudPressed: _viewModel.navigateToMap),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    children: [
+                      _createTitle(_viewModel.gethomeTittle()),
+                      ..._createPlantList(),
+                    ],
+                  ),
+                ),
+              ),
+              bottomNavigationBar: _bottomNavigationBar(),
+            ));
           }
         }
 
@@ -59,7 +57,26 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
           child: CircularProgressIndicator(),
         );
       },
-      future: store.getHomeData(),
+      future: _viewModel.getHomeData(),
+    );
+  }
+
+  _bottomNavigationBar() {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.developer_board),
+          label: 'Device',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.logout),
+          label: 'Logout',
+        ),
+      ],
     );
   }
 
@@ -74,7 +91,7 @@ class _HomePage extends ModularState<HomePage, HomeViewModel> {
   }
 
   _createPlantList() {
-    return store.plantList
+    return _viewModel.plantList
         .map((plant) => PlantStatsWidget(plantStats: plant))
         .toList();
   }
