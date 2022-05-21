@@ -1,4 +1,5 @@
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:localization/localization.dart';
@@ -15,6 +16,9 @@ abstract class _HomeViewModelBase with Store {
   String? clientName;
 
   @observable
+  int currentIndex = 0;
+
+  @observable
   String? error;
 
   @observable
@@ -23,6 +27,12 @@ abstract class _HomeViewModelBase with Store {
   @action
   void updateClientName(String name) {
     clientName = name;
+  }
+
+  @action
+  void updateCurrentIndex(int idx) {
+    print(idx);
+    currentIndex = idx;
   }
 
   @action
@@ -53,6 +63,14 @@ abstract class _HomeViewModelBase with Store {
   String gethomeTittle() {
     if (clientName != null) {
       return clientName! + ", " + "home-tittle".i18n();
+    } else {
+      return "error-home-tittle".i18n();
+    }
+  }
+
+  String getDevicehomeTittle() {
+    if (clientName != null) {
+      return clientName! + ", " + "home-device-tittle".i18n();
     } else {
       return "error-home-tittle".i18n();
     }

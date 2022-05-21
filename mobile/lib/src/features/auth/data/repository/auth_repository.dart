@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:basearch/src/features/auth/data/repository/repository.dart';
+import 'package:basearch/src/features/auth/data/repository/repository_base.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/login_model.dart';
 import 'package:basearch/src/features/auth/domain/model/response_model.dart';
@@ -8,7 +8,7 @@ import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/repository/auth_interface.dart';
 
-class AuthRepository extends AtuhRepositoryBase implements IAuth {
+class AuthRepository extends AuthRepositoryBase implements IAuth {
   @override
   Future<TokenDataModel?> login(LoginModel loginModel) async {
     try {

@@ -43,6 +43,7 @@
     "moisture": "Humidade",
     "luminosity": "Luminosidade",
     "home-tittle": "suas plantas",
+    "home-device-tittle": "seus Dispositivos",
     "error-home-tittle": "Cliente não encontrado",
     "map-title": "Localização atual"
 }
