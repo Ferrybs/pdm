@@ -25,6 +25,22 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+  late final _$devicelistAtom =
+      Atom(name: '_HomeViewModelBase.devicelist', context: context);
+
+  @override
+  List<DeviceDTO> get devicelist {
+    _$devicelistAtom.reportRead();
+    return super.devicelist;
+  }
+
+  @override
+  set devicelist(List<DeviceDTO> value) {
+    _$devicelistAtom.reportWrite(value, super.devicelist, () {
+      super.devicelist = value;
+    });
+  }
+
   late final _$currentIndexAtom =
       Atom(name: '_HomeViewModelBase.currentIndex', context: context);
 
@@ -121,9 +137,21 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+  void updateDeviceList(List<DeviceDTO> list) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateDeviceList');
+    try {
+      return super.updateDeviceList(list);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 personDTO: ${personDTO},
+devicelist: ${devicelist},
 currentIndex: ${currentIndex},
 error: ${error},
 plantList: ${plantList}

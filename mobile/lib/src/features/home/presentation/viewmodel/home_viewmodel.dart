@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/home/data/dto/person_dto.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -15,6 +16,9 @@ abstract class _HomeViewModelBase with Store {
 
   @observable
   PersonDTO personDTO = PersonDTO();
+
+  @observable
+  List<DeviceDTO> devicelist = [];
 
   @observable
   int currentIndex = 1;
@@ -45,18 +49,40 @@ abstract class _HomeViewModelBase with Store {
     plantList = list;
   }
 
+  @action
+  void updateDeviceList(List<DeviceDTO> list) {
+    devicelist = list;
+  }
+
   getHomeData() async {
-    updateError(await _usecase.getClient());
-    String? name = _usecase.getUserName();
+    String? errorLocal;
+    errorLocal = await _usecase.getClientFromRepository() ?? errorLocal;
+    updateError(errorLocal);
+    String? name = _usecase.getPersonName();
     if (name != null) {
-      updateError(null);
       updateClientName(name);
     } else {
       updateError("error-home-tittle".i18n());
+      return;
     }
     List<PlantStatsModel>? list = await _usecase.getPlantList();
     if (list != null) {
       updatePlantList(list);
+    }
+  }
+
+  getDeviceData() async {
+    String? errorLocal;
+    errorLocal = await _usecase.getDevicesFromRepository() ?? errorLocal;
+    errorLocal = await _usecase.getClientFromRepository() ?? errorLocal;
+    updateError(errorLocal);
+    String? name = _usecase.getPersonName();
+    if (name != null) {
+      updateClientName(name);
+    }
+    List<DeviceDTO>? devices = _usecase.getDevices();
+    if (devices != null) {
+      updateDeviceList(devices);
     }
   }
 
@@ -82,5 +108,9 @@ abstract class _HomeViewModelBase with Store {
 
   void navigateToMap() {
     Modular.to.navigate('/map/');
+  }
+
+  void navigateToDevice() {
+    Modular.to.navigate('/device/');
   }
 }

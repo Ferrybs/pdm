@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/device/presentation/view/widget/device_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class DevicePage extends StatefulWidget {
@@ -12,6 +13,12 @@ class _DevicePage extends State<DevicePage> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return Text("Device");
+    return SafeArea(
+        child: Scaffold(
+      appBar: DeviceAppBar(),
+      body: Column(
+        children: [],
+      ),
+    ));
   }
 }

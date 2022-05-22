@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/presentation/view/widget/device_card.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
@@ -21,44 +22,72 @@ class _HomeDevicePage extends State<HomeDevicePage> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-    return FutureBuilder(
-      builder: (ctx, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError || _viewModel.error != null) {
-            return Container(
-              color: _theme.colorScheme.background,
-              child: DialogContainer(
-                message: _viewModel.error ?? "error-get-client".i18n(),
-                buttonText: "try-again".i18n(),
-                onClick: () {
-                  _viewModel.navigateToLogin();
-                },
-              ),
-            );
-          } else {
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    children: [
-                      _createTitle(_viewModel.getDevicehomeTittle()),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-      future: _viewModel.getHomeData(),
-    );
+    return Observer(
+        builder: (_) => FutureBuilder(
+              builder: (ctx, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError || _viewModel.error != null) {
+                    return Container(
+                      color: _theme.colorScheme.background,
+                      child: DialogContainer(
+                        message: _viewModel.error ?? "error-get-client".i18n(),
+                        buttonText: "try-again".i18n(),
+                        onClick: () {
+                          _viewModel.navigateToLogin();
+                        },
+                      ),
+                    );
+                  } else {
+                    return SafeArea(
+                        child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+                          child: _createTitle(_viewModel.getDevicehomeTittle()),
+                        ),
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [..._deviceList()],
+                            ),
+                          ),
+                        ),
+                        _addDeviceButton()
+                      ],
+                    ));
+                  }
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+              future: _viewModel.getDeviceData(),
+            ));
   }
 
-  _deviceList() {}
+  Padding _addDeviceButton() {
+    return Padding(
+        padding: const EdgeInsets.all(10),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: FloatingActionButton(
+            onPressed: (() {
+              _viewModel.navigateToDevice();
+            }),
+            child: const Icon(Icons.add),
+          ),
+        ));
+  }
+
+  List<Widget> _deviceList() {
+    return _viewModel.devicelist
+        .map((device) => DeviceCard(deviceDTO: device))
+        .toList();
+  }
+
   _createTitle(String tittle) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
