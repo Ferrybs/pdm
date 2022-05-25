@@ -1,0 +1,3 @@
+class DeviceDTO {
+  String? id;
+}

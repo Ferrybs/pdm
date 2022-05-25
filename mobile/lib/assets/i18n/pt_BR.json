@@ -31,7 +31,7 @@
     "create-account-success": "Sua conta foi criada!",
     "email-send-success": "Email enviado com sucesso!",
     "create-account-failed": "Ooops, algo saiu errado!",
-    "continue": "Continue",
+    "continue": "Continuar",
     "try-agin": "Tente Novamente",
     "user-registered": "Usuário já está registrado",
     "invalid-field": "Ao menos um dos campos está inválido",
@@ -43,7 +43,15 @@
     "moisture": "Humidade",
     "luminosity": "Luminosidade",
     "home-tittle": "suas plantas",
+    "new-plant-tittle": "Nova Planta",
     "home-device-tittle": "seus Dispositivos",
     "error-home-tittle": "Cliente não encontrado",
-    "map-title": "Localização atual"
+    "map-title": "Localização atual",
+    "wireless-SSID": "Seu Wifi SSID",
+    "wireless-password": "Sua Senha Wifi",
+    "device-connection":"Configuração do Dipositivo",
+    "step":"Passo",
+    "step1-device-config":"Conecte-se ao ponto de acesso do Dispositivo",
+    "click-on": "Aperte em ",
+    "get-id": "Obter ID"
 }
