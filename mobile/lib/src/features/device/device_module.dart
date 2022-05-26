@@ -1,9 +1,8 @@
-import 'package:basearch/src/features/device/data/repository/auth_repository.dart';
-import 'package:basearch/src/features/device/domain/repository/modelo_interface.dart';
+import 'package:basearch/src/features/device/data/repository/device_repository.dart';
+import 'package:basearch/src/features/device/domain/repository/device_interface.dart';
 import 'package:basearch/src/features/device/domain/usecase/device_usecase.dart';
 import 'package:basearch/src/features/device/presentation/view/page/device_page.dart';
 import 'package:basearch/src/features/device/presentation/viewmodel/device_viewmodel.dart';
-import 'package:basearch/src/features/modelo/presentation/view/page/modelo_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class DeviceModule extends Module {

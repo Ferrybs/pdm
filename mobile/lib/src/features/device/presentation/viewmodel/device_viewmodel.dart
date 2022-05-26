@@ -23,7 +23,13 @@ abstract class _DeviceViewModel with Store {
   StepState deviceConfigStatus = StepState.indexed;
 
   @observable
-  bool isWirelessConfig = false;
+  StepState wifiConfigStatus = StepState.indexed;
+
+  @observable
+  StepState finishConfigStatus = StepState.indexed;
+
+  @observable
+  bool isWifiConfig = false;
 
   @observable
   bool isFinishConfig = false;
@@ -38,8 +44,28 @@ abstract class _DeviceViewModel with Store {
   DeviceDTO deviceDTO = DeviceDTO();
 
   @action
+  updateSSID(String value) {
+    wifiDTO.ssid = value;
+  }
+
+  @action
+  updatePassword(String value) {
+    wifiDTO.password = value;
+  }
+
+  @action
+  updateDeviceName(String value) {
+    deviceDTO.name = value;
+  }
+
+  @action
   changeDeviceConfig() {
     isDeviceConfig = !isDeviceConfig;
+  }
+
+  @action
+  changeFinishConfigStatus(StepState status) {
+    finishConfigStatus = status;
   }
 
   @action
@@ -48,25 +74,8 @@ abstract class _DeviceViewModel with Store {
   }
 
   @action
-  changeWirelessConfig() {
-    isWirelessConfig = !isWirelessConfig;
-  }
-
-  @action
-  changeFinishConfig() {
-    isFinishConfig = !isFinishConfig;
-  }
-
-  @action
-  increaseStep() {
-    stepIndex++;
-  }
-
-  @action
-  decreaseStep() {
-    if (stepIndex > 0) {
-      stepIndex--;
-    }
+  changeWifiConfigStatus(StepState status) {
+    wifiConfigStatus = status;
   }
 
   @action
@@ -74,12 +83,16 @@ abstract class _DeviceViewModel with Store {
     stepIndex = step;
   }
 
-  onStepContinue() {
-    if (stepIndex == 1) {}
-  }
-
-  updateStep() {
-    changeDeviceConfigStatus(_usecase.updateDeviceConfig(stepIndex, deviceDTO));
-    setStep(_usecase.updateStep(stepIndex, deviceConfigStatus));
+  updateStep() async {
+    changeDeviceConfigStatus(await _usecase.updateDeviceConfig(stepIndex));
+    changeWifiConfigStatus(await _usecase.updateWifiConfig(stepIndex, wifiDTO));
+    changeFinishConfigStatus(
+        await _usecase.updateFinishConfig(stepIndex, deviceDTO));
+    var stepFinish = _usecase.updateStep(stepIndex);
+    if (stepFinish <= 2) {
+      setStep(stepFinish);
+    } else {
+      Modular.to.navigate("/home/");
+    }
   }
 }

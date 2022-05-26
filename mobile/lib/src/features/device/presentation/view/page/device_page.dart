@@ -1,10 +1,12 @@
+import 'dart:convert';
+
 import 'package:basearch/src/features/device/presentation/view/widget/device_app_bar.dart';
 import 'package:basearch/src/features/device/presentation/view/widget/device_text_input.dart';
 import 'package:basearch/src/features/device/presentation/viewmodel/device_viewmodel.dart';
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
 
 class DevicePage extends StatefulWidget {
@@ -38,8 +40,7 @@ class _DevicePage extends State<DevicePage> {
                         _finishConfig()
                       ],
                       currentStep: _viewModel.stepIndex,
-                      onStepContinue: _viewModel.updateStep,
-                      onStepTapped: _viewModel.setStep,
+                      onStepContinue: _onStepContinue,
                     )),
               );
             },
@@ -47,6 +48,13 @@ class _DevicePage extends State<DevicePage> {
         ],
       ),
     ));
+  }
+
+  _onStepContinue() async {
+    SmartDialog.showLoading(
+        msg: "loading".i18n(), background: _theme.backgroundColor);
+    await _viewModel.updateStep();
+    SmartDialog.dismiss();
   }
 
   Step _finishConfig() {
@@ -59,7 +67,7 @@ class _DevicePage extends State<DevicePage> {
             _configStep("Step 1 ", "Connect back to your wifi."),
             _configStep("Step 2 ", "Please fill in the device name"),
             DeviceTextInput(
-              onChange: ((p0) {}),
+              onChange: _viewModel.updateDeviceName,
               label: "Device Name",
             ),
             _configStep("Step 3 ", "click-on".i18n() + "continue".i18n())
@@ -71,7 +79,7 @@ class _DevicePage extends State<DevicePage> {
     return Step(
         title: _painelTittle("Wireless Configuration"),
         content: _wifiDeviceConfig(),
-        isActive: _viewModel.isWirelessConfig);
+        state: _viewModel.wifiConfigStatus);
   }
 
   Step _deviceConnection() {
@@ -90,7 +98,6 @@ class _DevicePage extends State<DevicePage> {
                 "2 " + "step".i18n(), "click-on".i18n() + "continue".i18n())
           ],
         ),
-        isActive: _viewModel.isDeviceConfig,
         state: _viewModel.deviceConfigStatus);
   }
 
@@ -119,12 +126,12 @@ class _DevicePage extends State<DevicePage> {
         DeviceTextInput(
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-SSID".i18n(),
-          onChange: ((p0) {}),
+          onChange: _viewModel.updateSSID,
         ),
         DeviceTextInput(
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-password".i18n(),
-          onChange: ((p0) {}),
+          onChange: _viewModel.updatePassword,
         )
       ],
     );

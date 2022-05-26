@@ -57,19 +57,51 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
     });
   }
 
-  late final _$isWirelessConfigAtom =
-      Atom(name: '_DeviceViewModel.isWirelessConfig', context: context);
+  late final _$wifiConfigStatusAtom =
+      Atom(name: '_DeviceViewModel.wifiConfigStatus', context: context);
 
   @override
-  bool get isWirelessConfig {
-    _$isWirelessConfigAtom.reportRead();
-    return super.isWirelessConfig;
+  StepState get wifiConfigStatus {
+    _$wifiConfigStatusAtom.reportRead();
+    return super.wifiConfigStatus;
   }
 
   @override
-  set isWirelessConfig(bool value) {
-    _$isWirelessConfigAtom.reportWrite(value, super.isWirelessConfig, () {
-      super.isWirelessConfig = value;
+  set wifiConfigStatus(StepState value) {
+    _$wifiConfigStatusAtom.reportWrite(value, super.wifiConfigStatus, () {
+      super.wifiConfigStatus = value;
+    });
+  }
+
+  late final _$finishConfigStatusAtom =
+      Atom(name: '_DeviceViewModel.finishConfigStatus', context: context);
+
+  @override
+  StepState get finishConfigStatus {
+    _$finishConfigStatusAtom.reportRead();
+    return super.finishConfigStatus;
+  }
+
+  @override
+  set finishConfigStatus(StepState value) {
+    _$finishConfigStatusAtom.reportWrite(value, super.finishConfigStatus, () {
+      super.finishConfigStatus = value;
+    });
+  }
+
+  late final _$isWifiConfigAtom =
+      Atom(name: '_DeviceViewModel.isWifiConfig', context: context);
+
+  @override
+  bool get isWifiConfig {
+    _$isWifiConfigAtom.reportRead();
+    return super.isWifiConfig;
+  }
+
+  @override
+  set isWifiConfig(bool value) {
+    _$isWifiConfigAtom.reportWrite(value, super.isWifiConfig, () {
+      super.isWifiConfig = value;
     });
   }
 
@@ -141,11 +173,55 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
       ActionController(name: '_DeviceViewModel', context: context);
 
   @override
+  dynamic updateSSID(String value) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.updateSSID');
+    try {
+      return super.updateSSID(value);
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updatePassword(String value) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.updatePassword');
+    try {
+      return super.updatePassword(value);
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateDeviceName(String value) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.updateDeviceName');
+    try {
+      return super.updateDeviceName(value);
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic changeDeviceConfig() {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
         name: '_DeviceViewModel.changeDeviceConfig');
     try {
       return super.changeDeviceConfig();
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic changeFinishConfigStatus(StepState status) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.changeFinishConfigStatus');
+    try {
+      return super.changeFinishConfigStatus(status);
     } finally {
       _$_DeviceViewModelActionController.endAction(_$actionInfo);
     }
@@ -163,44 +239,11 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
   }
 
   @override
-  dynamic changeWirelessConfig() {
+  dynamic changeWifiConfigStatus(StepState status) {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
-        name: '_DeviceViewModel.changeWirelessConfig');
+        name: '_DeviceViewModel.changeWifiConfigStatus');
     try {
-      return super.changeWirelessConfig();
-    } finally {
-      _$_DeviceViewModelActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic changeFinishConfig() {
-    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
-        name: '_DeviceViewModel.changeFinishConfig');
-    try {
-      return super.changeFinishConfig();
-    } finally {
-      _$_DeviceViewModelActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic increaseStep() {
-    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
-        name: '_DeviceViewModel.increaseStep');
-    try {
-      return super.increaseStep();
-    } finally {
-      _$_DeviceViewModelActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic decreaseStep() {
-    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
-        name: '_DeviceViewModel.decreaseStep');
-    try {
-      return super.decreaseStep();
+      return super.changeWifiConfigStatus(status);
     } finally {
       _$_DeviceViewModelActionController.endAction(_$actionInfo);
     }
@@ -223,7 +266,9 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
 stepIndex: ${stepIndex},
 isDeviceConfig: ${isDeviceConfig},
 deviceConfigStatus: ${deviceConfigStatus},
-isWirelessConfig: ${isWirelessConfig},
+wifiConfigStatus: ${wifiConfigStatus},
+finishConfigStatus: ${finishConfigStatus},
+isWifiConfig: ${isWifiConfig},
 isFinishConfig: ${isFinishConfig},
 wifiDTO: ${wifiDTO},
 mqttDTO: ${mqttDTO},
