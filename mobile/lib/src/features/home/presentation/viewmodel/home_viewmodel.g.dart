@@ -6,10 +6,11 @@ part of 'home_viewmodel.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeViewModel on _HomeViewModelBase, Store {
-  final _$clientNameAtom = Atom(name: '_HomeViewModelBase.clientName');
+  late final _$clientNameAtom =
+      Atom(name: '_HomeViewModelBase.clientName', context: context);
 
   @override
   String? get clientName {
@@ -24,7 +25,8 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
-  final _$errorAtom = Atom(name: '_HomeViewModelBase.error');
+  late final _$errorAtom =
+      Atom(name: '_HomeViewModelBase.error', context: context);
 
   @override
   String? get error {
@@ -39,7 +41,8 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
-  final _$plantListAtom = Atom(name: '_HomeViewModelBase.plantList');
+  late final _$plantListAtom =
+      Atom(name: '_HomeViewModelBase.plantList', context: context);
 
   @override
   List<PlantStatsModel> get plantList {
@@ -54,8 +57,8 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
-  final _$_HomeViewModelBaseActionController =
-      ActionController(name: '_HomeViewModelBase');
+  late final _$_HomeViewModelBaseActionController =
+      ActionController(name: '_HomeViewModelBase', context: context);
 
   @override
   void updateClientName(String name) {
