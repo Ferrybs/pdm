@@ -9,9 +9,8 @@ export default class Services {
     private _database: Database; 
     private _jwt = new AuthJwt();
     private _email: SendMail;
-    constructor() {
-        const databese = new PostgresDatabase();
-        this._database = databese;
+    constructor(database: Database) {
+        this._database = database;
         this._email = new SendEmail();
     }
     public get database(){

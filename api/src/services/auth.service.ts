@@ -22,9 +22,6 @@ import LoginDTO from "dto/login.dto";
 import RegisterDTO from "dto/register.dto";
 
 export default class AuthService extends Services{
-  constructor(){
-    super();
-  }
   private async _addSession(session: Sessions): Promise<Sessions>{
     try{
     if(session){

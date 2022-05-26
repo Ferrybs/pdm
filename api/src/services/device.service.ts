@@ -15,12 +15,13 @@ import DataStoreToken from "../interfaces/data.store.token.interface";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import DeviceLocalization from "../entity/device.localization.entity";
 import MqttServer from "../mqtt/mqtt.server";
+import Database from "../interfaces/database.interface";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
-    constructor(){
-        super();
-        this._mqtt = new MqttServer(this.database);
+    constructor(database: Database){
+        super(database);
+        this._mqtt = new MqttServer(database);
     }
     public  async addDevice(deviceDTO: DeviceDTO, clientDTO: ClientDTO): Promise<boolean>{
         if(await this.database.findDeviceById(deviceDTO.id)){

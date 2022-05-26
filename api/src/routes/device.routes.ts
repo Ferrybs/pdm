@@ -4,16 +4,18 @@ import ValidationMiddleware from "../middlewares/validation.middleware";
 import AuthMiddleware from "../middlewares/auth.middleware";
 import Validation from "../interfaces/validation.interface";
 import Auth from "../interfaces/auth.interface";
+import Database from "../interfaces/database.interface";
 
 
 export default class DeviceRoutes {
     public path : string = '/device';
     public router : Router = express.Router();
-    private _controller: DeviceController = new DeviceController();
+    private _controller: DeviceController;
     private _validationMiddleware: Validation = new ValidationMiddleware();;
     private _authMiddleware: Auth = new AuthMiddleware();;
 
-    constructor(){
+    constructor(database: Database){
+        this._controller = new DeviceController(database);
         this.initializeRoutes();
     }
     

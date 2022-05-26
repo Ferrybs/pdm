@@ -4,14 +4,15 @@ import _ from "lodash";
 import Services from "../services/services";
 import struct from "pb-util";
 import { response } from "express";
+import Database from "../interfaces/database.interface";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
     private _dialogflowprojectId: string;
     private _dialogflowSessionClient: SessionsClient;
 
-    constructor(){
-        super();
+    constructor(database: Database){
+        super(database);
         this._privateKey = _.replace(process.env.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
         this._dialogflowprojectId = process.env.DIALOGFLOW_PROJECT_ID;
 
