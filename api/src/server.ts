@@ -6,6 +6,7 @@ import 'reflect-metadata';
 import 'es6-shim';
 import DeviceRoutes from "./routes/device.routes";
 import ClientRoutes from "./routes/client.routes";
+import ChatbotRoutes from "./chatbot/chatbot.routes";
 
 const app = new App(
     validateEnv.PORT,
@@ -13,7 +14,8 @@ const app = new App(
         new HomeRoutes(),
         new AuthRoutes(),
         new ClientRoutes(),
-        new DeviceRoutes()
+        new DeviceRoutes(),
+        new ChatbotRoutes()
     ]
     );
     
