@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:basearch/src/features/home/data/repository/home_repository_base.dart';
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
+import 'package:basearch/src/features/home/domain/model/device_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/home/domain/model/response_model.dart';
 import 'package:dio/dio.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import '../../domain/model/chart_serie.dart';
 import '../../domain/repository/home_interface.dart';
 
@@ -202,6 +202,27 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
         final data = ResponseModel.fromJson(response.data);
         if (data.ok == true) {
           return ClientModel.fromJson(response.data["clientDTO"]);
+        }
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<DeviceModel>?> getDevices(String token) async {
+    try {
+      Response response;
+      var dio = Dio(APIoptions);
+      response = await dio.get("/device",
+          options: Options(headers: {"Authorization": "Bearer " + token}));
+      if (response.statusCode == 200) {
+        final data = ResponseModel.fromJson(response.data);
+        if (data.ok == true) {
+          return (response.data['deviceDTO'] as List)
+              .map((device) => DeviceModel.fromJson(device))
+              .toList();
         }
       }
       return null;

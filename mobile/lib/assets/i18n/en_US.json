@@ -39,12 +39,20 @@
     "not-found": "Not found",
     "loading": "Loading...",
     "home-tittle": "your plants",
+    "new-plant-tittle": "New Plant",
+    "home-device-tittle": "your devices",
     "error-home-tittle": "Client not Found!",
     "temperature": "Temperature",
     "water_tank": "Water Tank",
     "moisture": "Moisture",
     "luminosity": "Luminosity",
     "map-title": "Current location",
-    "error-get-client": "Error To Get Client"
+    "error-get-client": "Error To Get Client",
+    "wireless-SSID": "Your Wireless SSID",
+    "wireless-password": "Your Wireless Password",
+    "device-connection":"Device Connection",
+    "step":"Step",
+    "step1-device-config":"Connect to device Access Point",
+    "click-on": "Click on"
 
 }

@@ -117,7 +117,7 @@ abstract class _AuthViewModelBase with Store {
     return false;
   }
 
-  void navigateTOLoginPage() {
+  void navigateToLoginPage() {
     Modular.to.navigate("/auth/");
   }
 }

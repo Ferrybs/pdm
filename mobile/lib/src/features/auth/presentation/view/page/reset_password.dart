@@ -60,7 +60,7 @@ class _ResetPassord extends State<ResetPassword> {
       var result = await _sendReset();
       if (result == null) {
         _dialog("email-send-success".i18n(), "continue".i18n(),
-            _viewModel.navigateTOLoginPage);
+            _viewModel.navigateToLoginPage);
       } else {
         _dialog(result, "try-agin".i18n(), null);
       }

@@ -112,7 +112,7 @@ class _CreateAccount extends State<CreateAccount> {
       result = await _register();
       if (result == null) {
         _dialog("create-account-success".i18n(), "continue".i18n(),
-            _viewModel.navigateTOLoginPage);
+            _viewModel.navigateToLoginPage);
       } else {
         _dialog(result, "try-agin".i18n(), null);
       }

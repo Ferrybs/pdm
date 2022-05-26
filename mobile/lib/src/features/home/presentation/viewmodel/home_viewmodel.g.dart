@@ -9,19 +9,51 @@ part of 'home_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeViewModel on _HomeViewModelBase, Store {
-  late final _$clientNameAtom =
-      Atom(name: '_HomeViewModelBase.clientName', context: context);
+  late final _$personDTOAtom =
+      Atom(name: '_HomeViewModelBase.personDTO', context: context);
 
   @override
-  String? get clientName {
-    _$clientNameAtom.reportRead();
-    return super.clientName;
+  PersonDTO get personDTO {
+    _$personDTOAtom.reportRead();
+    return super.personDTO;
   }
 
   @override
-  set clientName(String? value) {
-    _$clientNameAtom.reportWrite(value, super.clientName, () {
-      super.clientName = value;
+  set personDTO(PersonDTO value) {
+    _$personDTOAtom.reportWrite(value, super.personDTO, () {
+      super.personDTO = value;
+    });
+  }
+
+  late final _$devicelistAtom =
+      Atom(name: '_HomeViewModelBase.devicelist', context: context);
+
+  @override
+  List<DeviceDTO> get devicelist {
+    _$devicelistAtom.reportRead();
+    return super.devicelist;
+  }
+
+  @override
+  set devicelist(List<DeviceDTO> value) {
+    _$devicelistAtom.reportWrite(value, super.devicelist, () {
+      super.devicelist = value;
+    });
+  }
+
+  late final _$currentIndexAtom =
+      Atom(name: '_HomeViewModelBase.currentIndex', context: context);
+
+  @override
+  int get currentIndex {
+    _$currentIndexAtom.reportRead();
+    return super.currentIndex;
+  }
+
+  @override
+  set currentIndex(int value) {
+    _$currentIndexAtom.reportWrite(value, super.currentIndex, () {
+      super.currentIndex = value;
     });
   }
 
@@ -72,6 +104,17 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+  void updateCurrentIndex(int idx) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateCurrentIndex');
+    try {
+      return super.updateCurrentIndex(idx);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateError(String? value) {
     final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
         name: '_HomeViewModelBase.updateError');
@@ -94,9 +137,22 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+  void updateDeviceList(List<DeviceDTO> list) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateDeviceList');
+    try {
+      return super.updateDeviceList(list);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-clientName: ${clientName},
+personDTO: ${personDTO},
+devicelist: ${devicelist},
+currentIndex: ${currentIndex},
 error: ${error},
 plantList: ${plantList}
     ''';

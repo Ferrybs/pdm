@@ -1,4 +1,5 @@
 import 'package:basearch/src/features/auth/auth_module.dart';
+import 'package:basearch/src/features/device/device_module.dart';
 import 'package:basearch/src/features/onboarding/onboarding_module.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -22,5 +23,6 @@ class AppModule extends Module {
         ModuleRoute('/auth', module: AuthModule()),
         ModuleRoute('/home', module: HomeModule()),
         ModuleRoute('/map', module: MapModule()),
+        ModuleRoute('/device', module: DeviceModule())
       ];
 }
