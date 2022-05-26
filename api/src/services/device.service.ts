@@ -1,4 +1,4 @@
-import { instanceToInstance, plainToInstance } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import Device from "../entity/device.entiy";
 import DeviceDTO from "../dto/device.dto";
 import DeviceFoundHttpException from "../exceptions/device.found.http.exception";
@@ -15,6 +15,7 @@ import DataStoreToken from "../interfaces/data.store.token.interface";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import DeviceLocalization from "../entity/device.localization.entity";
 import MqttServer from "../mqtt/mqtt.server";
+import MqttServerDTO from "../dto/mqtt.server.dto";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
@@ -144,5 +145,13 @@ export default class DeviceService extends Services{
         }else{
             throw new NotFoundHttpException("MEASURES");
         }
+    }
+    public async getMqttServer(): Promise<MqttServerDTO>{
+        const mqttServer = await this.database.findMqttServer();
+        mqttServer.id = undefined;
+        if (mqttServer) {
+            return plainToInstance(MqttServerDTO,mqttServer);
+        }
+        return null;
     }
 }

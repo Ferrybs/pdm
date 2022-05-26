@@ -59,6 +59,11 @@ export default class DeviceRoutes {
             this._validationMiddleware.device(),
             this._controller.getLocalization.bind(this._controller)
             );
+        this.router.get(
+            `${this.path}/mqtt-server`,
+            this._authMiddleware.verifyAccesToken(),
+            this._controller.getMqttServer.bind(this._controller)
+            );
     }
 
 }

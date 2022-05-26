@@ -3,6 +3,7 @@ import Device from "entity/device.entiy";
 import DeviceLocalization from "entity/device.localization.entity";
 import DevicePreferences from "entity/device.preferences.entity";
 import Measure from "entity/measure.entity";
+import MqttServer from "entity/mqtt.server";
 import Sessions from "entity/sessions.entity";
 import TypeSession from "entity/type.session.entity";
 import Client from "../entity/client.entity";
@@ -22,6 +23,7 @@ export default interface Database{
     findDevicesBySessionId(sessionId: string): Promise<Device[]>;
     findDevicePreferencesByDevice(device: Device): Promise<DevicePreferences>;
     findDeviceLocalizationByDevice(device: Device): Promise<DeviceLocalization>;
+    findMqttServer(): Promise<MqttServer>;
 
     insertClient(client: Client): Promise<Client>;
     insertClientSessions(session: Sessions): Promise<Sessions>;
