@@ -20,10 +20,16 @@ export default class MqttServer {
 
     private async start(): Promise<void> {
         try {
+            
             this._mqqtClient.on("message",async (topic,payload)=>{
+                var message: any;
                 var measure: Measure;
-                const message: any = JSON.parse(payload.toString());
-                if (topic  === "measure" && message["ok"]) {
+                try {
+                    message = JSON.parse(payload.toString());
+                } catch (error) {
+                    console.log("MQTT WRONG JSON ON PAYLOAD!");
+                }
+                if (topic  === "measure" && (message != null && message["ok"])) {
                     try {
                         measure = this.plainToMeasure(message["measureDTO"]); 
                         console.log(measure);

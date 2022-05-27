@@ -9,11 +9,11 @@ export default class Client{
     @PrimaryGeneratedColumn("uuid")
     public id?: string;
 
-    @OneToOne(() => Person, (person: Person) => person.client)
+    @OneToOne(() => Person, (person: Person) => person.client, {nullable:false})
     @JoinColumn()
     public person?: Person;
 
-    @OneToOne(() => Credentials, (credentials: Credentials) => credentials.client)
+    @OneToOne(() => Credentials, (credentials: Credentials) => credentials.client, {nullable:false})
     @JoinColumn()
     public credentials?: Credentials;
 

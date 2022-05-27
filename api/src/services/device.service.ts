@@ -16,6 +16,7 @@ import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import DeviceLocalization from "../entity/device.localization.entity";
 import MqttServer from "../mqtt/mqtt.server";
 import MqttServerDTO from "../dto/mqtt.server.dto";
+import validateEnv from "../utils/validateEnv";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
@@ -146,12 +147,12 @@ export default class DeviceService extends Services{
             throw new NotFoundHttpException("MEASURES");
         }
     }
-    public async getMqttServer(): Promise<MqttServerDTO>{
-        const mqttServer = await this.database.findMqttServer();
-        mqttServer.id = undefined;
-        if (mqttServer) {
-            return plainToInstance(MqttServerDTO,mqttServer);
-        }
-        return null;
+    public getMqttServer(): MqttServerDTO{
+        const mqttDTO =  new MqttServerDTO();
+        mqttDTO.server = validateEnv.MQTT_HOST;
+        mqttDTO.user = validateEnv.MQTT_USER;
+        mqttDTO.password = validateEnv.MQTT_PASS;
+        mqttDTO.port = validateEnv.PORT.toString();
+        return mqttDTO;
     }
 }

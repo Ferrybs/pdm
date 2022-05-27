@@ -11,7 +11,6 @@ import Measure from "../entity/measure.entity";
 import devicePreferencesEntity from "../entity/device.preferences.entity";
 import DeviceLocalization from "../entity/device.localization.entity";
 import DevicePreferences from "../entity/device.preferences.entity";
-import MqttServer from "../entity/mqtt.server";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -22,13 +21,6 @@ export default class PostgresDatabase implements Database{
     }
     private async initializeDatabase(){
         await this._appDataSource.initialize();
-    }
-    public async findMqttServer(): Promise<MqttServer> {
-        try {
-            return await this._appDataSource.manager.findOne(MqttServer,{where: {id: "1"}});
-        } catch (error) {
-            throw( new DatabaseHttpException(error.message));
-        }
     }
     public async findDeviceLocalizationByDevice(device: Device): Promise<DeviceLocalization> {
         try {
