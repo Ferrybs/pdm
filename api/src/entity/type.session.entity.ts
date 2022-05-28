@@ -1,5 +1,5 @@
 import { Column, Entity,OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import Sessions from "./sessions.entity";
+import Session from "./session.entity";
 
 @Entity()
 export default class TypeSession{
@@ -9,6 +9,6 @@ export default class TypeSession{
     @Column({unique: true})
     public type?: string;
 
-    @OneToMany(() => Sessions, sessions => sessions.type,{cascade: true})
-    public sessions: Sessions[];
+    @OneToMany(() => Session, session => session.type,{cascade: true})
+    public sessions: Session[];
 }

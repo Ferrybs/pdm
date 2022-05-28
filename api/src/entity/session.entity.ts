@@ -3,7 +3,7 @@ import Client from "./client.entity";
 import TypeSession from "./type.session.entity";
 
 @Entity()
-export default class Sessions{    
+export default class Session{    
     
     @PrimaryColumn()
     public id?: string;
