@@ -33,33 +33,34 @@ export default class ChatbotService extends Services{
     }
     
     public async sendText(text: any, email: any, sessionId: any){
-        var _sessionPath = this._dialogflowSessionClient.projectAgentSessionPath(this._dialogflowprojectId, sessionId);
-        var request = {
-            session: _sessionPath,
-            queryInput: {
-              text: {
-                text: `${text}`,
-                languageCode: "pt-BR"
-              }
-            },
-            queryParams: {
-              contexts: [
-                {
-                  name: `projects/${this._dialogflowprojectId}/agent/sessions/${sessionId}/contexts/_context_data`,
-                  lifespanCount: 5,
-                  parameters: struct.struct.encode({ u_email: email, sessionId: sessionId })
-                }
-              ]
-            }
-          };
-
+        const _sessionPath = this._dialogflowSessionClient.projectAgentSessionPath(this._dialogflowprojectId, sessionId);
+        const {value} = await require("pb-util");
         try {
-            var res = await this._dialogflowSessionClient.detectIntent(request);
+            var res = await this._dialogflowSessionClient.detectIntent(
+              {
+                session: _sessionPath,
+                queryInput: {
+                  text: {
+                    text: `${text}`,
+                    languageCode: "pt-BR"
+                  }
+                },
+                queryParams: {
+                  contexts: [
+                    {
+                      name: `projects/${this._dialogflowprojectId}/agent/sessions/${sessionId}/contexts/_context_data`,
+                      lifespanCount: 5,
+                      parameters: value.encode({ u_email: email, sessionId: sessionId })
+                    }
+                  ]
+                }
+              }
+            );
         } catch (error) {
             console.log(error);
         }
 
-        return response.send(res);
+        return res;
     }
 
 
