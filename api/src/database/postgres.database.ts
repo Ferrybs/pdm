@@ -6,7 +6,7 @@ import PostgresDataSource from "../configs/data.source.postgres";
 import DatabaseHttpException from "../exceptions/database.http.exception";
 import Device from "../entity/device.entiy";
 import TypeSession from "../entity/type.session.entity";
-import Sessions from "../entity/sessions.entity";
+import Session from "../entity/session.entity";
 import Measure from "../entity/measure.entity";
 import devicePreferencesEntity from "../entity/device.preferences.entity";
 import DeviceLocalization from "../entity/device.localization.entity";
@@ -63,10 +63,10 @@ export default class PostgresDatabase implements Database{
             throw( new DatabaseHttpException(error.message));
         }
     }
-    public async findSessionBySessionId(id: string): Promise<Sessions> {
+    public async findSessionBySessionId(id: string): Promise<Session> {
         try {
             return await this._appDataSource.manager.findOne(
-                Sessions,
+                Session,
                 {where:{id: id}, 
                 relations:['type']
             });
@@ -74,12 +74,12 @@ export default class PostgresDatabase implements Database{
             throw( new DatabaseHttpException(error.message));
         }
     }
-    public async findSessionsByClientid(id: string): Promise<Sessions[]> {
+    public async findSessionsByClientid(id: string): Promise<Session[]> {
         try {
             const client = new Client()
             client.id = id;
             return await this._appDataSource.manager.find(
-                Sessions,
+                Session,
                 {where:{client: client}, 
                 relations:['type']
             });
@@ -87,10 +87,10 @@ export default class PostgresDatabase implements Database{
             throw( new DatabaseHttpException(error.message));
         }
     }
-    public async findSessionsByClient(client: Client): Promise<Sessions[]> {
+    public async findSessionsByClient(client: Client): Promise<Session[]> {
         try {
             return await this._appDataSource.manager.find(
-                Sessions,
+                Session,
                 {where:{client: client}, 
                 relations:['type']
             });
@@ -199,7 +199,7 @@ export default class PostgresDatabase implements Database{
     public async findClientBySessionId(sessionId: string): Promise<Client>{
         var client: Client;
         try {
-            const session = await this._appDataSource.manager.findOne(Sessions,{where:{id:sessionId}});
+            const session = await this._appDataSource.manager.findOne(Session,{where:{id:sessionId}});
             if(session){
                 client = await this._appDataSource.manager.findOne(Client,
                     {where:{sessions: session}, 
@@ -240,9 +240,9 @@ export default class PostgresDatabase implements Database{
             throw (new DatabaseHttpException(error.message));
         }
     }
-    public async deleteClientSessions(session: Sessions): Promise<boolean> {
+    public async deleteClientSessions(session: Session): Promise<boolean> {
         try {
-            const result: DeleteResult = await this._appDataSource.manager.delete(Sessions,session.id);
+            const result: DeleteResult = await this._appDataSource.manager.delete(Session,session.id);
             if(result.affected != null && result.affected>0) {
                 return true;
             }
@@ -251,9 +251,9 @@ export default class PostgresDatabase implements Database{
             throw (new DatabaseHttpException(error.message));
         }
     }
-    public async insertClientSessions(sessions: Sessions): Promise<Sessions> {
+    public async insertClientSessions(session: Session): Promise<Session> {
         try {
-            const result = await this._appDataSource.manager.save(sessions);
+            const result = await this._appDataSource.manager.save(session);
             return result;
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
