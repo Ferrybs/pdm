@@ -61,6 +61,7 @@ private:
     char buffer[4096];
     const char *_measure = "measure-test";
     const char *_localization = "localization";
+    const char *_device = "device";
     const char *_settings = "settings-test";
 public:
     boolean isConnected();
@@ -68,6 +69,7 @@ public:
     void loop();
     boolean postMeasure(float value,int type);
     boolean postLocalization(float latitude, float longitude);
+    boolean postDevice();
     boolean connect();
     };
 boolean MqttServer::postLocalization(float latitude, float longitude){
@@ -75,16 +77,38 @@ boolean MqttServer::postLocalization(float latitude, float longitude){
     json.clear();
     console.log("Posting Localization...");
     json["ok"] = true;
-    JsonObject deviceDTO = json.createNestedObject("deviceDTO");
+    JsonObject deviceLocalizationDTO = json.createNestedObject("deviceLocalizationDTO");
+    JsonObject deviceDTO = deviceLocalizationDTO.createNestedObject("deviceDTO");
     deviceDTO["id"] = preferences.getId();
-    json["latitude"] = latitude;
-    json["longitude"] = longitude;
+    deviceLocalizationDTO["latitude"] = latitude;
+    deviceLocalizationDTO["longitude"] = longitude;
     serializeJson(json, buffer); 
     console.log("message[Localization]: ",false);
     console.log(buffer);
     return client.publish(this->_localization,buffer,false);
     
 
+}
+boolean MqttServer::postDevice(){
+    memset(buffer,0,sizeof(buffer));
+    json.clear();
+    console.log("Posting Device...");
+    json["ok"] = true;
+    JsonObject deviceDTO = json.createNestedObject("deviceDTO");
+    JsonObject clientDTO = deviceDTO.createNestedObject("clientDTO");
+    deviceDTO["id"] = preferences.getId();
+    deviceDTO["name"] = preferences.getName();
+    clientDTO["id"] = preferences.getClientId();
+    serializeJson(json, buffer); 
+    console.log("message[Device]: ",false);
+    console.log(buffer);
+    bool status = client.publish(this->_device,buffer,false);
+    if (status)
+    {
+        preferences.putPosted(true);
+    }
+    return status;
+    
 }
 boolean MqttServer::postMeasure(float value,int type){
     boolean status = false;

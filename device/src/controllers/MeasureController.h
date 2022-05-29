@@ -27,9 +27,9 @@ void MeasureController::setTemperature(float temperature){
     if(!isnan(preferences.getTemperature())){
         if (preferences.getTemperature()< temperature)
         {
-            digitalWrite(this->temperature,0);
-        }else{
             digitalWrite(this->temperature,1);
+        }else{
+            digitalWrite(this->temperature,0);
         } 
     }
     
@@ -39,25 +39,21 @@ void MeasureController::setHumidity(float humidity){
     if(!isnan(preferences.getHumidity())){
         if (preferences.getHumidity()< humidity)
         {
-            digitalWrite(this->humidity,0);
-        }else{
             digitalWrite(this->humidity,1);
+        }else{
+            digitalWrite(this->humidity,0);
         } 
     }
     
 }
 
 void MeasureController::setLuminosity(float luminosity){
-    Serial.print("LUMINOSOITY: ");
-    Serial.print(preferences.getLuminosity());
-    Serial.print(" < ");
-    Serial.println(luminosity);
     if(!isnan(preferences.getLuminosity())){
         if (preferences.getLuminosity()< luminosity)
         {
-            digitalWrite(this->luminosity,0);
-        }else{
             digitalWrite(this->luminosity,1);
+        }else{
+            digitalWrite(this->luminosity,0);
         } 
     }
     
@@ -67,9 +63,9 @@ void MeasureController::setMoisture(float moisture){
     if(!isnan(preferences.getMoisture())){
         if (preferences.getMoisture()< moisture)
         {
-            digitalWrite(this->moisture,0);
-        }else{
             digitalWrite(this->moisture,1);
+        }else{
+            digitalWrite(this->moisture,0);
         } 
     }
     

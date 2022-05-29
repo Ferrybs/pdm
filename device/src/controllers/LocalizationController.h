@@ -1,5 +1,5 @@
 #include <WifiLocation.h>
-WifiLocation location("AIzaSyCOncGs8U50ZT261HbqdXGdlPGoyoEyeSM");
+WifiLocation location("AIzaSyBcdTJQN_QDqpsh-TmKp8yyK2Ol4SvnRi0");
 class LocalizationController
 {
 private: 

@@ -9,8 +9,13 @@ void setup() {
   delay(500);
   if (device.isConnected()&& mqtt.isConnected())
   {
+    if (!device.isPosted())
+    {
+      mqtt.postDevice();
+    }
     location_t loc = localizationController.getLocalization();
     mqtt.postLocalization(loc.lat,loc.lon);
+
   }else{
     ESP.restart();
   }

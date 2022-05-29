@@ -9,7 +9,11 @@ private:
     const char *_ssid = "SSID";
     const char *_password = "PASSWORD";
     const char *_configured = "CONFIGURED";
+    const char *_posted = "POSTED";
     const String _id = "3e14e9a9-6378-4c72-876e-ddc43d0a0fd5";
+    const char *_name = "NAME";
+    const char *_client_id = "CLIENT_ID";
+    const char *_api_key = "API_KEY";
     const char *_mqtt_user = "MQTT_USER";
     const char *_mqtt_server = "MQTT_SERVER";
     const char *_mqtt_password = "MQTT_PASSWORD";
@@ -21,24 +25,32 @@ private:
 public:
     void putWifiSettings(String ssid, String password);
     void putConfigured(bool status);
+    void putPosted(bool posted);
+    void putClientId(String id);
     void putHumidity(float humidity);
     void putMoisture(float moisture);
     void putTemperature(float temperature);
     void putLuminosity(float luminosity);
     void putMqttUser(String user);
+    void putName(String name);
     void putMqttServer(String server);
     void putMqttPassword(String password);
+    void putApiKey(String key);
     void putMqttPort(int port);
     float getTemperature();
     float getLuminosity();
     float getHumidity();
     float getMoisture();
+    String getApiKey();
+    String getName();
+    String getClientId();
     String getSSID();
     String getMqttServer();
     String getMqttUser();
     String getMqttPassword();
     int getMqttPort();
     bool isConfigured();
+    bool isPosted();
     String getPassword();
     String getId();
     };
@@ -64,8 +76,27 @@ void ClientSettings::putLuminosity(float luminosity){
 }
 void ClientSettings::putConfigured(bool status){
     _preferences.begin(this->_appName,false);
-    delay(500);
     _preferences.putBool(this->_configured,status);
+    _preferences.end();
+}
+void ClientSettings::putPosted(bool posted){
+    _preferences.begin(this->_appName,false);
+    _preferences.putBool(this->_posted,posted);
+    _preferences.end();
+}
+void ClientSettings::putApiKey(String key){
+    _preferences.begin(this->_appName,false);
+    _preferences.putString(this->_api_key,key);
+    _preferences.end();
+}
+void ClientSettings::putName(String name){
+    _preferences.begin(this->_appName,false);
+    _preferences.putString(this->_name,name);
+    _preferences.end();
+}
+void ClientSettings::putClientId(String id){
+    _preferences.begin(this->_appName,false);
+    _preferences.putString(this->_client_id,id);
     _preferences.end();
 }
 void ClientSettings::putMqttServer(String server){
@@ -93,6 +124,13 @@ void ClientSettings::putWifiSettings(String ssid, String password){
     _preferences.putString(this->_ssid,ssid);
     _preferences.putString(this->_password,password);
     _preferences.end();
+}
+String ClientSettings::getName(){
+    String name;
+    _preferences.begin(this->_appName,false);
+    name = _preferences.getString(this->_name);
+    _preferences.end();
+    return name;
 }
 String ClientSettings::getSSID(){
     String SSID;
@@ -172,6 +210,14 @@ bool ClientSettings::isConfigured(){
     return status;
 }
 
+bool ClientSettings::isPosted(){
+    bool status;
+    _preferences.begin(this->_appName,false);
+    status = _preferences.getBool(this->_posted,false);
+    _preferences.end();
+    return status;
+}
+
 String ClientSettings::getPassword(){
     String password;
     _preferences.begin(this->_appName,false);
@@ -180,4 +226,19 @@ String ClientSettings::getPassword(){
     return password;
 }
 
+String ClientSettings::getClientId(){
+    String id;
+    _preferences.begin(this->_appName,false);
+    id = _preferences.getString(this->_client_id);
+    _preferences.end();
+    return id;
+}
+
+String ClientSettings::getApiKey(){
+    String key;
+    _preferences.begin(this->_appName,false);
+    key = _preferences.getString(this->_api_key);
+    _preferences.end();
+    return key;
+}
 ClientSettings preferences;

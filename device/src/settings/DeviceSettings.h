@@ -10,6 +10,7 @@ private:
 public:
     void configure();
     bool isConnected();
+    bool isPosted();
 };
 bool DeviceSettings::isConnected(){
     return wifiNetwork.isConnected();
@@ -43,6 +44,10 @@ void DeviceSettings::configure(){
     console.log("Device configured successfully!");
     console.ledOff();
 
+}
+
+bool DeviceSettings::isPosted(){
+    return preferences.isPosted();
 }
 
 DeviceSettings device;
