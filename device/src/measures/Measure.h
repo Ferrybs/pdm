@@ -2,35 +2,26 @@
 #include <DHT.h>
 #include <DHT_U.h>
 #include "core/Console.h"
-
-DHT_Unified dht(27, DHT11);
+DHT_Unified dht(26, DHT11);
 class Measure
 {
 private:
     const int delayMS = 1500;
     const int luminosity = 34;
     const int moisture = 35;
-    void setup();
 public:
-    Measure(){
-        setup();
-    }
     float getHumidity();
     float getTemperature();
     float getLumiosity();
     float getMoisture();
 };
-void Measure::setup(){
-    pinMode(luminosity,INPUT);
-    pinMode(moisture,INPUT);
-}
 
 float Measure::getMoisture(){
     float rawValue =analogRead(moisture);
     float value = 100 - (rawValue/4095)*100;
-    console.log("Moisture: ",false);
-    console.log(value,false);
-    console.log("%");
+    // console.log("Moisture: ",false);
+    // console.log(value,false);
+    // console.log("%");
     return value;
 }
 float Measure::getTemperature(){
@@ -43,22 +34,18 @@ float Measure::getTemperature(){
         return NAN;
     }
     else {
-        console.log(F("Temperature: "),false);
-        console.log(String(event.relative_humidity),false);
-        console.log(F("C"));
+        // console.log(F("Temperature: "),false);
+        // console.log(String(event.relative_humidity),false);
+        // console.log(F("C"));
         return event.relative_humidity;
     }
 }
 float Measure::getLumiosity(){
-    int ldrRawData = analogRead(luminosity);
-    float resistorVoltage = (float)ldrRawData/4095*3.3;
-    float ldrVoltage = 3.3 - resistorVoltage;
-    float ldrResistance = ldrVoltage/resistorVoltage * 10000;
-    float ldrLux = 12518931 * pow(ldrResistance, -1.405);
-    console.log("Luminosity: ",false);
-    console.log(ldrLux,false);
-    console.log(" LUX");
-    return ldrLux;
+    float temt = analogRead(luminosity);
+    // console.log("Luminosity: ",false);
+    // Serial.print(temt);
+    // console.log(" LUX");
+    return temt;
 } 
 
 float Measure::getHumidity(){
@@ -71,9 +58,9 @@ float Measure::getHumidity(){
         return NAN;
     }
     else {
-        console.log(F("Humidity: "),false);
-        console.log(String(event.relative_humidity),false);
-        console.log(F("%"));
+        // console.log(F("Humidity: "),false);
+        // console.log(String(event.relative_humidity),false);
+        // console.log(F("%"));
         return event.relative_humidity;
     }
 

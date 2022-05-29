@@ -18,8 +18,6 @@ bool WifiNetwork::start(){
     console.blink();
     ssid = preferences.getSSID();
     password = preferences.getPassword();
-    console.log(ssid);
-    console.log(password);
     WiFi.begin(ssid.c_str(),password.c_str());
     console.log("Try to connect to WiFi ..",false);
     digitalWrite(2,HIGH);

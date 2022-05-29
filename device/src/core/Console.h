@@ -11,6 +11,7 @@ public:
     void setup();
     void log(String text="", bool ln=true);
     void log(IPAddress text, bool ln=true);
+    void log(float text, bool ln=true);
     void log(int text, bool ln=true);
     void blink(int tick=2, int size=200);
     void ledOn();
@@ -56,6 +57,15 @@ void Console::log(int text, bool ln){
     }
     
 }
+void Console::log(float text, bool ln){
+    if (ln)
+    {
+        Serial.println(text);
+    }else{
+        Serial.print(text);
+    }
+    
+}
 
 void Console::blink(int tick, int size){
     int count=0;
@@ -67,6 +77,7 @@ void Console::blink(int tick, int size){
         delay(rand()%size);
         count++;
     }
+    digitalWrite(ledPin,LOW);
 }
 Console console;
 

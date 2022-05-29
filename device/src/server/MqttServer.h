@@ -59,16 +59,33 @@ class MqttServer
 {
 private:
     char buffer[4096];
-    const char *_measure = "measure";
-    const char *_settings = "settings";
+    const char *_measure = "measure-test";
+    const char *_localization = "localization";
+    const char *_settings = "settings-test";
 public:
     boolean isConnected();
     void setup();
     void loop();
     boolean postMeasure(float value,int type);
+    boolean postLocalization(float latitude, float longitude);
     boolean connect();
     };
+boolean MqttServer::postLocalization(float latitude, float longitude){
+    memset(buffer,0,sizeof(buffer));
+    json.clear();
+    console.log("Posting Localization...");
+    json["ok"] = true;
+    JsonObject deviceDTO = json.createNestedObject("deviceDTO");
+    deviceDTO["id"] = preferences.getId();
+    json["latitude"] = latitude;
+    json["longitude"] = longitude;
+    serializeJson(json, buffer); 
+    console.log("message[Localization]: ",false);
+    console.log(buffer);
+    return client.publish(this->_localization,buffer,false);
+    
 
+}
 boolean MqttServer::postMeasure(float value,int type){
     boolean status = false;
     memset(buffer,0,sizeof(buffer));
@@ -84,10 +101,10 @@ boolean MqttServer::postMeasure(float value,int type){
         measureDTO["value"] = value;
         waitForSync();
         measureDTO["date"] = UTC.dateTime(RFC822);
-        size_t n = serializeJson(json, buffer);
-        console.log("message["+String(type)+"]: ",false);
-        console.log(buffer);
-        status = client.publish(this->_measure,buffer,n);
+        serializeJson(json, buffer);
+        // console.log("message["+String(type)+"]: ",false);
+        // console.log(buffer);
+        status = client.publish(this->_measure,buffer,false);
     }
     console.log("Status:",false);
     console.log(status ? "Message send!": "Message was Not Send!");
@@ -104,10 +121,12 @@ void MqttServer::setup(){
     client.setBufferSize(4096);
     client.setServer(pHost, preferences.getMqttPort());
     client.setCallback(callback);
+    console.blink();
+    connect();
 }
 boolean MqttServer::connect(){
     int count = 0;
-    while (!client.connected() && count<50) {
+    while (!client.connected() && count<20) {
         count++;
         console.log("Attempting MQTT connection...",false);
         if (client.connect(preferences.getId().c_str(),
@@ -122,6 +141,9 @@ boolean MqttServer::connect(){
             console.log("failed, rc=",false);
             console.log(client.state());
             console.log("try again in 2 seconds");
+            console.log("Count: ",false);
+            console.log(count,false);
+            console.log(" Up to 20",false);
             console.blink(20);
         }
   }
