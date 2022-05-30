@@ -83,7 +83,7 @@ boolean MqttServer::postLocalization(float latitude, float longitude){
     deviceLocalizationDTO["latitude"] = latitude;
     deviceLocalizationDTO["longitude"] = longitude;
     serializeJson(json, buffer); 
-    console.log("message[Localization]: ",false);
+    console.log("message[/"+String(this->_localization)+"]: ",false);
     console.log(buffer);
     return client.publish(this->_localization,buffer,false);
     
@@ -100,7 +100,7 @@ boolean MqttServer::postDevice(){
     deviceDTO["name"] = preferences.getName();
     clientDTO["id"] = preferences.getClientId();
     serializeJson(json, buffer); 
-    console.log("message[Device]: ",false);
+    console.log("message[/"+String(this->_device)+"]: ",false);
     console.log(buffer);
     bool status = client.publish(this->_device,buffer,false);
     if (status)

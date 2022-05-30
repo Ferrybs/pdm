@@ -7,6 +7,7 @@ void setup() {
   device.configure();
   mqtt.setup();
   delay(500);
+  preferences.putPosted(false);
   if (device.isConnected()&& mqtt.isConnected())
   {
     if (!device.isPosted())
