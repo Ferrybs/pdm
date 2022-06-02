@@ -11,31 +11,36 @@ import Client from "../../../entity/client.entity";
 import ChatbotSession from "../entity/chatbot.session.entity";
 import ChatbotMessageRequestDTO from "../dto/chatbot.message.request.dto";
 import ChatbotMessageResponseDTO from "../dto/chatbot.message.response.dto";
+import { DataSource } from "typeorm";
+import ChatbotPostgresDatabase from "../database/chatbot.postgres.database";
+import ChatbotDatabase from "../interfaces/chatbot.database.interface";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
     private _dialogflowprojectId: string;
     private _dialogflowSessionClient: SessionsClient;
+    private _database: ChatbotDatabase;
 
-    constructor(database: Database){
-        super(database);
-        this._privateKey = _.replace(process.env.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
-        this._dialogflowprojectId = process.env.DIALOGFLOW_PROJECT_ID;
+    constructor(dataSource: DataSource){
+      super();
+      this._database = new ChatbotPostgresDatabase(dataSource);
+      this._privateKey = _.replace(process.env.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
+      this._dialogflowprojectId = process.env.DIALOGFLOW_PROJECT_ID;
 
-        try {
-            this._dialogflowSessionClient = new dialogflow.SessionsClient({
-                credentials: {
-                    client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
-                    private_key: this._privateKey
-                }
-            })
-        } catch (error) {
-            if (error instanceof HttpException){
-                throw new HttpException(404, "Dialogflow Session Client Error: " + error.message);
-            } else{
-                throw error;
-            }
-        }
+      try {
+          this._dialogflowSessionClient = new dialogflow.SessionsClient({
+              credentials: {
+                  client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+                  private_key: this._privateKey
+              }
+          })
+      } catch (error) {
+          if (error instanceof HttpException){
+              throw new HttpException(404, "Dialogflow Session Client Error: " + error.message);
+          } else{
+              throw error;
+          }
+      }
     }
     
     public async sendText(chatbotMessageRequestDTO: ChatbotMessageRequestDTO, clientDTO: ClientDTO): Promise<ChatbotMessageResponseDTO>{
@@ -43,7 +48,7 @@ export default class ChatbotService extends Services{
         throw new NotFoundHttpException('Client');
       }
 
-      var chatbotSession = await this.database.findChatbotSessionBySessionId(chatbotMessageRequestDTO.sessionId);
+      var chatbotSession = await this._database.findChatbotSessionBySessionId(chatbotMessageRequestDTO.sessionId);
       if (! (await this.isMatchSessionChatbot(chatbotSession.id,clientDTO.id))) {
         throw new NotFoundHttpException("ChatbotSession");
       }
@@ -55,7 +60,7 @@ export default class ChatbotService extends Services{
         newChatbotSession.client = client;
         newChatbotSession.id = chatbotMessageRequestDTO.sessionId;
 
-        chatbotSession = await this.database.insertChatbotSession(newChatbotSession);
+        chatbotSession = await this._database.insertChatbotSession(newChatbotSession);
       }
 
       const chatbotMessage = new ChatbotMessage();
@@ -64,7 +69,7 @@ export default class ChatbotService extends Services{
       chatbotMessage.type = this.getClientTypeMessage();
       chatbotMessage.chatbotSession = chatbotSession;
 
-      await this.database.insertChatbotMessage(chatbotMessage);
+      await this._database.insertChatbotMessage(chatbotMessage);
 
         const _sessionPath = this._dialogflowSessionClient.projectAgentSessionPath(this._dialogflowprojectId, chatbotSession.id);
         const {value} = await require("pb-util");
@@ -100,7 +105,7 @@ export default class ChatbotService extends Services{
         newChatbotMessage.type = this.getBotTypeMessage();
         newChatbotMessage.chatbotSession = chatbotSession;
 
-        await this.database.insertChatbotMessage(newChatbotMessage);
+        await this._database.insertChatbotMessage(newChatbotMessage);
 
         const newChatbotMessageDTO = new ChatbotMessageResponseDTO();
         newChatbotMessageDTO.text = newChatbotMessage.message;
@@ -119,7 +124,7 @@ export default class ChatbotService extends Services{
       }
 
         if(await this.isMatchSessionChatbot(id,clientDTO.id)){    
-          const chatbotMessages = await this.database.findChatbotMessagesBySessionId(id);
+          const chatbotMessages = await this._database.findChatbotMessagesBySessionId(id);
           const chatbotMessagesDTO: ChatbotMessageResponseDTO[] = [];
           if (chatbotMessages){
             chatbotMessages.forEach((chatbotMessage) => {
@@ -139,9 +144,21 @@ export default class ChatbotService extends Services{
         }
     }
 
+    public async deleteAllMessagesBySessionId(clientDTO: ClientDTO, id: string): Promise<boolean>{
+      if (!id){
+        throw new NotFoundHttpException('ChatbotSessionId');
+      }
+
+        if(await this.isMatchSessionChatbot(id,clientDTO.id)){    
+          return await this._database.deleteAllMessagesBySessionId(id);
+        }else{
+            throw new NotFoundHttpException("Session");
+        }
+    }
+
     public async isMatchSessionChatbot(sessionId: string, clientId: string): Promise<boolean>{
       if (clientId && sessionId) {
-          const session = await this.database.findChatbotSessionById(sessionId);
+          const session = await this._database.findChatbotSessionById(sessionId);
           if (session) {
                   if (session.client.id == clientId) {
                       return true;

@@ -18,22 +18,6 @@ import ChatbotMessageDTO from '../features/chatbot/dto/chatbot.message.request.d
 
 export default class ValidationMiddleware implements Validation {
 
-  public chatbotMessage(): RequestHandler {
-    return async (request: RequestWithError, response: Response, next) =>{
-      let message: string;
-      try {
-        const chatbotMessage: ChatbotMessageDTO = request.body;
-        await transformAndValidate(ChatbotMessageDTO,chatbotMessage);
-      } catch (err) {
-        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        request.error = message;
-      }
-      next();
-    }
-  }
-
   public localization():RequestHandler {
     return async (request: RequestWithError, response: Response, next) =>{
       let message: string;

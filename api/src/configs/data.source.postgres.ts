@@ -15,9 +15,9 @@ import ChatbotMessage from "../features/chatbot/entity/chatbot.message.entity";
 import ChatbotTypeMessage from "../features/chatbot/entity/chatbot.type.message.entity";
 
 export default class PostgresDataSource{
-    appDataSource: DataSource;
+    _appDataSource: DataSource;
     constructor() {
-        this.appDataSource= new DataSource({
+        this._appDataSource= new DataSource({
             type: "postgres",
             url: validateEnv.DATABASE_URL,
             synchronize: true,
@@ -35,5 +35,10 @@ export default class PostgresDataSource{
                 }
             }
         })
+        this.initializeDatabase();
+    }
+
+    private async initializeDatabase(){
+        await this._appDataSource.initialize();
     }
 }

@@ -49,4 +49,26 @@ export default class ChatbotController extends Controller{
           }
         }
       }
+
+      public async deleteAllMessagesBySessionId(request: RequestWithToken, response: Response){
+        if (request.error) {
+          const httpData: HttpData = { ok: false, message: request.error};
+          response.status(400).send(httpData);
+        }else{
+          try {
+            const dataStoreToken = request.dataStoreToken;
+            const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
+            const result = await this.chatbotService.deleteAllMessagesBySessionId(clientDTO, request.params.id);
+            response.status(200).send({ok: result});
+          } catch (error) {
+            if(error instanceof(HttpException)){
+              response.status(error.status).send(error.data);
+            }else{
+              const httpData: HttpData = { ok: false, message: error.message};
+              response.status(500).send(httpData);
+            }
+          
+          }
+        }
+      }
 }

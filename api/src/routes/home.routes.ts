@@ -1,6 +1,7 @@
 import HomeController from "../controllers/home.controller";
 import express, { Router } from "express";
 import Database from "../interfaces/database.interface";
+import { DataSource } from "typeorm";
 
 
 export default class HomeRoutes {
@@ -8,7 +9,7 @@ export default class HomeRoutes {
     public router : Router = express.Router();
     private _controller: HomeController;
 
-    constructor(database: Database){
+    constructor(database: DataSource){
         this._controller = new HomeController(database);
         this.initializeRoutes();
     }

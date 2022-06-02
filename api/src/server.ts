@@ -9,17 +9,20 @@ import ClientRoutes from "./routes/client.routes";
 import ChatbotRoutes from "./features/chatbot/routes/chatbot.routes";
 import Database from "./interfaces/database.interface";
 import PostgresDatabase from "./database/postgres.database";
+import { DataSource } from "typeorm";
+import PostgresDataSource from "configs/data.source.postgres";
 
-const database: Database = new PostgresDatabase();
+// const database: Database = new PostgresDatabase();
+const _appDataSource: DataSource = new PostgresDataSource()._appDataSource;
 
 const app = new App(
     validateEnv.PORT,
     [
-        new HomeRoutes(database),
-        new AuthRoutes(database),
-        new ClientRoutes(database),
-        new DeviceRoutes(database),
-        new ChatbotRoutes(database)
+        new HomeRoutes(_appDataSource),
+        new AuthRoutes(_appDataSource),
+        new ClientRoutes(_appDataSource),
+        new DeviceRoutes(_appDataSource),
+        new ChatbotRoutes(_appDataSource)
     ]
     );
     

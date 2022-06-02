@@ -6,15 +6,10 @@ import Crypto from "crypto";
 import TypeSession from "../entity/type.session.entity";
 import ChatbotTypeMessage from "../features/chatbot/entity/chatbot.type.message.entity";
 export default class Services {
-    private _database: Database; 
     private _jwt = new AuthJwt();
     private _email: SendMail;
-    constructor(database: Database) {
-        this._database = database;
+    constructor() {
         this._email = new SendEmail();
-    }
-    public get database(){
-        return this._database;
     }
 
     public get jwt(){

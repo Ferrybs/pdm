@@ -5,13 +5,17 @@ import ChatbotController from "../controller/chatbot.controller";
 import Auth from "../../../interfaces/auth.interface";
 import ValidationMiddleware from "../../../middlewares/validation.middleware";
 import Validation from "../../../interfaces/validation.interface";
+import ChatbotAuthMiddleware from "../middleware/chatbot.auth.middleware";
+import ChatbotAuth from "../interfaces/chatbot.auth.interface";
+import ChatbotValidationMiddleware from "../middleware/chatbot.validation.middleware";
+import ChatbotValidation from "../interfaces/chatbot.validation.interface";
 
 export default class ChatbotRoutes {
     public path : string = '/chatbot';
     public router : Router = express.Router();
     private _controller: ChatbotController;
-    private _authMiddleware: Auth = new AuthMiddleware();
-    private _validationMiddleware: Validation = new ValidationMiddleware();
+    private _chatbotAuthMiddleware: ChatbotAuth = new ChatbotAuthMiddleware();
+    private _chatbotValidationMiddleware: ChatbotValidation = new ChatbotValidationMiddleware();
 
     constructor(database: Database){
         this._controller = new ChatbotController(database);
@@ -20,13 +24,18 @@ export default class ChatbotRoutes {
     
     private initializeRoutes() {
         this.router.post(`${this.path}/send/text`,
-            this._validationMiddleware.chatbotMessage(),
-            this._authMiddleware.verifyAccesToken(),
+            this._chatbotValidationMiddleware.chatbotMessage(),
+            this._chatbotAuthMiddleware.verifyAccessToken(),
             this._controller.sendText.bind(this._controller));
 
         this.router.get(
             `${this.path}/:id`,
-            this._authMiddleware.verifyAccesToken(),
+            this._chatbotAuthMiddleware.verifyAccessToken(),
             this._controller.getAllMessagesSession.bind(this._controller));
+
+        this.router.delete(
+            `${this.path}/:id`,
+            this._chatbotAuthMiddleware.verifyAccessToken(),
+            this._controller.deleteAllMessagesBySessionId.bind(this._controller));
     }
 }

@@ -20,8 +20,15 @@ import DataStoreToken from "../interfaces/data.store.token.interface";
 import SendEmailDTO from "dto/send.email.dto";
 import LoginDTO from "dto/login.dto";
 import RegisterDTO from "dto/register.dto";
+import PostgresDatabase from "database/postgres.database";
 
 export default class AuthService extends Services{
+  private _database: PostgresDatabase;
+  
+  constructor(){
+    
+  }
+
   private async _addSession(session: Session): Promise<Session>{
     try{
     if(session){
