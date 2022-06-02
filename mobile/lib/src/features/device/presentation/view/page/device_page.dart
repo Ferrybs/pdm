@@ -36,11 +36,12 @@ class _DevicePage extends State<DevicePage> {
                     child: Stepper(
                       steps: [
                         _deviceConnection(),
-                        _wirelessConfig(),
+                        _deviceConfig(),
                         _finishConfig()
                       ],
                       currentStep: _viewModel.stepIndex,
                       onStepContinue: _onStepContinue,
+                      onStepCancel: _onStepCancel,
                     )),
               );
             },
@@ -48,6 +49,10 @@ class _DevicePage extends State<DevicePage> {
         ],
       ),
     ));
+  }
+
+  _onStepCancel() async {
+    _viewModel.updateStepCancel(_viewModel.stepIndex - 1);
   }
 
   _onStepContinue() async {
@@ -65,17 +70,12 @@ class _DevicePage extends State<DevicePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _configStep("Step 1 ", "Connect back to your wifi."),
-            _configStep("Step 2 ", "Please fill in the device name"),
-            DeviceTextInput(
-              onChange: _viewModel.updateDeviceName,
-              label: "Device Name",
-            ),
-            _configStep("Step 3 ", "click-on".i18n() + "continue".i18n())
+            _configStep("Step 2 ", "click-on".i18n() + "continue".i18n())
           ],
         ));
   }
 
-  Step _wirelessConfig() {
+  Step _deviceConfig() {
     return Step(
         title: _painelTittle("Wireless Configuration"),
         content: _wifiDeviceConfig(),
@@ -124,6 +124,10 @@ class _DevicePage extends State<DevicePage> {
     return Column(
       children: [
         DeviceTextInput(
+          onChange: _viewModel.updateDeviceName,
+          label: "Device Name",
+        ),
+        DeviceTextInput(
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-SSID".i18n(),
           onChange: _viewModel.updateSSID,
@@ -132,7 +136,7 @@ class _DevicePage extends State<DevicePage> {
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-password".i18n(),
           onChange: _viewModel.updatePassword,
-        )
+        ),
       ],
     );
   }

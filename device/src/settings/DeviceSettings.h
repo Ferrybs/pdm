@@ -1,9 +1,8 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include "connections/WifiAccessPoint.h"
 #include "connections/WifiNetwork.h"
-#include "server/HttpServer.h"
 #include "core/Console.h"
+#include "server/BTServer.h"
 class DeviceSettings
 {
 private:
@@ -21,17 +20,13 @@ void DeviceSettings::configure(){
     if (!preferences.isConfigured())
     {
         console.blink();
-        wifiAccessPoint.start();
-        http.start();
+        btserver.setup();
         console.blink();
         console.blink();
-        console.log("Starting Access Point...");
         while (!preferences.isConfigured()){
-            http.run();
+            btserver.run();
         }
         console.blink();
-        wifiAccessPoint.stop();
-        http.stop();
     }
     if (!wifiNetwork.start())
     {

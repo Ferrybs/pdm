@@ -16,7 +16,6 @@ void setup() {
     }
     location_t loc = localizationController.getLocalization();
     mqtt.postLocalization(loc.lat,loc.lon);
-
   }else{
     ESP.restart();
   }

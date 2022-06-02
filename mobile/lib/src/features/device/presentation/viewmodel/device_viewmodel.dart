@@ -80,7 +80,17 @@ abstract class _DeviceViewModel with Store {
 
   @action
   setStep(int step) {
-    stepIndex = step;
+    if (step >= 0) {
+      stepIndex = step;
+    }
+  }
+
+  updateStepCancel(int step) {
+    if (step < 0) {
+      navigateToHome();
+    } else {
+      setStep(step);
+    }
   }
 
   updateStep() async {
@@ -92,7 +102,11 @@ abstract class _DeviceViewModel with Store {
     if (stepFinish <= 2) {
       setStep(stepFinish);
     } else {
-      Modular.to.navigate("/home/");
+      navigateToHome();
     }
+  }
+
+  navigateToHome() {
+    Modular.to.navigate("/home/");
   }
 }

@@ -47,8 +47,8 @@ class _HomePage extends State<HomePage> {
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.logout),
-                  label: 'Logout',
+                  icon: Icon(Icons.help),
+                  label: 'Help',
                 ),
               ],
               currentIndex: _viewModel.currentIndex,
