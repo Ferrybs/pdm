@@ -3,7 +3,7 @@ import DevicePreferencesDTO from "../dto/device.preferences.dto";
 import Measure from "../entity/measure.entity";
 import Database from "../interfaces/database.interface";
 import { mqttClient } from "../configs/mqtt.config";
-import Device from "../entity/device.entiy";
+import Device from "../entity/device.entity";
 import TypeMeasure from "../entity/type.measure.entity";
 
 export default class MqttServer {

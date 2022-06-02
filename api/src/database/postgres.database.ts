@@ -4,13 +4,15 @@ import Client from "../entity/client.entity";
 import { Between, DataSource, DeleteResult, UpdateResult } from "typeorm";
 import PostgresDataSource from "../configs/data.source.postgres";
 import DatabaseHttpException from "../exceptions/database.http.exception";
-import Device from "../entity/device.entiy";
+import Device from "../entity/device.entity";
 import TypeSession from "../entity/type.session.entity";
 import Session from "../entity/session.entity";
 import Measure from "../entity/measure.entity";
 import devicePreferencesEntity from "../entity/device.preferences.entity";
 import DeviceLocalization from "../entity/device.localization.entity";
 import DevicePreferences from "../entity/device.preferences.entity";
+import ChatbotSession from "../features/chatbot/entity/chatbot.session.entity";
+import ChatbotMessage from "../features/chatbot/entity/chatbot.message.entity";
 
 export default class PostgresDatabase implements Database{
     private _appDataSource: DataSource;
@@ -22,6 +24,54 @@ export default class PostgresDatabase implements Database{
     private async initializeDatabase(){
         await this._appDataSource.initialize();
     }
+
+    public async findChatbotSessionBySessionId(id: string): Promise<ChatbotSession> {
+        try {
+            return await this._appDataSource.manager.findOne(
+                ChatbotSession,
+                {where: {
+                    id: id 
+                }
+            });
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+
+    public async findChatbotSessionById(id: string): Promise<ChatbotSession> {
+        try {
+            return await this._appDataSource.manager.findOne(
+                ChatbotSession,
+                {where: {
+                    id
+                },
+                relations: ['client'],
+            });
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+
+    public async findChatbotMessagesBySessionId(id: string): Promise<ChatbotMessage[]> {
+        try {
+            const chatbotSession = new ChatbotSession();
+            chatbotSession.id = id;
+
+            return await this._appDataSource.manager.find(
+                ChatbotMessage,
+                {where: {
+                    chatbotSession: chatbotSession,
+                },
+                relations: ['type'],
+                order: {
+                    date: "ASC"
+                }
+            });
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+
     public async findDeviceLocalizationByDevice(device: Device): Promise<DeviceLocalization> {
         try {
             return await this._appDataSource.manager.findOne(
@@ -122,6 +172,22 @@ export default class PostgresDatabase implements Database{
     public async insertTypeSession(typeSession: TypeSession): Promise<TypeSession> {
         try {
             return await this._appDataSource.manager.save(typeSession);
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+
+    public async insertChatbotSession(chatbotSession: ChatbotSession): Promise<ChatbotSession> {
+        try {
+            return await this._appDataSource.manager.save(chatbotSession);
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
+
+    public async insertChatbotMessage(chatbotMessage: ChatbotMessage): Promise<ChatbotMessage>{
+        try {
+            return await this._appDataSource.manager.save(chatbotMessage);
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }

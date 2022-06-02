@@ -6,7 +6,7 @@ import 'reflect-metadata';
 import 'es6-shim';
 import DeviceRoutes from "./routes/device.routes";
 import ClientRoutes from "./routes/client.routes";
-import ChatbotRoutes from "./chatbot/chatbot.routes";
+import ChatbotRoutes from "./features/chatbot/routes/chatbot.routes";
 import Database from "./interfaces/database.interface";
 import PostgresDatabase from "./database/postgres.database";
 

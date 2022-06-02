@@ -2,7 +2,7 @@ import AuthService from "../services/auth.service";
 import HomeService from "../services/home.service";
 import ClientService from "../services/client.service";
 import DeviceService from "../services/device.service";
-import ChatbotService from "../chatbot/chatbot.service";
+import ChatbotService from "../features/chatbot/service/chatbot.service";
 import Database from "../interfaces/database.interface";
 
 export default class Controller{

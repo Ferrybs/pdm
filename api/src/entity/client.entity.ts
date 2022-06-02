@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
-import ChatbotSession from "./chatbot.session.entity";
+import ChatbotSession from "../features/chatbot/entity/chatbot.session.entity";
 import Credentials from './credentials.entity';
-import Device from "./device.entiy";
+import Device from "./device.entity";
 import Person from "./person.entity"
 import Session from "./session.entity";
 

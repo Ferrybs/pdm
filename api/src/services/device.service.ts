@@ -1,5 +1,5 @@
 import { instanceToInstance, plainToInstance } from "class-transformer";
-import Device from "../entity/device.entiy";
+import Device from "../entity/device.entity";
 import DeviceDTO from "../dto/device.dto";
 import DeviceFoundHttpException from "../exceptions/device.found.http.exception";
 import Services from "./services";
