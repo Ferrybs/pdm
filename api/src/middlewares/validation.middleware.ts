@@ -1,5 +1,5 @@
 import { transformAndValidate } from 'class-transformer-validator';
-import PersonDTO from '../dto/person.dto';
+import PersonDTO from '../features/client/dto/person.dto';
 import { RequestHandler, Response } from 'express';
 import Validation from '../interfaces/validation.interface';
 import { ValidationError } from 'class-validator';

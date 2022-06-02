@@ -1,8 +1,8 @@
-import HttpException from "../exceptions/http.exceptions";
 import { Response } from "express";
-import RequestWithToken from "../interfaces/request.token.interface";
-import Controller from "./controller";
 import HttpData from "interfaces/http.data.interface";
+import Controller from "controllers/controller";
+import HttpException from "../../../exceptions/http.exceptions";
+import RequestWithToken from "../interface/request.token.interface";
 
 export default class ClientController extends Controller{
     public async getClient(request: RequestWithToken, response: Response){

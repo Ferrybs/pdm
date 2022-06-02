@@ -1,7 +1,6 @@
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne,PrimaryGeneratedColumn } from "typeorm";
 import ChatbotTypeMessage from "./chatbot.type.message.entity";
 import ChatbotSession from "./chatbot.session.entity";
-import Client from "../../../entity/client.entity";
 
 @Entity()
 export default class ChatbotMessage{

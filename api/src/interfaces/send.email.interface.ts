@@ -1,4 +1,3 @@
-import ClientDTO from "dto/client.dto";
-export default interface SendMail{
-    sendEmail(clientDTO: ClientDTO, token: string): Promise<boolean>;
+export default interface Email{
+    sendResetPasswordEmail(name: string,  email: string, token: string): Promise<boolean>
 }

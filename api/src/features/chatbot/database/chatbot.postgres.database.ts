@@ -1,10 +1,8 @@
-import PostgresDataSource from "configs/data.source.postgres";
-import PostgresDatabase from "database/postgres.database";
-import DatabaseHttpException from "exceptions/database.http.exception";
+import DatabaseHttpException from "../../../exceptions/database.http.exception";
 import { DataSource, DeleteResult } from "typeorm";
-import ChatbotMessage from "../entity/chatbot.message.entity";
-import ChatbotSession from "../entity/chatbot.session.entity";
+import ChatbotSession from "../entities/chatbot.session.entity";
 import ChatbotDatabase from "../interfaces/chatbot.database.interface";
+import ChatbotMessage from "../entities/chatbot.message.entity";
 
 export default class ChatbotPostgresDatabase implements ChatbotDatabase{
     private _appDataSource: DataSource;

@@ -1,8 +1,6 @@
 import { NextFunction,Response } from "express";
 import Controller from "./controller";
-import RequesWithToken from "../interfaces/request.token.interface";
 import { validate } from "class-validator";
-import RequestWithError from "../interfaces/request.error.interface";
 import HttpException from "../exceptions/http.exceptions";
 import HttpData from "../interfaces/http.data.interface";
 import SendEmailDTO from "../dto/send.email.dto";

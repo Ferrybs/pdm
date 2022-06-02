@@ -11,16 +11,7 @@ import Measure from "../entity/measure.entity";
 import devicePreferencesEntity from "../entity/device.preferences.entity";
 import DeviceLocalization from "../entity/device.localization.entity";
 import DevicePreferences from "../entity/device.preferences.entity";
-import ChatbotSession from "../features/chatbot/entity/chatbot.session.entity";
-import ChatbotMessage from "../features/chatbot/entity/chatbot.message.entity";
-import ChatbotPostgresDatabase from "features/chatbot/database/chatbot.postgres.database";
-import DevicePostgresDatabase from "features/device/database/device.postgres.database";
-
 export default class PostgresDatabase implements Database{
-
-    constructor(){
-        super(new PostgresDataSource()._appDataSource);
-    }
     
 
     public async findDeviceLocalizationByDevice(device: Device): Promise<DeviceLocalization> {
@@ -175,72 +166,7 @@ export default class PostgresDatabase implements Database{
             throw( new DatabaseHttpException(error.message));
         }
     }
-
-    public async updateCredentials(credentials: Credentials): Promise<boolean>{
-        try {
-            const result: UpdateResult = await this._appDataSource.manager.update(Credentials,credentials.email,credentials);
-            if(result.affected != null && result.affected>0){
-                return true;
-            }
-            return false
-        } catch (error) {
-            throw( new DatabaseHttpException(error.message));
-        }
-    }
-    public async findClientById(id: string): Promise<Client>{
-        try {
-            const client = await this._appDataSource.manager.findOne(
-                Client,{where:{id: id}, relations: ['credentials', 'person']});
-            return client;
-        } catch (error) {
-            throw (new DatabaseHttpException(error.message));
-
-        }
-    }
-    public async findClientBySessionId(sessionId: string): Promise<Client>{
-        var client: Client;
-        try {
-            const session = await this._appDataSource.manager.findOne(Session,{where:{id:sessionId}});
-            if(session){
-                client = await this._appDataSource.manager.findOne(Client,
-                    {where:{sessions: session}, 
-                    relations: ['credentials', 'person']});
-            }
-            return client;
-            
-        } catch (error) {
-            throw (new DatabaseHttpException(error.message));
-        }
-    }
-    public async findClientByEmail(credentials: Credentials): Promise<Client>{
-        var client: Client;
-        try {
-            const credentialsClient = await this._appDataSource.manager.findOne(Credentials,
-            {where: 
-                {
-                email: credentials.email
-                }
-            });
-            if (credentialsClient) {
-                client = await this._appDataSource.manager.findOne(
-                Client,{where:{credentials: credentialsClient}, 
-                relations: ['credentials', 'person']});
-            }
-        
-            return client;
-        } catch (error) {
-            throw(new DatabaseHttpException(error.message));
-        }
-      }
-    public async insertClient(client: Client): Promise<Client>{
-        try {
-            await this._appDataSource.manager.save(client.person);
-            await this._appDataSource.manager.save(client.credentials);
-            return await this._appDataSource.manager.save(client);
-        } catch (error) {
-            throw (new DatabaseHttpException(error.message));
-        }
-    }
+     
     public async deleteClientSessions(session: Session): Promise<boolean> {
         try {
             const result: DeleteResult = await this._appDataSource.manager.delete(Session,session.id);

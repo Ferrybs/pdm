@@ -1,5 +1,5 @@
-import ChatbotMessage from "../entity/chatbot.message.entity";
-import ChatbotSession from "../entity/chatbot.session.entity";
+import ChatbotMessage from "../entities/chatbot.message.entity";
+import ChatbotSession from "../entities/chatbot.session.entity";
 
 export default interface ChatbotDatabase{
     findChatbotSessionBySessionId(id: string): Promise<ChatbotSession>;

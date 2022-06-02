@@ -10,13 +10,17 @@ import TypeMeasure from "../entity/type.measure.entity";
 import TypeSession from "../entity/type.session.entity";
 import DeviceLocalization from "../entity/device.localization.entity";
 import DevicePreferences from "../entity/device.preferences.entity";
-import ChatbotSession from "../features/chatbot/entity/chatbot.session.entity";
-import ChatbotMessage from "../features/chatbot/entity/chatbot.message.entity";
-import ChatbotTypeMessage from "../features/chatbot/entity/chatbot.type.message.entity";
+import ChatbotSession from "../features/chatbot/entities/chatbot.session.entity";
+import ChatbotTypeMessage from "../features/chatbot/entities/chatbot.type.message.entity";
+import ChatbotMessage from "../features/chatbot/entities/chatbot.message.entity";
 
 export default class PostgresDataSource{
     _appDataSource: DataSource;
     constructor() {
+        this.initialize();
+        this.initializeDatabase();
+    }
+    private initialize(){
         this._appDataSource= new DataSource({
             type: "postgres",
             url: validateEnv.DATABASE_URL,
@@ -34,10 +38,8 @@ export default class PostgresDataSource{
                   rejectUnauthorized: false
                 }
             }
-        })
-        this.initializeDatabase();
+        });
     }
-
     private async initializeDatabase(){
         await this._appDataSource.initialize();
     }

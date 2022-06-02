@@ -1,6 +1,6 @@
 import { ValidateNested } from 'class-validator';
 import CredentialsDTO from './credentials.dto';
-import PersonDTO from "./person.dto"
+import PersonDTO from './person.dto';
 export default class ClientDTO {
 
     public id?: string 

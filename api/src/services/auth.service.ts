@@ -2,7 +2,7 @@ import Services from "./services";
 import bcrypt from "bcrypt"
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
-import CredentialsDTO from "../dto/credentials.dto";
+import CredentialsDTO from "../features/client/dto/credentials.dto";
 import TokenData from "../interfaces/token.data.interface";
 import Session from "../entity/session.entity";
 import EmailFoundHttpException from "../exceptions/email.found.http.exception";
