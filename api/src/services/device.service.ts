@@ -1,5 +1,5 @@
-import { plainToInstance } from "class-transformer";
-import Device from "../entity/device.entiy";
+import { instanceToInstance, plainToInstance } from "class-transformer";
+import Device from "../entity/device.entity";
 import DeviceDTO from "../dto/device.dto";
 import DeviceFoundHttpException from "../exceptions/device.found.http.exception";
 import Services from "./services";
@@ -17,12 +17,13 @@ import DeviceLocalization from "../entity/device.localization.entity";
 import MqttServer from "../mqtt/mqtt.server";
 import MqttServerDTO from "../dto/mqtt.server.dto";
 import validateEnv from "../utils/validateEnv";
+import Database from "../interfaces/database.interface";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
-    constructor(){
-        super();
-        this._mqtt = new MqttServer(this.database);
+    constructor(database: Database){
+        super(database);
+        this._mqtt = new MqttServer(database);
     }
     public  async addDevice(deviceDTO: DeviceDTO, clientDTO: ClientDTO): Promise<boolean>{
         if(await this.database.findDeviceById(deviceDTO.id)){

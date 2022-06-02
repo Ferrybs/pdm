@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import Device from "./device.entiy";
+import Device from "./device.entity";
 import TypeMeasure from "./type.measure.entity";
 
 @Entity()

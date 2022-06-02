@@ -1,6 +1,6 @@
 import ClientDTO from "dto/client.dto";
 import * as nodemailer from "nodemailer";
-import HttpException from "../exceptions/http.exceptions"
+import HttpException from "../exceptions/http.exceptions";
 import SendMail from "../interfaces/send.email.interface";
 import validateEnv from "./validateEnv";
 

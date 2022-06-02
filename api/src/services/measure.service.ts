@@ -1,6 +1,6 @@
 import { plainToInstance } from "class-transformer";
 import MeasureDTO from "../dto/measure.dto";
-import Device from "../entity/device.entiy";
+import Device from "../entity/device.entity";
 import Measure from "../entity/measure.entity";
 import TypeMeasure from "../entity/type.measure.entity";
 import Services from "./services";

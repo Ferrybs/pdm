@@ -4,7 +4,7 @@ import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
 import CredentialsDTO from "../dto/credentials.dto";
 import TokenData from "../interfaces/token.data.interface";
-import Sessions from "../entity/sessions.entity";
+import Session from "../entity/session.entity";
 import EmailFoundHttpException from "../exceptions/email.found.http.exception";
 import HashHttpException from "../exceptions/hash.http.exception";
 import DatabaseHttpException from "../exceptions/database.http.exception";
@@ -22,10 +22,7 @@ import LoginDTO from "dto/login.dto";
 import RegisterDTO from "dto/register.dto";
 
 export default class AuthService extends Services{
-  constructor(){
-    super();
-  }
-  private async _addSession(session: Sessions): Promise<Sessions>{
+  private async _addSession(session: Session): Promise<Session>{
     try{
     if(session){
       return await this.database.insertClientSessions(session);
@@ -42,8 +39,8 @@ export default class AuthService extends Services{
     return await this.database.findSessionsByClient(client);
   }
 
-  public async createSession(type: TypeSession,description: string = ' ', tokenData: TokenData,sessionId: string): Promise<Sessions>{
-    const session = new Sessions();
+  public async createSession(type: TypeSession,description: string = ' ', tokenData: TokenData,sessionId: string): Promise<Session>{
+    const session = new Session();
     type.type = type.type.toUpperCase();
     if(await this.database.findTypeSession(type)){
       session.type = type;
@@ -81,7 +78,7 @@ export default class AuthService extends Services{
   }
   public async getNewRefreshToken(dataStoreToken: DataStoreToken ): Promise<TokenData>{
     var client: Client;
-    var session: Sessions;
+    var session: Session;
     var refreshToken: TokenData;
       client = await this.database.findClientBySessionId(dataStoreToken.id);
 
@@ -116,7 +113,7 @@ export default class AuthService extends Services{
   public async getNewAccessToken(id: string ): Promise<TokenData> {
     var client: Client;
     var sessionId: string;
-    var session: Sessions;
+    var session: Session;
     var accessToken: TokenData;
       
     client = await this.database.findClientById(id);
@@ -167,7 +164,7 @@ export default class AuthService extends Services{
     var client: Client;
     var isMatch = false;
     var accessToken: TokenData;
-    var session: Sessions;
+    var session: Session;
     loginDTO.email = loginDTO.email.toLowerCase();
 
     client = await this.database.findClientByEmail(loginDTO);
@@ -207,8 +204,7 @@ export default class AuthService extends Services{
    
   public async sendEmail(sendEmailDTO: SendEmailDTO){
     var sessionId: string;
-    var session: Sessions;
-    var sessions: Sessions;
+    var session: Session;
     const credentials = new CredentialsDTO();
     credentials.email = sendEmailDTO.email;
     const client = await this.database.findClientByEmail(credentials);
@@ -230,7 +226,7 @@ export default class AuthService extends Services{
       }
       
       session.client = client;
-      sessions = await this._addSession(session);
+      session = await this._addSession(session);
       
       
       const clientDTO = new ClientDTO();

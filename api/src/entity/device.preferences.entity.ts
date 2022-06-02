@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import Device from "./device.entiy";
+import Device from "./device.entity";
 
 @Entity()
 export default class DevicePreferences{

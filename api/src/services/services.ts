@@ -1,17 +1,16 @@
 import SendEmail from "../utils/sendEmail";
 import Database from "../interfaces/database.interface";
-import PostgresDatabase from "../database/postgres.database";
 import AuthJwt from "../auth/auth.jwt";
 import SendMail from "../interfaces/send.email.interface";
 import Crypto from "crypto";
 import TypeSession from "../entity/type.session.entity";
+import ChatbotTypeMessage from "../features/chatbot/entity/chatbot.type.message.entity";
 export default class Services {
     private _database: Database; 
     private _jwt = new AuthJwt();
     private _email: SendMail;
-    constructor() {
-        const databese = new PostgresDatabase();
-        this._database = databese;
+    constructor(database: Database) {
+        this._database = database;
         this._email = new SendEmail();
     }
     public get database(){
@@ -45,6 +44,18 @@ export default class Services {
         const typeSession = new TypeSession();
         typeSession.id ='2';
         typeSession.type = 'RESET_PASSWORD';
+        return typeSession;
+    }
+    public getClientTypeMessage(){
+        const typeSession = new ChatbotTypeMessage();
+        typeSession.id ='1';
+        typeSession.type = 'CLIENT_MESSAGE';
+        return typeSession;
+    }
+    public getBotTypeMessage(){
+        const typeSession = new ChatbotTypeMessage();
+        typeSession.id ='2';
+        typeSession.type = 'BOT_MESSAGE';
         return typeSession;
     }
 }

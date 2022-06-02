@@ -9,4 +9,5 @@ export default interface Validation{
     measureQuery(): RequestHandler
     preferences():  RequestHandler
     localization():  RequestHandler
+    chatbotMessage(): RequestHandler
 }

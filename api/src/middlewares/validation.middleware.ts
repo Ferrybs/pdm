@@ -14,7 +14,25 @@ import LoginDTO from '../dto/login.dto';
 import RegisterDTO from '../dto/register.dto';
 import DevicePreferencesDTO from '../dto/device.preferences.dto';
 import DeviceLocalizationDTO from '../dto/device.localization.dto';
+import ChatbotMessageDTO from '../features/chatbot/dto/chatbot.message.request.dto';
+
 export default class ValidationMiddleware implements Validation {
+
+  public chatbotMessage(): RequestHandler {
+    return async (request: RequestWithError, response: Response, next) =>{
+      let message: string;
+      try {
+        const chatbotMessage: ChatbotMessageDTO = request.body;
+        await transformAndValidate(ChatbotMessageDTO,chatbotMessage);
+      } catch (err) {
+        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+      }
+      if(message){
+        request.error = message;
+      }
+      next();
+    }
+  }
 
   public localization():RequestHandler {
     return async (request: RequestWithError, response: Response, next) =>{

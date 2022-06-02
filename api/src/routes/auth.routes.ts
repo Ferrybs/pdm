@@ -4,6 +4,7 @@ import ValidationMiddleware from "../middlewares/validation.middleware";
 import Validation from "../interfaces/validation.interface";
 import Auth from "../interfaces/auth.interface";
 import AuthMiddleware from "../middlewares/auth.middleware";
+import Database from "../interfaces/database.interface";
 export default class AuthRoutes {
     public path : string = '/auth';
     public router : Router = express.Router();
@@ -11,9 +12,9 @@ export default class AuthRoutes {
     private _validationMiddleware: Validation;
     private _authMiddleware: Auth;
 
-    constructor(){
+    constructor(database: Database){
         this._validationMiddleware = new ValidationMiddleware();
-        this._controller = new AuthController();
+        this._controller = new AuthController(database);
         this._authMiddleware = new AuthMiddleware();
         this.initializeRoutes();
     }
