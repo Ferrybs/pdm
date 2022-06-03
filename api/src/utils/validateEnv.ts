@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const validateEnv = cleanEnv(process.env, {
-    PORT:port(),
+    PORT: port(),
     DATABASE_URL: str(),
     JWT_SECRET: str(),
     EMAIL_HOST: str(),
@@ -14,7 +14,10 @@ const validateEnv = cleanEnv(process.env, {
     MQTT_HOST: host(),
     MQTT_PORT: port(),
     MQTT_USER: str(),
-    MQTT_PASS: str()
+    MQTT_PASS: str(),
+    DIALOGFLOW_PRIVATE_KEY: str(),
+    DIALOGFLOW_PROJECT_ID: str(),
+    DIALOGFLOW_CLIENT_EMAIL: str()
   })
 
 export default validateEnv;

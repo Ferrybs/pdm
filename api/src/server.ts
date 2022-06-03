@@ -1,19 +1,26 @@
 import App from "./app";
 import validateEnv from "./utils/validateEnv";
-import HomeRoutes from "./routes/home.routes";
-import AuthRoutes from "./routes/auth.routes";
+import HomeRoutes from "./features/home/routes/home.routes";
+import AuthRoutes from "./features/auth/routes/auth.routes";
 import 'reflect-metadata';
 import 'es6-shim';
-import DeviceRoutes from "./routes/device.routes";
-import ClientRoutes from "./routes/client.routes";
+import ChatbotRoutes from "./features/chatbot/routes/chatbot.routes";
+import { DataSource } from "typeorm";
+import PostgresDataSource from "./configs/data.source.postgres";
+import ClientRoutes from "./features/client/routes/client.routes";
+import DeviceRoutes from "./features/device/routes/device.routes";
+
+
+const _appDataSource: DataSource = new PostgresDataSource()._appDataSource;
 
 const app = new App(
     validateEnv.PORT,
     [
-        new HomeRoutes(),
-        new AuthRoutes(),
-        new ClientRoutes(),
-        new DeviceRoutes()
+        new HomeRoutes(_appDataSource),
+        new AuthRoutes(_appDataSource),
+        new ClientRoutes(_appDataSource),
+        new DeviceRoutes(_appDataSource),
+        new ChatbotRoutes(_appDataSource)
     ]
     );
     
