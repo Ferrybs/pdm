@@ -12,6 +12,7 @@ import ChatbotDatabase from "../interfaces/chatbot.database.interface";
 import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
+import validateEnv from "utils/validateEnv";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
@@ -22,13 +23,13 @@ export default class ChatbotService extends Services{
     constructor(dataSource: DataSource){
       super();
       this._database = new ChatbotPostgresDatabase(dataSource);
-      this._privateKey = _.replace(process.env.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
-      this._dialogflowprojectId = process.env.DIALOGFLOW_PROJECT_ID;
+      this._privateKey = _.replace(validateEnv.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
+      this._dialogflowprojectId = validateEnv.DIALOGFLOW_PROJECT_ID;
 
       try {
           this._dialogflowSessionClient = new dialogflow.SessionsClient({
               credentials: {
-                  client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+                  client_email: validateEnv.DIALOGFLOW_CLIENT_EMAIL,
                   private_key: this._privateKey
               }
           })
