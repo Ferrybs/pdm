@@ -1,7 +1,7 @@
-import Client from "entity/client.entity";
-import Credentials from "entity/credentials.entity";
-import Session from "entity/session.entity";
-import TypeSession from "entity/type.session.entity";
+import Credentials from "../../../features/client/entities/credentials.entity";
+import Client from "../../../features/client/entities/client.entity";
+import Session from "../entities/session.entity";
+import TypeSession from "../entities/type.session.entity";
 
 export default interface AuthDatabase {
     findTypeSession(typeSession: TypeSession): Promise<TypeSession>;

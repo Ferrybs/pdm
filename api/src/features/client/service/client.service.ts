@@ -15,15 +15,10 @@ import ClientDTO from "../dto/client.dto";
 
 
 export default class ClientService extends Services{
-    private _database: ClientDatabase;
-    constructor(appDataSource: DataSource){
-        super();
-        this._database = new ClientPostgresDatabase(appDataSource);
-    }
 
     public async getClientById(id: string){
         try {
-            const result = await this._database.findClientById(id);
+            const result = await this._clientDatabase.findClientById(id);
             if (result){
                 const clientDTO = new ClientDTO();
                 clientDTO.id = result.id;
@@ -37,7 +32,7 @@ export default class ClientService extends Services{
         }
     }
     public async getClientBySessionId(sessionid: string){
-        const result = await this._database.findClientBySessionId(sessionid);
+        const result = await this._clientDatabase.findClientBySessionId(sessionid);
         if (result) {
             result.credentials.password = undefined;
             const clientDTO = new ClientDTO();
@@ -53,14 +48,14 @@ export default class ClientService extends Services{
             const hashedPassword =  await bcrypt.hash(loginDTO.password,10);
             loginDTO.password = hashedPassword;
             const credentials = plainToInstance(Credentials,loginDTO);
-            return  await this._database.updateCredentials(credentials);
+            return  await this._clientDatabase.updateCredentials(credentials);
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }
     }
     public async getClientByEmail(credentialsData: CredentialsDTO):Promise<ClientDTO>{
         try {
-            const client = await this._database.findClientByEmail(credentialsData.email);
+            const client = await this._clientDatabase.findClientByEmail(credentialsData.email);
             if (client){
                 const personDTO = plainToInstance(PersonDTO,client.person)
                 const credentialsDTO = plainToInstance(CredentialsDTO,client.credentials);

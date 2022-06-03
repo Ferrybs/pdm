@@ -1,5 +1,5 @@
+import Client from "../../../features/client/entities/client.entity";
 import { Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
-import Client from "./client.entity";
 import TypeSession from "./type.session.entity";
 
 @Entity()

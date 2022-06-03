@@ -1,5 +1,5 @@
-import Credentials from "../../../entity/credentials.entity";
-import Client from "../../../entity/client.entity";
+import Client from "../entities/client.entity";
+import Credentials from "../entities/credentials.entity";
 
 export default interface ClientDatabase {
     findClientById(id: string): Promise<Client>;

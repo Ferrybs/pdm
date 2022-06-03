@@ -17,27 +17,23 @@ import MqttServer from "../../mqtt/mqtt.server";
 import MqttServerDTO from "../../../dto/mqtt.server.dto";
 import validateEnv from "../../../utils/validateEnv";
 import { DataSource } from "typeorm";
-import DeviceDatabase from "../interfaces/device.database.interface";
-import DevicePostgresDatabase from "../database/device.postgres.database";
 import Measure from "../entities/measure.entity";
 import TypeMeasure from "../entities/type.measure.entity";
 import Client from "../../../features/client/entities/client.entity";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
-    private _database: DeviceDatabase;
     constructor(dataSource: DataSource){
-        super();
-        this._database = new DevicePostgresDatabase(dataSource);
-        this._mqtt = new MqttServer(this._database);
+        super(dataSource);
+        this._mqtt = new MqttServer(this._deviceDatabase);
     }
     public  async addDevice(deviceDTO: DeviceDTO, clientDTO: ClientDTO): Promise<boolean>{
-        if(await this._database.findDeviceById(deviceDTO.id)){
+        if(await this._deviceDatabase.findDeviceById(deviceDTO.id)){
             throw new DeviceFoundHttpException(deviceDTO.id);
         }
         const device = plainToInstance(Device,deviceDTO);
         device.client = plainToInstance(Client,clientDTO);
-        if (await this._database.insertDevice(device)) {
+        if (await this._deviceDatabase.insertDevice(device)) {
             return true;
         }
         return false;
@@ -51,11 +47,11 @@ export default class DeviceService extends Services{
             devicelocalization.latitude = deviceLocalizationDTO.latitude;
             devicelocalization.longitude = deviceLocalizationDTO.longitude;
             devicelocalization.device = device;
-            const deviceLocalization_old = await this._database.findDeviceLocalizationByDevice(device);
+            const deviceLocalization_old = await this._deviceDatabase.findDeviceLocalizationByDevice(device);
             if (deviceLocalization_old) {
                 devicelocalization.id = deviceLocalization_old.id;
             }
-            if(await this._database.insertDeviceLocalization(devicelocalization)){
+            if(await this._deviceDatabase.insertDeviceLocalization(devicelocalization)){
                 return true;
             }
         }
@@ -68,11 +64,11 @@ export default class DeviceService extends Services{
             devicePreferencesDTO.deviceDTO = undefined;
             const devicePreferences = plainToInstance(DevicePreferences,devicePreferencesDTO);
             devicePreferences.device = device;
-            const devicePreferences_old = await this._database.findDevicePreferencesByDevice(device);
+            const devicePreferences_old = await this._deviceDatabase.findDevicePreferencesByDevice(device);
             if (devicePreferences_old) {
                 devicePreferences.id = devicePreferences_old.id;
             }
-            if(await this._database.insertDevicePreferences(devicePreferences)){
+            if(await this._deviceDatabase.insertDevicePreferences(devicePreferences)){
                 this._mqtt.postDevicePreferences(device.id,devicePreferencesDTO);
                 return true;
             }
@@ -85,7 +81,7 @@ export default class DeviceService extends Services{
         client.id = clientId;
         if (client) {
             const deviceDTO: DeviceDTO[] = [];
-            const devices = await this._database.findDevicesByClient(client);
+            const devices = await this._deviceDatabase.findDevicesByClient(client);
             devices.forEach((device)=>{
                 deviceDTO.push(plainToInstance(DeviceDTO,device));
             })
@@ -96,7 +92,7 @@ export default class DeviceService extends Services{
     }
     public async isMatchSessionDevice(sessionId: string, deviceId: string): Promise<Device>{
         if (deviceId) {
-            const devices = await this._database.findDevicesBySessionId(sessionId);
+            const devices = await this._deviceDatabase.findDevicesBySessionId(sessionId);
             if (devices) {
                 return devices.find((device)=>{
                     if (device.id == deviceId) {
@@ -113,7 +109,7 @@ export default class DeviceService extends Services{
     public async getMeasures(measure_query: MeasureQueryDTO): Promise<MeasureDTO[]>{
         const device = new Device();
         device.id = measure_query.deviceId;
-        const result = await this._database.findMeasuresByDevice(
+        const result = await this._deviceDatabase.findMeasuresByDevice(
             device, new Date(measure_query.start),
             new Date(measure_query.end));
         if(result.length >0){   
@@ -138,7 +134,7 @@ export default class DeviceService extends Services{
         measure.date = measureDTO.date;
         measure.device = plainToInstance(Device,measureDTO.deviceDTO);
         measure.type = plainToInstance(TypeMeasure,measureDTO.typeDTO);
-        const result =  await this._database.insertMeasure(measure);
+        const result =  await this._deviceDatabase.insertMeasure(measure);
         if(result){
             return true;
         }
@@ -148,7 +144,7 @@ export default class DeviceService extends Services{
     public async getPreferences(deviceDTO: DeviceDTO,dataStoreToken: DataStoreToken): Promise<DevicePreferencesDTO>{
         const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceDTO.id);
         if(device){    
-            const devicePreferences = await this._database.findDevicePreferencesByDevice(device);
+            const devicePreferences = await this._deviceDatabase.findDevicePreferencesByDevice(device);
             devicePreferences.device = undefined;
             devicePreferences.id = undefined;
             return plainToInstance(DevicePreferencesDTO,devicePreferences);
@@ -159,7 +155,7 @@ export default class DeviceService extends Services{
     public async getLocalization(deviceDTO: DeviceDTO,dataStoreToken: DataStoreToken): Promise<DeviceLocalizationDTO>{
         const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceDTO.id);
         if(device){    
-            const deviceLocalization = await this._database.findDeviceLocalizationByDevice(device);
+            const deviceLocalization = await this._deviceDatabase.findDeviceLocalizationByDevice(device);
             deviceLocalization.device = undefined;
             deviceLocalization.id = undefined;
             return plainToInstance(DeviceLocalizationDTO,deviceLocalization);

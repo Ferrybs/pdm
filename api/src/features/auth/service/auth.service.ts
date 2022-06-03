@@ -1,7 +1,5 @@
 import Services from "../../../services/services";
 import bcrypt from "bcrypt"
-import ClientDTO from "../dto/client.dto";
-import Client from "../entity/client.entity";
 import CredentialsDTO from "../../client/dto/credentials.dto";
 import TokenData from "../../jwt/interfaces/token.data.interface";
 import Session from "../entities/session.entity";
@@ -13,30 +11,22 @@ import EmailNotSendHttpException from "../../../exceptions/email.not.send.except
 import NotFoundHttpException from "../../../exceptions/not.found.http.exception";
 import TypeSession from "../entities/type.session.entity";
 import SessionsDTO from "../dto/sessions.dto";
-import Credentials from "../entity/credentials.entity";
 import { plainToInstance } from "class-transformer";
-import Person from "../entity/person.entity";
 import DataStoreToken from "../interfaces/data.store.token.interface";
-import SendEmailDTO from "dto/send.email.dto";
 import LoginDTO from "features/auth/dto/login.dto";
-import RegisterDTO from "dto/register.dto";
-import AuthDatabase from "../interfaces/auth.database.interface";
-import AuthPostgresDatabase from "../database/auth.postgres.database";
-import { DataSource } from "typeorm";
+import RegisterDTO from "../dto/register.dto";
+import Credentials from "../../../features/client/entities/credentials.entity";
+import Client from "../../../features/client/entities/client.entity";
+import Person from "../../../features/client/entities/person.entity";
+import SendEmailDTO from "../dto/send.email.dto";
+import ClientDTO from "../../../features/client/dto/client.dto";
 
 export default class AuthService extends Services{
-  private _database: AuthDatabase;
-  
-  constructor(dataSource: DataSource){
-    super();
-    this._database = new AuthPostgresDatabase(dataSource);
-    
-  }
 
   private async _addSession(session: Session): Promise<Session>{
     try{
     if(session){
-      return await this._database.insertClientSessions(session);
+      return await this._authDatabase.insertClientSessions(session);
     }else{
       throw new SessionHttpException("INSERT","Session is null");
     }
@@ -46,14 +36,14 @@ export default class AuthService extends Services{
   }
 
   public async getSessions(id: string): Promise<SessionsDTO[]>{
-    const client = await this._database.findClientBySessionId(id);
-    return await this._database.findSessionsByClient(client);
+    const client = await this._clientDatabase.findClientBySessionId(id);
+    return await this._authDatabase.findSessionsByClient(client);
   }
 
   public async createSession(type: TypeSession,description: string = ' ', tokenData: TokenData,sessionId: string): Promise<Session>{
     const session = new Session();
     type.type = type.type.toUpperCase();
-    if(await this._database.findTypeSession(type)){
+    if(await this._authDatabase.findTypeSession(type)){
       session.type = type;
     }else{
       throw new NotFoundHttpException("TYPE_SESSION");
@@ -70,7 +60,7 @@ export default class AuthService extends Services{
     credentials.email = registerDTO.loginDTO.email.toLowerCase();
     credentials.password = registerDTO.loginDTO.password;
     
-    if(await this._database.findClientByEmail(credentials)){
+    if(await this._clientDatabase.findClientByEmail(credentials.email)){
       throw new EmailFoundHttpException(credentials.email);
     }
     try {
@@ -81,7 +71,7 @@ export default class AuthService extends Services{
     const client = new Client();
     client.person = plainToInstance(Person,registerDTO.personDTO);
     client.credentials = credentials;
-    const result = await this._database.insertClient(client);
+    const result = await this._clientDatabase.insertClient(client);
     if(result){
       return true;
     }
@@ -91,7 +81,7 @@ export default class AuthService extends Services{
     var client: Client;
     var session: Session;
     var refreshToken: TokenData;
-      client = await this._database.findClientBySessionId(dataStoreToken.id);
+      client = await this._clientDatabase.findClientBySessionId(dataStoreToken.id);
 
       if(client){
         await this.updateClientSessionsByClientId(client.id);
@@ -127,7 +117,7 @@ export default class AuthService extends Services{
     var session: Session;
     var accessToken: TokenData;
       
-    client = await this._database.findClientById(id);
+    client = await this._clientDatabase.findClientById(id);
     if (client) {
       await this.updateClientSessionsByClientId(client.id);
     
@@ -158,12 +148,12 @@ export default class AuthService extends Services{
   }
   
   public async updateClientSessionsByClientId(id: string){
-    const sessions = await this._database.findSessionsByClientid(id);
+    const sessions = await this._authDatabase.findSessionsByClientid(id);
     const time: number = Math.floor(Date.now() / 1000);
     sessions.forEach( async (session) => {
       if (session.expiresIn < time || session.type.id == "2") {
         try{
-          await this._database.deleteClientSessions(session);
+          await this._authDatabase.deleteClientSessions(session);
         } catch (error) {
           throw new DatabaseHttpException(error.message);
         }
@@ -178,7 +168,7 @@ export default class AuthService extends Services{
     var session: Session;
     loginDTO.email = loginDTO.email.toLowerCase();
 
-    client = await this._database.findClientByEmail(loginDTO);
+    client = await this._clientDatabase.findClientByEmail(loginDTO.email);
     
     if(client){
       try {
@@ -218,7 +208,7 @@ export default class AuthService extends Services{
     var session: Session;
     const credentials = new CredentialsDTO();
     credentials.email = sendEmailDTO.email;
-    const client = await this._database.findClientByEmail(credentials);
+    const client = await this._clientDatabase.findClientByEmail(credentials.email);
     if(client){
       await this.updateClientSessionsByClientId(client.id);
       
@@ -239,13 +229,7 @@ export default class AuthService extends Services{
       session.client = client;
       session = await this._addSession(session);
       
-      
-      const clientDTO = new ClientDTO();
-      clientDTO.id =  client.id;
-      clientDTO.credentialsDTO = client.credentials;
-      clientDTO.personDTO = client.person;
-      
-      const result = await this.email.sendEmail(clientDTO,accessToken.token);
+      const result = await this.email.sendResetPasswordEmail(client.person.name,client.credentials.email,accessToken.token);
       if(!result){
         throw new EmailNotSendHttpException("e-mail not send");
       }else{

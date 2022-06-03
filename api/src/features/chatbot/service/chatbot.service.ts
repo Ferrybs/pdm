@@ -7,40 +7,38 @@ import ChatbotSession from "../entities/chatbot.session.entity";
 import ChatbotMessageRequestDTO from "../dto/chatbot.message.request.dto";
 import ChatbotMessageResponseDTO from "../dto/chatbot.message.response.dto";
 import { DataSource } from "typeorm";
-import ChatbotPostgresDatabase from "../database/chatbot.postgres.database";
-import ChatbotDatabase from "../interfaces/chatbot.database.interface";
 import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
+import validateEnv from "utils/validateEnv";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
     private _dialogflowprojectId: string;
     private _dialogflowSessionClient: SessionsClient;
-    private _database: ChatbotDatabase;
 
     constructor(dataSource: DataSource){
-      super();
-      this._database = new ChatbotPostgresDatabase(dataSource);
-      this._privateKey = _.replace(process.env.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
-      this._dialogflowprojectId = process.env.DIALOGFLOW_PROJECT_ID;
-
-      try {
-          this._dialogflowSessionClient = new dialogflow.SessionsClient({
-              credentials: {
-                  client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
-                  private_key: this._privateKey
-              }
-          })
-      } catch (error) {
-          if (error instanceof HttpException){
-              throw new HttpException(404, "Dialogflow Session Client Error: " + error.message);
-          } else{
-              throw error;
-          }
-      }
+      super(dataSource);
+      this._privateKey = _.replace(validateEnv.DIALOGFLOW_PRIVATE_KEY, new RegExp("\\\\n", "\g"), "\n");
+      this._dialogflowprojectId = validateEnv.DIALOGFLOW_PROJECT_ID;
+      this.initialize();
     }
-    
+    private initialize(){
+      try {
+        this._dialogflowSessionClient = new dialogflow.SessionsClient({
+            credentials: {
+                client_email: validateEnv.DIALOGFLOW_CLIENT_EMAIL,
+                private_key: this._privateKey
+            }
+        })
+    } catch (error) {
+        if (error instanceof HttpException){
+            throw new HttpException(404, "Dialogflow Session Client Error: " + error.message);
+        } else{
+            throw error;
+        }
+    }
+    }
     public async sendText(chatbotMessageRequestDTO: ChatbotMessageRequestDTO, clientDTO: ClientChatbotDTO): Promise<ChatbotMessageResponseDTO>{
       if (!clientDTO){
         throw new NotFoundHttpException('Client');

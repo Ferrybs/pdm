@@ -12,7 +12,7 @@ export default class Controller{
     deviceService: DeviceService;
     chatbotService: ChatbotService;
     constructor(appDataSource: DataSource){
-        this.homeService = new HomeService();
+        this.homeService = new HomeService(appDataSource);
         this.clientService = new ClientService(appDataSource);
         this.authService = new AuthService(appDataSource);
         this.deviceService = new DeviceService(appDataSource);

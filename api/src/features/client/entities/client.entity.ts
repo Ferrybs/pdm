@@ -1,9 +1,9 @@
+import Session from "../../../features/auth/entities/session.entity";
 import { Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import ChatbotSession from "../features/chatbot/entities/chatbot.session.entity";
 import Credentials from './credentials.entity';
-import Device from "./device.entity";
 import Person from "./person.entity"
-import Session from "./session.entity";
+import Device from "../../../features/device/entities/device.entity";
+import ChatbotSession from "../../../features/chatbot/entities/chatbot.session.entity";
 
 @Entity()
 export default class Client{    
