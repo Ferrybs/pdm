@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
 export default interface Auth{
-    verifyAccesToken(): RequestHandler;
+    verifyAccessToken(): RequestHandler;
     verifyPasswordReset(): RequestHandler;
     verifyRefreshToken(): RequestHandler;
 }

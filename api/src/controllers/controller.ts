@@ -1,5 +1,5 @@
-import AuthService from "../services/auth.service";
-import HomeService from "../services/home.service";
+import AuthService from "../features/auth/service/auth.service";
+import HomeService from "../features/home/service/home.service";
 import DeviceService from "../features/device/services/device.service";
 import ChatbotService from "../features/chatbot/service/chatbot.service";
 import { DataSource } from "typeorm";

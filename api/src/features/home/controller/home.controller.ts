@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import HomeService from "../services/home.service"
-import Controller from "./controller";
+import HomeService from "../service/home.service"
+import Controller from "../../../controllers/controller";
 
 export default class HomeController extends Controller{
     

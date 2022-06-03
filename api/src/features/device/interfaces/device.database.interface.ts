@@ -1,4 +1,4 @@
-import Client from "../../../entity/client.entity";
+import Client from "../../../features/client/entities/client.entity";
 import Device from "../entities/device.entity";
 import DeviceLocalization from "../entities/device.localization.entity";
 import DevicePreferences from "../entities/device.preferences.entity";

@@ -1,8 +1,8 @@
 import express, { Router } from "express";
 import ChatbotController from "../controller/chatbot.controller";
-import ChatbotAuthMiddleware from "../middleware/chatbot.auth.middleware";
+import ChatbotAuthMiddleware from "../middlewares/chatbot.auth.middleware";
 import ChatbotAuth from "../interfaces/chatbot.auth.interface";
-import ChatbotValidationMiddleware from "../middleware/chatbot.validation.middleware";
+import ChatbotValidationMiddleware from "../middlewares/chatbot.validation.middleware";
 import ChatbotValidation from "../interfaces/chatbot.validation.interface";
 import { DataSource } from "typeorm";
 

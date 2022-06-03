@@ -1,18 +1,20 @@
 import { NextFunction,Response } from "express";
-import Controller from "./controller";
+import Controller from "../../../controllers/controller";
 import { validate } from "class-validator";
-import HttpException from "../exceptions/http.exceptions";
+import HttpException from "../../../exceptions/http.exceptions";
 import HttpData from "../interfaces/http.data.interface";
 import SendEmailDTO from "../dto/send.email.dto";
 import ResetPasswordDTO from "../dto/reset.password.dto";
 import LoginDTO from "../dto/login.dto";
 import { plainToInstance } from "class-transformer";
-import Credentials from "../entity/credentials.entity";
+import Credentials from "../../../features/client/entities/credentials.entity";
 import RegisterDTO from "../dto/register.dto";
+import RequestWithToken from "../interfaces/request.token.interface";
+import RequestWithError from "../interfaces/request.error.interface";
 
 export default class AuthController extends Controller{
 
-  public async getSessions(request: RequesWithToken, response: Response){
+  public async getSessions(request: RequestWithToken, response: Response){
     if (request.error) {
       const httpData: HttpData = { ok: false, message: request.error};
       response.status(400).send(httpData);
@@ -52,7 +54,7 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async newRefreshToken(request: RequesWithToken, response: Response, next: NextFunction){
+  public async newRefreshToken(request: RequestWithToken, response: Response, next: NextFunction){
     if (request.error) {
       const httpData: HttpData = { ok: false, message: request.error};
       response.status(400).send(httpData);
@@ -71,7 +73,7 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async newAccessToken(request: RequesWithToken, response: Response, next: NextFunction){
+  public async newAccessToken(request: RequestWithToken, response: Response, next: NextFunction){
     if (request.error) {
       const httpData: HttpData = { ok: false, message: request.error};
       response.status(400).send(httpData);
@@ -114,7 +116,7 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async changePasswordPage(request: RequesWithToken, response: Response, next: NextFunction){
+  public async changePasswordPage(request: RequestWithToken, response: Response, next: NextFunction){
     let message: string;
     let token: string;
     let name: string = "User";
@@ -155,7 +157,7 @@ export default class AuthController extends Controller{
       }
     }
   }
-  public async resetPasswordPage(request: RequesWithToken, response: Response, next: NextFunction) {
+  public async resetPasswordPage(request: RequestWithToken, response: Response, next: NextFunction) {
     if (request.error) {
       response.render('pages/invalidLink',{message: request.error});
     }else{

@@ -1,38 +1,42 @@
-import Services from "./services";
+import Services from "../../../services/services";
 import bcrypt from "bcrypt"
 import ClientDTO from "../dto/client.dto";
 import Client from "../entity/client.entity";
-import CredentialsDTO from "../features/client/dto/credentials.dto";
-import TokenData from "../interfaces/token.data.interface";
-import Session from "../entity/session.entity";
-import EmailFoundHttpException from "../exceptions/email.found.http.exception";
-import HashHttpException from "../exceptions/hash.http.exception";
-import DatabaseHttpException from "../exceptions/database.http.exception";
-import SessionHttpException from "../exceptions/session.http.exception";
-import EmailNotSendHttpException from "../exceptions/email.not.send.exception";
-import NotFoundHttpException from "../exceptions/not.found.http.exception";
-import TypeSession from "../entity/type.session.entity";
+import CredentialsDTO from "../../client/dto/credentials.dto";
+import TokenData from "../../jwt/interfaces/token.data.interface";
+import Session from "../entities/session.entity";
+import EmailFoundHttpException from "../../../exceptions/email.found.http.exception";
+import HashHttpException from "../../../exceptions/hash.http.exception";
+import DatabaseHttpException from "../../../exceptions/database.http.exception";
+import SessionHttpException from "../../../exceptions/session.http.exception";
+import EmailNotSendHttpException from "../../../exceptions/email.not.send.exception";
+import NotFoundHttpException from "../../../exceptions/not.found.http.exception";
+import TypeSession from "../entities/type.session.entity";
 import SessionsDTO from "../dto/sessions.dto";
 import Credentials from "../entity/credentials.entity";
 import { plainToInstance } from "class-transformer";
 import Person from "../entity/person.entity";
 import DataStoreToken from "../interfaces/data.store.token.interface";
 import SendEmailDTO from "dto/send.email.dto";
-import LoginDTO from "dto/login.dto";
+import LoginDTO from "features/auth/dto/login.dto";
 import RegisterDTO from "dto/register.dto";
-import PostgresDatabase from "database/postgres.database";
+import AuthDatabase from "../interfaces/auth.database.interface";
+import AuthPostgresDatabase from "../database/auth.postgres.database";
+import { DataSource } from "typeorm";
 
 export default class AuthService extends Services{
-  private _database: PostgresDatabase;
+  private _database: AuthDatabase;
   
-  constructor(){
+  constructor(dataSource: DataSource){
+    super();
+    this._database = new AuthPostgresDatabase(dataSource);
     
   }
 
   private async _addSession(session: Session): Promise<Session>{
     try{
     if(session){
-      return await this.database.insertClientSessions(session);
+      return await this._database.insertClientSessions(session);
     }else{
       throw new SessionHttpException("INSERT","Session is null");
     }
@@ -42,14 +46,14 @@ export default class AuthService extends Services{
   }
 
   public async getSessions(id: string): Promise<SessionsDTO[]>{
-    const client = await this.database.findClientBySessionId(id);
-    return await this.database.findSessionsByClient(client);
+    const client = await this._database.findClientBySessionId(id);
+    return await this._database.findSessionsByClient(client);
   }
 
   public async createSession(type: TypeSession,description: string = ' ', tokenData: TokenData,sessionId: string): Promise<Session>{
     const session = new Session();
     type.type = type.type.toUpperCase();
-    if(await this.database.findTypeSession(type)){
+    if(await this._database.findTypeSession(type)){
       session.type = type;
     }else{
       throw new NotFoundHttpException("TYPE_SESSION");
@@ -66,7 +70,7 @@ export default class AuthService extends Services{
     credentials.email = registerDTO.loginDTO.email.toLowerCase();
     credentials.password = registerDTO.loginDTO.password;
     
-    if(await this.database.findClientByEmail(credentials)){
+    if(await this._database.findClientByEmail(credentials)){
       throw new EmailFoundHttpException(credentials.email);
     }
     try {
@@ -77,7 +81,7 @@ export default class AuthService extends Services{
     const client = new Client();
     client.person = plainToInstance(Person,registerDTO.personDTO);
     client.credentials = credentials;
-    const result = await this.database.insertClient(client);
+    const result = await this._database.insertClient(client);
     if(result){
       return true;
     }
@@ -87,7 +91,7 @@ export default class AuthService extends Services{
     var client: Client;
     var session: Session;
     var refreshToken: TokenData;
-      client = await this.database.findClientBySessionId(dataStoreToken.id);
+      client = await this._database.findClientBySessionId(dataStoreToken.id);
 
       if(client){
         await this.updateClientSessionsByClientId(client.id);
@@ -123,7 +127,7 @@ export default class AuthService extends Services{
     var session: Session;
     var accessToken: TokenData;
       
-    client = await this.database.findClientById(id);
+    client = await this._database.findClientById(id);
     if (client) {
       await this.updateClientSessionsByClientId(client.id);
     
@@ -154,12 +158,12 @@ export default class AuthService extends Services{
   }
   
   public async updateClientSessionsByClientId(id: string){
-    const sessions = await this.database.findSessionsByClientid(id);
+    const sessions = await this._database.findSessionsByClientid(id);
     const time: number = Math.floor(Date.now() / 1000);
     sessions.forEach( async (session) => {
       if (session.expiresIn < time || session.type.id == "2") {
         try{
-          await this.database.deleteClientSessions(session);
+          await this._database.deleteClientSessions(session);
         } catch (error) {
           throw new DatabaseHttpException(error.message);
         }
@@ -174,7 +178,7 @@ export default class AuthService extends Services{
     var session: Session;
     loginDTO.email = loginDTO.email.toLowerCase();
 
-    client = await this.database.findClientByEmail(loginDTO);
+    client = await this._database.findClientByEmail(loginDTO);
     
     if(client){
       try {
@@ -214,7 +218,7 @@ export default class AuthService extends Services{
     var session: Session;
     const credentials = new CredentialsDTO();
     credentials.email = sendEmailDTO.email;
-    const client = await this.database.findClientByEmail(credentials);
+    const client = await this._database.findClientByEmail(credentials);
     if(client){
       await this.updateClientSessionsByClientId(client.id);
       

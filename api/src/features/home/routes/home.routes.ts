@@ -1,4 +1,4 @@
-import HomeController from "../controllers/home.controller";
+import HomeController from "../controller/home.controller";
 import express, { Router } from "express";
 import { DataSource } from "typeorm";
 

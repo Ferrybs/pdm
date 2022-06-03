@@ -1,10 +1,10 @@
 import App from "./app";
 import validateEnv from "./utils/validateEnv";
-import HomeRoutes from "./routes/home.routes";
-import AuthRoutes from "./routes/auth.routes";
+import HomeRoutes from "./features/home/routes/home.routes";
+import AuthRoutes from "./features/auth/routes/auth.routes";
 import 'reflect-metadata';
 import 'es6-shim';
-import DeviceRoutes from "./routes/device.routes";
+import DeviceRoutes from "./features/device/routes/device.routes";
 import ChatbotRoutes from "./features/chatbot/routes/chatbot.routes";
 import { DataSource } from "typeorm";
 import PostgresDataSource from "configs/data.source.postgres";

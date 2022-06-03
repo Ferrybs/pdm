@@ -9,7 +9,7 @@ import ChatbotMessageResponseDTO from "../dto/chatbot.message.response.dto";
 import { DataSource } from "typeorm";
 import ChatbotPostgresDatabase from "../database/chatbot.postgres.database";
 import ChatbotDatabase from "../interfaces/chatbot.database.interface";
-import ClientDTO from "../dto/client.dto";
+import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
 
@@ -41,7 +41,7 @@ export default class ChatbotService extends Services{
       }
     }
     
-    public async sendText(chatbotMessageRequestDTO: ChatbotMessageRequestDTO, clientDTO: ClientDTO): Promise<ChatbotMessageResponseDTO>{
+    public async sendText(chatbotMessageRequestDTO: ChatbotMessageRequestDTO, clientDTO: ClientChatbotDTO): Promise<ChatbotMessageResponseDTO>{
       if (!clientDTO){
         throw new NotFoundHttpException('Client');
       }
@@ -115,7 +115,7 @@ export default class ChatbotService extends Services{
     }
 
 
-    public async getAllMessagesSession(clientDTO: ClientDTO, id: string): Promise<ChatbotMessageResponseDTO[]>{
+    public async getAllMessagesSession(clientDTO: ClientChatbotDTO, id: string): Promise<ChatbotMessageResponseDTO[]>{
 
       if (!id){
         throw new NotFoundHttpException('ChatbotSessionId');
@@ -142,7 +142,7 @@ export default class ChatbotService extends Services{
         }
     }
 
-    public async deleteAllMessagesBySessionId(clientDTO: ClientDTO, id: string): Promise<boolean>{
+    public async deleteAllMessagesBySessionId(clientDTO: ClientChatbotDTO, id: string): Promise<boolean>{
       if (!id){
         throw new NotFoundHttpException('ChatbotSessionId');
       }

@@ -1,8 +1,8 @@
 import SendEmail from "../utils/node.email";
-import AuthJwt from "../auth/auth.jwt";
-import SendMail from "../interfaces/email.interface";
+import AuthJwt from "../features/jwt/auth/auth.jwt";
+import SendMail from ../features/jwt/auth/auth.jwtmail.interface";
 import Crypto from "crypto";
-import TypeSession from "../entity/type.session.entity";
+import TypeSession from "../features/auth/entities/type.session.entity";
 import ChatbotTypeMessage from "../features/chatbot/entities/chatbot.type.message.entity";
 export default class Services {
     private _jwt = new AuthJwt();

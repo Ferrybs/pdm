@@ -1,4 +1,4 @@
-import Services from "./services"
+import Services from "../../../services/services"
 export default class HomeService extends Services{
 
     public getHome = () => {

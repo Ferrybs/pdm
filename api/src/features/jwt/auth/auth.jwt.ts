@@ -1,8 +1,8 @@
 import DataStoreToken from "../interfaces/data.store.token.interface";
 import TokenData from "../interfaces/token.data.interface";
-import validateEnv from "../utils/validateEnv";
+import validateEnv from "../../../utils/validateEnv";
 import jwt from "jsonwebtoken";
-import Auth from "../interfaces/auth.interface";
+import Auth from "../../auth/interfaces/auth.interface";
 
 export default class AuthJwt{
     private _secret: string = validateEnv.JWT_SECRET;

@@ -1,9 +1,9 @@
-import Client from "../../../entity/client.entity";
+import Client from "../entities/client.entity";
 import { DataSource, UpdateResult } from "typeorm";
 import ClientDatabase from "../interface/client.database.interface";
 import DatabaseHttpException from "../../../exceptions/database.http.exception";
-import Session from "../../../entity/session.entity";
-import Credentials from "../../../entity/credentials.entity";
+import Session from "../../auth/entities/session.entity";
+import Credentials from "../entities/credentials.entity";
 
 export default class ClientPostgresDatabase implements ClientDatabase {
     private _appDataSource: DataSource;

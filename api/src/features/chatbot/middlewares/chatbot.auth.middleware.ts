@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import jwt from 'jsonwebtoken';
-import DataStoreToken from "interfaces/data.store.token.interface";
+import DataStoreToken from "../interfaces/data.store.token.interface";
 import RequestWithToken from "../interfaces/request.token.interface";
 import validateEnv from "../../../utils/validateEnv";
 import ChatbotAuth from "../interfaces/chatbot.auth.interface";
