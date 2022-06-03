@@ -1,7 +1,7 @@
 import { transformAndValidate } from "class-transformer-validator";
 import { ValidationError } from "class-validator";
 import { NextFunction, RequestHandler, Response } from "express";
-import RequestWithError from "interfaces/request.error.interface";
+import RequestWithError from "../interfaces/request.error.interface";
 import DeviceDTO from "../dto/device.dto";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import DevicePreferencesDTO from "../dto/device.preferences.dto";

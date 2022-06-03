@@ -1,9 +1,9 @@
 import DeviceDTO from "../dto/device.dto";
-import HttpException from "../exceptions/http.exceptions";
+import HttpException from "../../../exceptions/http.exceptions";
 import { Response } from "express";
 import RequestWithToken from "../interfaces/request.token.interface";
-import Controller from "./controller";
-import NotFoundHttpException from "../exceptions/not.found.http.exception";
+import Controller from "../../../controllers/controller";
+import NotFoundHttpException from "../../../exceptions/not.found.http.exception";
 import HttpData from "../interfaces/http.data.interface";
 import MeasureQueryDTO from "../dto/measure.query.dto";
 import DevicePreferencesDTO from "../dto/device.preferences.dto";
