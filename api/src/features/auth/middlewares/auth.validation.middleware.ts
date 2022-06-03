@@ -30,8 +30,8 @@ export default class AuthValidationMiddleware implements AuthValidation{
         return async (request: RequestWithError, response: Response, next) =>{
           let message: string;
           try {
-            const password = request.body;
-            await transformAndValidate(ResetPasswordDTO,password);
+            const resetPasswordDTO: ResetPasswordDTO = {password:  request.body.pass }
+            await transformAndValidate(ResetPasswordDTO,resetPasswordDTO);
           } catch (err) {
             message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
           }

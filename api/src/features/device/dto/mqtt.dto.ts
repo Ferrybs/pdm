@@ -1,4 +1,4 @@
-export default class MqttServerDTO {
+export default class MqttDTO {
     public server?: string;
     public user?: string;
     public password?: string;

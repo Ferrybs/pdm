@@ -62,9 +62,9 @@ export default class DeviceRoutes {
             this._controller.getLocalization.bind(this._controller)
             );
         this.router.get(
-            `${this.path}/mqtt-server`,
+            `${this.path}/configs`,
             this._authMiddleware.verifyAccessToken(),
-            this._controller.getMqttServer.bind(this._controller)
+            this._controller.getConfigs.bind(this._controller)
             );
     }
 

@@ -170,7 +170,7 @@ export default class DeviceController extends Controller{
         }
       }
     }
-    public async getMqttServer(request: RequestWithToken, response: Response) {
+    public async getConfigs(request: RequestWithToken, response: Response) {
       if (request.error) {
         const httpData: HttpData = { ok: false, message: request.error};
         response.status(400).send(httpData);
@@ -178,7 +178,7 @@ export default class DeviceController extends Controller{
         try {
           const dataStoreToken = request.dataStoreToken;
           await this.clientService.getClientBySessionId(dataStoreToken.id);
-          const mqttDTO = this.deviceService.getMqttServer();
+          const mqttDTO = this.deviceService.getConfigs();
           if (mqttDTO) {
             response.status(200).send({ok: true,mqttDTO});
           }else{

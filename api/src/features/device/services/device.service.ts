@@ -14,12 +14,12 @@ import DataStoreToken from "../interfaces/data.store.token.interface";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import DeviceLocalization from "../entities/device.localization.entity";
 import MqttServer from "../../mqtt/mqtt.server";
-import MqttServerDTO from "../../../dto/mqtt.server.dto";
 import validateEnv from "../../../utils/validateEnv";
 import { DataSource } from "typeorm";
 import Measure from "../entities/measure.entity";
 import TypeMeasure from "../entities/type.measure.entity";
 import Client from "../../../features/client/entities/client.entity";
+import MqttDTO from "../dto/mqtt.dto";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
@@ -163,8 +163,8 @@ export default class DeviceService extends Services{
             throw new NotFoundHttpException("MEASURES");
         }
     }
-    public getMqttServer(): MqttServerDTO{
-        const mqttDTO =  new MqttServerDTO();
+    public getConfigs(): MqttDTO{
+        const mqttDTO =  new MqttDTO();
         mqttDTO.server = validateEnv.MQTT_HOST;
         mqttDTO.user = validateEnv.MQTT_USER;
         mqttDTO.password = validateEnv.MQTT_PASS;

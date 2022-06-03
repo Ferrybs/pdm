@@ -1,4 +1,4 @@
-import HttpData from "features/auth/interfaces/http.data.interface";
+import HttpData from "../interfaces/http.data.interface";
 
 class HttpException extends Error {
     status: number;

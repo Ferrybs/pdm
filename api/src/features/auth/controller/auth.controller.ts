@@ -125,7 +125,7 @@ export default class AuthController extends Controller{
       response.render('pages/invalidLink',{message: request.error});
     }else{
       try {
-        const resetPasswordDTO: ResetPasswordDTO = request.body;
+        const resetPasswordDTO: ResetPasswordDTO = { password: request.body.pass };
         const dataStoreToken = request.dataStoreToken;
         const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
         if (clientDTO) {
