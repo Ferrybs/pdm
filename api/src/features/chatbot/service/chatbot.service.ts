@@ -10,7 +10,7 @@ import { DataSource } from "typeorm";
 import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
-import validateEnv from "utils/validateEnv";
+import validateEnv from "../../../utils/validateEnv";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
@@ -44,7 +44,7 @@ export default class ChatbotService extends Services{
         throw new NotFoundHttpException('Client');
       }
 
-      var chatbotSession = await this._database.findChatbotSessionBySessionId(chatbotMessageRequestDTO.sessionId);
+      var chatbotSession = await this._chatbotDatabase.findChatbotSessionBySessionId(chatbotMessageRequestDTO.sessionId);
       if (! (await this.isMatchSessionChatbot(chatbotSession.id,clientDTO.id))) {
         throw new NotFoundHttpException("ChatbotSession");
       }
@@ -56,7 +56,7 @@ export default class ChatbotService extends Services{
         newChatbotSession.client = client;
         newChatbotSession.id = chatbotMessageRequestDTO.sessionId;
 
-        chatbotSession = await this._database.insertChatbotSession(newChatbotSession);
+        chatbotSession = await this._chatbotDatabase.insertChatbotSession(newChatbotSession);
       }
 
       const chatbotMessage = new ChatbotMessage();
@@ -65,7 +65,7 @@ export default class ChatbotService extends Services{
       chatbotMessage.type = this.getClientTypeMessage();
       chatbotMessage.chatbotSession = chatbotSession;
 
-      await this._database.insertChatbotMessage(chatbotMessage);
+      await this._chatbotDatabase.insertChatbotMessage(chatbotMessage);
 
         const _sessionPath = this._dialogflowSessionClient.projectAgentSessionPath(this._dialogflowprojectId, chatbotSession.id);
         const {value} = await require("pb-util");
@@ -101,7 +101,7 @@ export default class ChatbotService extends Services{
         newChatbotMessage.type = this.getBotTypeMessage();
         newChatbotMessage.chatbotSession = chatbotSession;
 
-        await this._database.insertChatbotMessage(newChatbotMessage);
+        await this._chatbotDatabase.insertChatbotMessage(newChatbotMessage);
 
         const newChatbotMessageDTO = new ChatbotMessageResponseDTO();
         newChatbotMessageDTO.text = newChatbotMessage.message;
@@ -120,7 +120,7 @@ export default class ChatbotService extends Services{
       }
 
         if(await this.isMatchSessionChatbot(id,clientDTO.id)){    
-          const chatbotMessages = await this._database.findChatbotMessagesBySessionId(id);
+          const chatbotMessages = await this._chatbotDatabase.findChatbotMessagesBySessionId(id);
           const chatbotMessagesDTO: ChatbotMessageResponseDTO[] = [];
           if (chatbotMessages){
             chatbotMessages.forEach((chatbotMessage) => {
@@ -146,7 +146,7 @@ export default class ChatbotService extends Services{
       }
 
         if(await this.isMatchSessionChatbot(id,clientDTO.id)){    
-          return await this._database.deleteAllMessagesBySessionId(id);
+          return await this._chatbotDatabase.deleteAllMessagesBySessionId(id);
         }else{
             throw new NotFoundHttpException("Session");
         }
@@ -154,7 +154,7 @@ export default class ChatbotService extends Services{
 
     public async isMatchSessionChatbot(sessionId: string, clientId: string): Promise<boolean>{
       if (clientId && sessionId) {
-          const session = await this._database.findChatbotSessionById(sessionId);
+          const session = await this._chatbotDatabase.findChatbotSessionById(sessionId);
           if (session) {
                   if (session.client.id == clientId) {
                       return true;

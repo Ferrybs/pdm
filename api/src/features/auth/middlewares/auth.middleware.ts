@@ -1,5 +1,5 @@
 import { RequestHandler, Response } from "express";
-import validateEnv from "utils/validateEnv";
+import validateEnv from "../../../utils/validateEnv";
 import Auth from "../interfaces/auth.interface";
 import jwt from "jsonwebtoken";
 import DataStoreToken from "../interfaces/data.store.token.interface";

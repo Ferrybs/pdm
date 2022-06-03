@@ -6,7 +6,7 @@ import 'reflect-metadata';
 import 'es6-shim';
 import ChatbotRoutes from "./features/chatbot/routes/chatbot.routes";
 import { DataSource } from "typeorm";
-import PostgresDataSource from "configs/data.source.postgres";
+import PostgresDataSource from "./configs/data.source.postgres";
 import ClientRoutes from "./features/client/routes/client.routes";
 import DeviceRoutes from "./features/device/routes/device.routes";
 

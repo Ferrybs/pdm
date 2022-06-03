@@ -2,7 +2,7 @@ import Client from "../../../features/client/entities/client.entity";
 import Credentials from "../../../features/client/entities/credentials.entity";
 import Session from "../entities/session.entity";
 import TypeSession from "../entities/type.session.entity";
-import DatabaseHttpException from "exceptions/database.http.exception";
+import DatabaseHttpException from "../../../exceptions/database.http.exception";
 import { DataSource, DeleteResult, UpdateResult } from "typeorm";
 import AuthDatabase from "../interfaces/auth.database.interface";
 

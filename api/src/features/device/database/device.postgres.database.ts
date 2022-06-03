@@ -4,7 +4,7 @@ import devicePreferencesEntity from "../entities/device.preferences.entity";
 import DevicePreferences from "../entities/device.preferences.entity";
 import Measure from "../entities/measure.entity";
 import Session from "../../../features/auth/entities/session.entity";
-import DatabaseHttpException from "exceptions/database.http.exception";
+import DatabaseHttpException from "../../../exceptions/database.http.exception";
 import { Between, DataSource } from "typeorm";
 import DeviceDatabase from "../interfaces/device.database.interface";
 import Client from "../../../features/client/entities/client.entity";
