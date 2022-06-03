@@ -1,15 +1,14 @@
-import PostgresDatabase from "../database/postgres.database";
-import DevicePreferencesDTO from "../features/device/dto/device.preferences.dto";
-import Measure from "../entity/measure.entity";
-import Database from "../interfaces/database.interface";
-import { mqttClient } from "../configs/mqtt.config";
-import Device from "../entity/device.entity";
-import TypeMeasure from "../features/device/entity/type.measure.entity";
+import DevicePreferencesDTO from "../device/dto/device.preferences.dto";
+import { mqttClient } from "../../configs/mqtt.config";
+import DeviceDatabase from "../../features/device/interfaces/device.database.interface";
+import Measure from "../../features/device/entities/measure.entity";
+import Device from "../../features/device/entities/device.entity";
+import TypeMeasure from "../../features/device/entities/type.measure.entity";
 
 export default class MqttServer {
     private _mqqtClient = mqttClient;
-    private _database: Database;
-    constructor(database: Database){
+    private _database: DeviceDatabase;
+    constructor(database: DeviceDatabase){
         this._database = database;
         this.start();
     }

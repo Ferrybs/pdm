@@ -1,14 +1,14 @@
-import SendEmail from "../utils/node.email";
 import AuthJwt from "../features/jwt/auth/auth.jwt";
-import SendMail from ../features/jwt/auth/auth.jwtmail.interface";
 import Crypto from "crypto";
 import TypeSession from "../features/auth/entities/type.session.entity";
 import ChatbotTypeMessage from "../features/chatbot/entities/chatbot.type.message.entity";
+import Email from "../features/email/interfaces/email.interface";
+import NodeMail from "../features/email/node.email";
 export default class Services {
     private _jwt = new AuthJwt();
-    private _email: SendMail;
+    private _email: Email;
     constructor() {
-        this._email = new SendEmail();
+        this._email = new NodeMail();
     }
 
     public get jwt(){
