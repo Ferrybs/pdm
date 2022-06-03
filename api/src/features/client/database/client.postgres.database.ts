@@ -1,21 +1,15 @@
-import Credentials from "../entity/credentials.entity";
-import Database from "../interfaces/database.interface";
-import Client from "../entity/client.entity";
-import { Between, DataSource, DeleteResult, UpdateResult } from "typeorm";
-import PostgresDataSource from "../configs/data.source.postgres";
-import DatabaseHttpException from "../exceptions/database.http.exception";
-import Device from "../entity/device.entity";
-import TypeSession from "../entity/type.session.entity";
-import Session from "../entity/session.entity";
-import Measure from "../entity/measure.entity";
-import devicePreferencesEntity from "../entity/device.preferences.entity";
-import DeviceLocalization from "../entity/device.localization.entity";
-import DevicePreferences from "../entity/device.preferences.entity";
-export default class PostgresDatabase implements Database{
-    
+import Client from "../../../entity/client.entity";
+import { DataSource, UpdateResult } from "typeorm";
+import ClientDatabase from "../interface/client.database.interface";
+import DatabaseHttpException from "../../../exceptions/database.http.exception";
+import Session from "../../../entity/session.entity";
+import Credentials from "../../../entity/credentials.entity";
 
-    
-    
+export default class ClientPostgresDatabase implements ClientDatabase {
+    private _appDataSource: DataSource;
+    constructor(appDataSource: DataSource) {
+        this._appDataSource = appDataSource;
+    }
     public async findClientById(id: string): Promise<Client>{
         try {
             const client = await this._appDataSource.manager.findOne(
@@ -41,15 +35,10 @@ export default class PostgresDatabase implements Database{
             throw (new DatabaseHttpException(error.message));
         }
     }
-    public async findClientByEmail(credentials: Credentials): Promise<Client>{
+    public async findClientByEmail(email: string): Promise<Client>{
         var client: Client;
         try {
-            const credentialsClient = await this._appDataSource.manager.findOne(Credentials,
-            {where: 
-                {
-                email: credentials.email
-                }
-            });
+            const credentialsClient = await this._appDataSource.manager.findOne(Credentials,{where: {email}});
             if (credentialsClient) {
                 client = await this._appDataSource.manager.findOne(
                 Client,{where:{credentials: credentialsClient}, 
@@ -60,7 +49,7 @@ export default class PostgresDatabase implements Database{
         } catch (error) {
             throw(new DatabaseHttpException(error.message));
         }
-      }
+    }
     public async insertClient(client: Client): Promise<Client>{
         try {
             await this._appDataSource.manager.save(client.person);
@@ -70,5 +59,15 @@ export default class PostgresDatabase implements Database{
             throw (new DatabaseHttpException(error.message));
         }
     }
-    
+    public async updateCredentials(credentials: Credentials): Promise<boolean>{
+        try {
+            const result: UpdateResult = await this._appDataSource.manager.update(Credentials,credentials.email,credentials);
+            if(result.affected != null && result.affected>0){
+                return true;
+            }
+            return false
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
 }

@@ -5,12 +5,12 @@ import AuthRoutes from "./routes/auth.routes";
 import 'reflect-metadata';
 import 'es6-shim';
 import DeviceRoutes from "./routes/device.routes";
-import ClientRoutes from "./routes/client.routes";
 import ChatbotRoutes from "./features/chatbot/routes/chatbot.routes";
 import Database from "./interfaces/database.interface";
 import PostgresDatabase from "./database/postgres.database";
 import { DataSource } from "typeorm";
 import PostgresDataSource from "configs/data.source.postgres";
+import ClientRoutes from "features/client/routes/client.routes";
 
 // const database: Database = new PostgresDatabase();
 const _appDataSource: DataSource = new PostgresDataSource()._appDataSource;

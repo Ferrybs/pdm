@@ -3,7 +3,6 @@ import HomeService from "../services/home.service";
 import ClientService from "../services/client.service";
 import DeviceService from "../features/device/services/device.service";
 import ChatbotService from "../features/chatbot/service/chatbot.service";
-import Database from "../interfaces/appDataSource.interface";
 import { DataSource } from "typeorm";
 
 export default class Controller{

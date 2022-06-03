@@ -1,19 +1,21 @@
-import ClientDTO from "dto/client.dto";
+import Email from "interfaces/send.email.interface";
 import * as nodemailer from "nodemailer";
 import HttpException from "../exceptions/http.exceptions";
-import SendMail from "../interfaces/send.email.interface";
 import validateEnv from "./validateEnv";
 
-export default class SendEmail implements SendMail{
+export default class NodeMail implements Email{
     private _email: string;
     private _transporter: nodemailer.Transporter;
 
     constructor(){
         this._email = validateEnv.EMAIL_USER;
+        this.initialize();
+    }
+    private initialize(){
         try {
             this._transporter = nodemailer.createTransport({
-                host: String(validateEnv.EMAIL_HOST),
-                port: Number(validateEnv.EMAIL_PORT),
+                host: validateEnv.EMAIL_HOST,
+                port: validateEnv.EMAIL_PORT,
                 secure: true,
                 auth: {
                     user: validateEnv.EMAIL_USER,
@@ -29,14 +31,13 @@ export default class SendEmail implements SendMail{
             }
         }
     }
-
-    async sendEmail(clientDTO: ClientDTO, token: string): Promise<boolean>{
+    async sendResetPasswordEmail(name: string,  email: string, token: string): Promise<boolean>{
         try {
             const info = await this._transporter.sendMail({
                 from: `Intelligent Garden Co.<${this._email}>`,
-                to: clientDTO.credentialsDTO.email,
-                subject: `${clientDTO.personDTO.name}, your password reset is ready ✔`,
-                html: this.emailTemplate(clientDTO.personDTO.name,token),
+                to: email,
+                subject: `${name}, your password reset is ready ✔`,
+                html: this.resetEmailTemplate(name,token),
               });    
 
             if (info) {
@@ -54,7 +55,7 @@ export default class SendEmail implements SendMail{
         }          
     }
 
-    private emailTemplate(name: string,token: string): string{
+    private resetEmailTemplate(name: string,token: string): string{
         return (
             `
             <!doctype html>

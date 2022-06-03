@@ -6,8 +6,6 @@ import Measure from "features/device/entity/measure.entity";
 import Session from "../entity/session.entity";
 import TypeSession from "../entity/type.session.entity";
 import Client from "../entity/client.entity";
-import ChatbotSession from "../features/chatbot/entity/chatbot.session.entity";
-import ChatbotMessage from "../features/chatbot/entity/chatbot.message.entity";
 import ChatbotDatabase from "features/chatbot/interfaces/chatbot.database.interface";
 
 export default interface Database extends ChatbotDatabase{

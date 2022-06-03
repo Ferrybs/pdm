@@ -2,18 +2,16 @@ import dialogflow, { SessionsClient } from "@google-cloud/dialogflow";
 import HttpException from "../../../exceptions/http.exceptions";
 import _ from "lodash";
 import Services from "../../../services/services";
-import Database from "../../../interfaces/database.interface";
-import ClientDTO from "../../../dto/client.dto";
 import NotFoundHttpException from "../../../exceptions/not.found.http.exception";
-import ChatbotMessageDTO from "../dto/chatbot.message.request.dto";
-import ChatbotMessage from "../entity/chatbot.message.entity";
 import Client from "../../../entity/client.entity";
-import ChatbotSession from "../entity/chatbot.session.entity";
+import ChatbotSession from "../entities/chatbot.session.entity";
 import ChatbotMessageRequestDTO from "../dto/chatbot.message.request.dto";
 import ChatbotMessageResponseDTO from "../dto/chatbot.message.response.dto";
 import { DataSource } from "typeorm";
 import ChatbotPostgresDatabase from "../database/chatbot.postgres.database";
 import ChatbotDatabase from "../interfaces/chatbot.database.interface";
+import ClientDTO from "../dto/client.dto";
+import ChatbotMessage from "../entities/chatbot.message.entity";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
