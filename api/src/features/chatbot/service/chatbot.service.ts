@@ -3,7 +3,6 @@ import HttpException from "../../../exceptions/http.exceptions";
 import _ from "lodash";
 import Services from "../../../services/services";
 import NotFoundHttpException from "../../../exceptions/not.found.http.exception";
-import Client from "../../../entity/client.entity";
 import ChatbotSession from "../entities/chatbot.session.entity";
 import ChatbotMessageRequestDTO from "../dto/chatbot.message.request.dto";
 import ChatbotMessageResponseDTO from "../dto/chatbot.message.response.dto";
@@ -12,6 +11,7 @@ import ChatbotPostgresDatabase from "../database/chatbot.postgres.database";
 import ChatbotDatabase from "../interfaces/chatbot.database.interface";
 import ClientDTO from "../dto/client.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
+import Client from "../../../features/client/entities/client.entity";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;

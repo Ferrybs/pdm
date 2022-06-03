@@ -1,7 +1,7 @@
 import { Response } from "express";
-import HttpData from "interfaces/http.data.interface";
-import Controller from "controllers/controller";
+import Controller from "../../../controllers/controller";
 import HttpException from "../../../exceptions/http.exceptions";
+import HttpData from "../interface/http.data.interface";
 import RequestWithToken from "../interface/request.token.interface";
 
 export default class ClientController extends Controller{

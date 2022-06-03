@@ -1,6 +1,6 @@
 import SendEmail from "../utils/node.email";
 import AuthJwt from "../auth/auth.jwt";
-import SendMail from "../interfaces/send.email.interface";
+import SendMail from "../interfaces/email.interface";
 import Crypto from "crypto";
 import TypeSession from "../entity/type.session.entity";
 import ChatbotTypeMessage from "../features/chatbot/entities/chatbot.type.message.entity";
