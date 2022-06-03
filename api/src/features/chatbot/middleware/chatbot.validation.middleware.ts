@@ -1,11 +1,9 @@
 import { transformAndValidate } from "class-transformer-validator";
 import { ValidationError } from "class-validator";
-import RequestWithError from "interfaces/request.error.interface";
 import ChatbotValidation from "../interfaces/chatbot.validation.interface";
 import ChatbotMessageDTO from '../dto/chatbot.message.request.dto';
-import { RequestHandler, Response } from "express";
-import { NextFunction, ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
+import { NextFunction, RequestHandler, Response } from "express";
+import RequestWithError from "../interfaces/request.error.interface";
 
 export default class ChatbotValidationMiddleware implements ChatbotValidation{
 

@@ -1,5 +1,4 @@
-import { IsDate, IsDateString, MaxLength, MinLength, ValidateNested } from "class-validator";
-import ChatbotTypeMessageDTO from "./chatbot.type.message.dto";
+import {IsDateString, MinLength } from "class-validator";
 
 export default class ChatbotMessageRequestDTO {
     @MinLength(6)
