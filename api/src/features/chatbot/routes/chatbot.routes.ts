@@ -1,10 +1,6 @@
 import express, { Router } from "express";
-import AuthMiddleware from "../../../middlewares/auth.middleware";
 import Database from "../../../interfaces/database.interface";
 import ChatbotController from "../controller/chatbot.controller";
-import Auth from "../../../interfaces/auth.interface";
-import ValidationMiddleware from "../../../middlewares/validation.middleware";
-import Validation from "../../../interfaces/validation.interface";
 import ChatbotAuthMiddleware from "../middleware/chatbot.auth.middleware";
 import ChatbotAuth from "../interfaces/chatbot.auth.interface";
 import ChatbotValidationMiddleware from "../middleware/chatbot.validation.middleware";

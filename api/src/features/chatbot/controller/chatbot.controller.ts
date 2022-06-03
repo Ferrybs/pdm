@@ -1,9 +1,9 @@
 import Controller from "../../../controllers/controller";
 import HttpException from "../../../exceptions/http.exceptions";
 import { Response } from "express";
-import HttpData from "../../../interfaces/http.data.interface";
-import RequestWithToken from "../../../interfaces/request.token.interface";
+import RequestWithToken from "../interfaces/request.token.interface";
 import ChatbotMessageDTO from "../dto/chatbot.message.request.dto";
+import HttpData from "../interfaces/http.data.interface";
 
 export default class ChatbotController extends Controller{
 
