@@ -1,7 +1,7 @@
-import Email from "interfaces/send.email.interface";
+import Email from "./interfaces/email.interface";
 import * as nodemailer from "nodemailer";
-import HttpException from "../exceptions/http.exceptions";
-import validateEnv from "./validateEnv";
+import HttpException from "../../exceptions/http.exceptions";
+import validateEnv from "../../utils/validateEnv";
 
 export default class NodeMail implements Email{
     private _email: string;

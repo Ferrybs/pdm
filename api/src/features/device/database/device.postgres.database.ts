@@ -1,4 +1,3 @@
-import Client from "entity/client.entity";
 import Device from "../entities/device.entity";
 import DeviceLocalization from "../entities/device.localization.entity";
 import devicePreferencesEntity from "../entities/device.preferences.entity";
@@ -8,6 +7,7 @@ import Session from "../../../entity/session.entity";
 import DatabaseHttpException from "exceptions/database.http.exception";
 import { Between, DataSource } from "typeorm";
 import DeviceDatabase from "../interfaces/device.database.interface";
+import Client from "../../../features/client/entities/client.entity";
 
 export default class DevicePostgresDatabase implements DeviceDatabase{
     private _appDataSource: DataSource;
