@@ -1,10 +1,10 @@
 import Client from "entity/client.entity";
-import Device from "entity/device.entity";
-import DeviceLocalization from "entity/device.localization.entity";
-import devicePreferencesEntity from "entity/device.preferences.entity";
-import DevicePreferences from "entity/device.preferences.entity";
-import Measure from "entity/measure.entity";
-import Session from "entity/session.entity";
+import Device from "../entities/device.entity";
+import DeviceLocalization from "../entities/device.localization.entity";
+import devicePreferencesEntity from "../entities/device.preferences.entity";
+import DevicePreferences from "../entities/device.preferences.entity";
+import Measure from "../entities/measure.entity";
+import Session from "../../../entity/session.entity";
 import DatabaseHttpException from "exceptions/database.http.exception";
 import { Between, DataSource } from "typeorm";
 import DeviceDatabase from "../interfaces/device.database.interface";

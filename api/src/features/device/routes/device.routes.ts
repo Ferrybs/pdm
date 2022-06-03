@@ -1,22 +1,18 @@
 import express, { Router } from "express";
 import DeviceController from "../controller/device.controller";
-import ValidationMiddleware from "../middlewares/validation.middleware";
-import AuthMiddleware from "../middlewares/auth.middleware";
-import Validation from "../interfaces/validation.interface";
-import Auth from "../interfaces/auth.interface";
 import { DataSource } from "typeorm";
 import DeviceAuth from "../interfaces/device.auth.interface";
-import DeviceAuthMiddleware from "../middleware/device.auth.middleware";
+import DeviceAuthMiddleware from "../middlewares/device.auth.middleware";
 import DeviceValidation from "../interfaces/device.validation.interface";
-import DeviceValidationMiddleware from "../middleware/device.validation.middleware";
+import DeviceValidationMiddleware from "../middlewares/device.validation.middleware";
 
 
 export default class DeviceRoutes {
     public path : string = '/device';
     public router : Router = express.Router();
     private _controller: DeviceController;
-    private _validationMiddleware: DeviceValidation = new DeviceValidationMiddleware();;
-    private _authMiddleware: DeviceAuth = new DeviceAuthMiddleware();;
+    private _validationMiddleware: DeviceValidation = new DeviceValidationMiddleware();
+    private _authMiddleware: DeviceAuth = new DeviceAuthMiddleware();
 
     constructor(appDataSource: DataSource){
         this._controller = new DeviceController(appDataSource);
