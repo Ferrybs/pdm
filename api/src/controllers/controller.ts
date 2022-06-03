@@ -1,9 +1,9 @@
 import AuthService from "../services/auth.service";
 import HomeService from "../services/home.service";
-import ClientService from "../services/client.service";
 import DeviceService from "../features/device/services/device.service";
 import ChatbotService from "../features/chatbot/service/chatbot.service";
 import { DataSource } from "typeorm";
+import ClientService from "../features/client/service/client.service";
 
 export default class Controller{
     homeService: HomeService;

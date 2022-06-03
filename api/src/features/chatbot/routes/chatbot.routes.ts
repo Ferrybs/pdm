@@ -1,5 +1,4 @@
 import express, { Router } from "express";
-import Database from "../../../interfaces/database.interface";
 import ChatbotController from "../controller/chatbot.controller";
 import ChatbotAuthMiddleware from "../middleware/chatbot.auth.middleware";
 import ChatbotAuth from "../interfaces/chatbot.auth.interface";
