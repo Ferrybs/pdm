@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
-import Client from "./client.entity";
+import Client from "../../../entity/client.entity";
 import DeviceLocalization from "./device.localization.entity";
 import DevicePreferences from "./device.preferences.entity";
 import Measure from "./measure.entity";

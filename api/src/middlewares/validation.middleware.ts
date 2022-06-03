@@ -4,101 +4,21 @@ import { RequestHandler, Response } from 'express';
 import Validation from '../interfaces/validation.interface';
 import { ValidationError } from 'class-validator';
 import RequestWithError from '../interfaces/request.error.interface';
-import DeviceDTO from '../dto/device.dto';
-import MeasureDTO from '../dto/measure.dto';
-import TypeMeasureDTO from '../dto/type.measure.dto';
-import MeasureQueryDTO from '../dto/measure.query.dto';
+import DeviceDTO from '../features/device/dto/device.dto';
+import MeasureDTO from '../features/device/dto/measure.dto';
+import TypeMeasureDTO from '../features/device/dto/type.measure.dto';
+import MeasureQueryDTO from '../features/device/dto/measure.query.dto';
 import SendEmailDTO from '../dto/send.email.dto';
 import ResetPasswordDTO from '../dto/reset.password.dto';
 import LoginDTO from '../dto/login.dto';
 import RegisterDTO from '../dto/register.dto';
-import DevicePreferencesDTO from '../dto/device.preferences.dto';
+import DevicePreferencesDTO from '../features/device/dto/device.preferences.dto';
 import DeviceLocalizationDTO from '../dto/device.localization.dto';
 import ChatbotMessageDTO from '../features/chatbot/dto/chatbot.message.request.dto';
 
 export default class ValidationMiddleware implements Validation {
 
-  public localization():RequestHandler {
-    return async (request: RequestWithError, response: Response, next) =>{
-      let message: string;
-      try {
-        const localization: DeviceLocalizationDTO = request.body;
-        await transformAndValidate(DeviceDTO,localization.deviceDTO);
-        await transformAndValidate(DeviceLocalizationDTO,localization);
-      } catch (err) {
-        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        request.error = message;
-      }
-      next();
-    }
-  }
-  public preferences():RequestHandler {
-    return async (request: RequestWithError, response: Response, next) =>{
-      let message: string;
-      try {
-        const devicePreferencesDTO: DevicePreferencesDTO = request.body;
-        await transformAndValidate(DeviceDTO,devicePreferencesDTO.deviceDTO);
-        await transformAndValidate(DevicePreferencesDTO,devicePreferencesDTO);
-      } catch (err) {
-        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        request.error = message;
-      }
-      next();
-    }
-  }
-  public measureQuery(): RequestHandler {
-    return async (request: RequestWithError, response: Response, next) =>{
-      let message: string;
-      try {
-        const measure_query: MeasureQueryDTO = request.body;
-        await transformAndValidate(MeasureQueryDTO,measure_query);
-      } catch (err) {
-        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        request.error = message;
-      }
-      next();
-    }
-  }
-
-
-  public device(): RequestHandler {
-    return async (request: RequestWithError, response: Response, next) =>{
-      let message: string;
-      try {
-        const deviceDTO: DeviceDTO = request.body;
-        await transformAndValidate(DeviceDTO,deviceDTO);
-      } catch (err) {
-        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        request.error = message;
-      }
-      next();
-    }
-  }
-  public measure(): RequestHandler {
-    return async (request: RequestWithError, response: Response, next) =>{
-      let message: string;
-      try {
-        const measureDTO: MeasureDTO = request.body;
-        await transformAndValidate(MeasureDTO,measureDTO);
-        await transformAndValidate(DeviceDTO,measureDTO.deviceDTO);
-        await transformAndValidate(TypeMeasureDTO,measureDTO.typeDTO);
-      } catch (err) {
-        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
-      }
-      if(message){
-        request.error = message;
-      }
-      next();
-    }
-  }
+  
   public email(): RequestHandler {
     return async (request: RequestWithError, response: Response, next) =>{
       let message: string;

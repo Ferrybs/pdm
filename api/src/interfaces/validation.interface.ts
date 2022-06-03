@@ -5,8 +5,4 @@ export default interface Validation{
     login(): RequestHandler
     email(): RequestHandler
     password(): RequestHandler
-    device(): RequestHandler
-    measureQuery(): RequestHandler
-    preferences():  RequestHandler
-    localization():  RequestHandler
 }

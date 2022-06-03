@@ -9,6 +9,7 @@ import ChatbotAuthMiddleware from "../middleware/chatbot.auth.middleware";
 import ChatbotAuth from "../interfaces/chatbot.auth.interface";
 import ChatbotValidationMiddleware from "../middleware/chatbot.validation.middleware";
 import ChatbotValidation from "../interfaces/chatbot.validation.interface";
+import { DataSource } from "typeorm";
 
 export default class ChatbotRoutes {
     public path : string = '/chatbot';
@@ -17,8 +18,8 @@ export default class ChatbotRoutes {
     private _chatbotAuthMiddleware: ChatbotAuth = new ChatbotAuthMiddleware();
     private _chatbotValidationMiddleware: ChatbotValidation = new ChatbotValidationMiddleware();
 
-    constructor(database: Database){
-        this._controller = new ChatbotController(database);
+    constructor(appDataSource: DataSource){
+        this._controller = new ChatbotController(appDataSource);
         this.initializeRoutes();
     }
     

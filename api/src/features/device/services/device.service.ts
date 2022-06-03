@@ -1,23 +1,23 @@
 import { instanceToInstance, plainToInstance } from "class-transformer";
-import Device from "../entity/device.entity";
+import Device from "../../../entity/device.entity";
 import DeviceDTO from "../dto/device.dto";
-import DeviceFoundHttpException from "../exceptions/device.found.http.exception";
-import Services from "./services";
-import Client from "../entity/client.entity";
-import ClientDTO from "../dto/client.dto";
-import NotFoundHttpException from "../exceptions/not.found.http.exception";
+import DeviceFoundHttpException from "../../../exceptions/device.found.http.exception";
+import Services from "../../../services/services";
+import Client from "../../../entity/client.entity";
+import ClientDTO from "../../../dto/client.dto";
+import NotFoundHttpException from "../../../exceptions/not.found.http.exception";
 import MeasureDTO from "../dto/measure.dto";
 import TypeMeasureDTO from "../dto/type.measure.dto";
 import MeasureQueryDTO from "../dto/measure.query.dto";
 import DevicePreferencesDTO from "../dto/device.preferences.dto";
-import DevicePreferences from "../entity/device.preferences.entity";
-import DataStoreToken from "../interfaces/data.store.token.interface";
+import DevicePreferences from "../../../entity/device.preferences.entity";
+import DataStoreToken from "../../../interfaces/data.store.token.interface";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
-import DeviceLocalization from "../entity/device.localization.entity";
-import MqttServer from "../mqtt/mqtt.server";
-import MqttServerDTO from "../dto/mqtt.server.dto";
-import validateEnv from "../utils/validateEnv";
-import Database from "../interfaces/database.interface";
+import DeviceLocalization from "../../../entity/device.localization.entity";
+import MqttServer from "../../../mqtt/mqtt.server";
+import MqttServerDTO from "../../../dto/mqtt.server.dto";
+import validateEnv from "../../../utils/validateEnv";
+import Database from "../../../interfaces/database.interface";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
