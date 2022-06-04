@@ -5,6 +5,7 @@ import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:localization/localization.dart';
 import 'package:mobx/mobx.dart';
 
@@ -47,7 +48,7 @@ class _HomePage extends State<HomePage> {
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.help),
+                  icon: Icon(FontAwesomeIcons.robot),
                   label: 'Help',
                 ),
               ],

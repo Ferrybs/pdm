@@ -6,6 +6,7 @@ import 'package:basearch/src/features/device/domain/repository/device_interface.
 import 'package:basearch/src/features/device/domain/model/device_model.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class DeviceUseCase {
@@ -14,6 +15,7 @@ class DeviceUseCase {
   WifiModel? wifiModel;
   DeviceConfigModel? deviceConfigModel;
   final encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
+  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
   String? get deviceId {
     return deviceModel?.id;
@@ -21,6 +23,16 @@ class DeviceUseCase {
 
   Future<StepState> updateDeviceConfig(int step) async {
     if (step == 0) {
+      flutterBlue.startScan(timeout: const Duration(seconds: 4));
+      print("ENTREI:");
+      var subscription = flutterBlue.scanResults.listen((results) {
+        for (ScanResult r in results) {
+          print("ENTREI:");
+          print('${r.device.name} found! rssi: ${r.rssi}');
+        }
+        flutterBlue.stopScan();
+      });
+
       deviceModel = await repository.getDeviceId();
       if (deviceModel?.id != null) {
         return StepState.complete;

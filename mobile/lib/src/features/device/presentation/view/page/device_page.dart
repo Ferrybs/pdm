@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:basearch/src/features/device/presentation/view/widget/device_app_bar.dart';
+import 'package:basearch/src/features/device/presentation/view/widget/device_blue_on.dart';
 import 'package:basearch/src/features/device/presentation/view/widget/device_text_input.dart';
 import 'package:basearch/src/features/device/presentation/viewmodel/device_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({Key? key}) : super(key: key);
@@ -93,12 +93,23 @@ class _DevicePage extends State<DevicePage> {
           children: [
             _configStep("1 " + "step".i18n(), "step1-device-config".i18n()),
             _configStep(
-                "SSID: Esp32-Access-Point", "password".i18n() + ": 123456789"),
-            _configStep(
                 "2 " + "step".i18n(), "click-on".i18n() + "continue".i18n())
           ],
         ),
         state: _viewModel.deviceConfigStatus);
+  }
+
+  FutureBuilder _flutterBlue() {
+    return FutureBuilder<PermissionStatus>(
+      builder: ((context, snapshot) {
+        print(snapshot.data);
+        if (snapshot.hasData && snapshot.data!.isGranted) {
+          return const CircularProgressIndicator();
+        }
+        return const CircularProgressIndicator();
+      }),
+      future: Permission.bluetooth.request(),
+    );
   }
 
   Padding _configStep(String step, String text) {

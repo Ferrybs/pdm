@@ -19,7 +19,6 @@ export default class MqttServer {
 
     private async start(): Promise<void> {
         try {
-            this._mqqtClient.on()
             this._mqqtClient.on("message",async (topic,payload)=>{
                 var message: any;
                 var measure: Measure;

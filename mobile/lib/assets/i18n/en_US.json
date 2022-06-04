@@ -52,7 +52,7 @@
     "wireless-password": "Your Wireless Password",
     "device-connection":"Device Connection",
     "step":"Step",
-    "step1-device-config":"Connect to device Access Point",
+    "step1-device-config":"Pair with bluetooth device", 
     "click-on": "Click on"
 
 }
