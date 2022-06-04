@@ -23,16 +23,15 @@ class DeviceUseCase {
 
   Future<StepState> updateDeviceConfig(int step) async {
     if (step == 0) {
-      flutterBlue.startScan(timeout: const Duration(seconds: 4));
-      print("ENTREI:");
+      await flutterBlue.startScan(timeout: Duration(seconds: 4));
       var subscription = flutterBlue.scanResults.listen((results) {
+        // do something with scan results
         for (ScanResult r in results) {
-          print("ENTREI:");
-          print('${r.device.name} found! rssi: ${r.rssi}');
+          print(
+              'BLUE: ${r.device.name} found! rssi: ${r.advertisementData.serviceUuids}');
         }
-        flutterBlue.stopScan();
       });
-
+      flutterBlue.stopScan();
       deviceModel = await repository.getDeviceId();
       if (deviceModel?.id != null) {
         return StepState.complete;
