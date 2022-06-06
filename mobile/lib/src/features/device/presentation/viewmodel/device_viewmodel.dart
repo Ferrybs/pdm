@@ -35,6 +35,12 @@ abstract class _DeviceViewModel with Store {
   bool isFinishConfig = false;
 
   @observable
+  String name = '';
+
+  @observable
+  String errorName = '';
+
+  @observable
   WifiDTO wifiDTO = WifiDTO();
 
   @observable
@@ -42,6 +48,16 @@ abstract class _DeviceViewModel with Store {
 
   @observable
   DeviceDTO deviceDTO = DeviceDTO();
+
+  @action
+  updateName(String value) {
+    name = value;
+  }
+
+  @action
+  updateErrorName(String value) {
+    errorName = value;
+  }
 
   @action
   updateSSID(String value) {
@@ -94,7 +110,14 @@ abstract class _DeviceViewModel with Store {
   }
 
   updateStep() async {
-    changeDeviceConfigStatus(await _usecase.updateDeviceConfig(stepIndex));
+    String? error = _usecase.updateErrorName(name);
+    if (error == null) {
+      updateErrorName('');
+      changeDeviceConfigStatus(
+          await _usecase.updateDeviceConfig(stepIndex, name));
+    } else {
+      updateErrorName(error);
+    }
     changeWifiConfigStatus(await _usecase.updateWifiConfig(stepIndex, wifiDTO));
     changeFinishConfigStatus(
         await _usecase.updateFinishConfig(stepIndex, deviceDTO));

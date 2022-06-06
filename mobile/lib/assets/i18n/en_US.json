@@ -51,6 +51,8 @@
     "wireless-SSID": "Your Wireless SSID",
     "wireless-password": "Your Wireless Password",
     "device-connection":"Device Connection",
+    "device-name": "Device Name",
+    "error-device-name": "Invalid Device Name",
     "step":"Step",
     "step1-device-config":"Pair with bluetooth device", 
     "click-on": "Click on"

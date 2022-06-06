@@ -6,13 +6,13 @@ class DeviceTextInput extends StatelessWidget {
   final void Function(String) onChange;
   final String label;
   final TextInputType? keyboardType;
-  final String? errorText;
+  final String errorText;
   final String? initialValue;
 
   const DeviceTextInput(
       {Key? key,
       this.initialValue,
-      this.errorText,
+      required this.errorText,
       this.prefixIcon,
       this.obscureText = false,
       required this.onChange,
@@ -43,7 +43,7 @@ class DeviceTextInput extends StatelessWidget {
                 ?.copyWith(color: _theme.textSelectionTheme.cursorColor),
             obscureText: obscureText,
             decoration: InputDecoration(
-              errorText: errorText,
+              errorText: errorText.length > 1 ? errorText : null,
               hintText: label,
               hintStyle: _theme.textTheme.titleMedium
                   ?.copyWith(color: _theme.textSelectionTheme.cursorColor),

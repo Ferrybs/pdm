@@ -49,7 +49,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         String mqtt_port = BTJson["mqttDTO"]["port"];
         String device_name = BTJson["name"];
         String device_key = BTJson["key"];
-        String client_id = BTJson["clientDTO"]["id"];
+        String client_id = BTJson["id"];
         console.log("Reciving Wifi Settings...");
         result = ssid == "null" ? false : result;
         result = password == "null" ? false : result;

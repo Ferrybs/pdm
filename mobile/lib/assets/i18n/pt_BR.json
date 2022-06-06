@@ -51,7 +51,9 @@
     "wireless-password": "Sua Senha Wifi",
     "device-connection":"Configuração do Dipositivo",
     "step":"Passo",
-    "step1-device-config":"Conecte-se ao ponto de acesso do Dispositivo",
+    "step1-device-config":"Digite o nome do dispositivo",
+    "error-device-name": "Nome do Dispositivo Invalido",   
+    "device-name": "Nome do Dispositivo",
     "click-on": "Aperte em ",
     "get-id": "Obter ID"
 }

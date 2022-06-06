@@ -8,6 +8,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:localization/localization.dart';
 import 'dart:convert';
 
 class DeviceUseCase {
@@ -20,6 +21,13 @@ class DeviceUseCase {
 
   String? get deviceId {
     return deviceModel?.id;
+  }
+
+  String? updateErrorName(String name) {
+    if (name.length > 2) {
+      return null;
+    }
+    return "error-device-name".i18n();
   }
 
   Future<StepState> updateDeviceConfig(int step) async {

@@ -51,6 +51,14 @@ class _DevicePage extends State<DevicePage> {
     ));
   }
 
+  String _updateErrorName() {
+    String error = '';
+    setState(() {
+      error = _viewModel.errorName;
+    });
+    return error;
+  }
+
   _onStepCancel() async {
     _viewModel.updateStepCancel(_viewModel.stepIndex - 1);
   }
@@ -91,9 +99,11 @@ class _DevicePage extends State<DevicePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _configStep("1 " + "step".i18n(), "step1-device-config".i18n()),
-            _configStep(
-                "2 " + "step".i18n(), "click-on".i18n() + "continue".i18n())
+            DeviceTextInput(
+              errorText: _viewModel.errorName,
+              onChange: _viewModel.updateName,
+              label: "device-name".i18n(),
+            )
           ],
         ),
         state: _viewModel.deviceConfigStatus);
@@ -122,15 +132,18 @@ class _DevicePage extends State<DevicePage> {
     return Column(
       children: [
         DeviceTextInput(
+          errorText: _viewModel.errorName,
           onChange: _viewModel.updateDeviceName,
           label: "Device Name",
         ),
         DeviceTextInput(
+          errorText: _viewModel.errorName,
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-SSID".i18n(),
           onChange: _viewModel.updateSSID,
         ),
         DeviceTextInput(
+          errorText: _viewModel.errorName,
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-password".i18n(),
           onChange: _viewModel.updatePassword,
