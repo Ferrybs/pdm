@@ -20,6 +20,7 @@ import Measure from "../entities/measure.entity";
 import TypeMeasure from "../entities/type.measure.entity";
 import Client from "../../../features/client/entities/client.entity";
 import MqttDTO from "../dto/mqtt.dto";
+import ConfigsDTO from "../dto/device.configs";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
@@ -163,12 +164,15 @@ export default class DeviceService extends Services{
             throw new NotFoundHttpException("MEASURES");
         }
     }
-    public getConfigs(): MqttDTO{
+    public getConfigs(): ConfigsDTO{
         const mqttDTO =  new MqttDTO();
         mqttDTO.server = validateEnv.MQTT_HOST;
         mqttDTO.user = validateEnv.MQTT_USER;
         mqttDTO.password = validateEnv.MQTT_PASS;
         mqttDTO.port = validateEnv.PORT.toString();
-        return mqttDTO;
+        const configsDTO = new ConfigsDTO()
+        configsDTO.mqttDTO = mqttDTO;
+        configsDTO.key = validateEnv.DEVICE_API;
+        return configsDTO;
     }
 }
