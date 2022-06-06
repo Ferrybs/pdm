@@ -8,6 +8,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'dart:convert';
 
 class DeviceUseCase {
   final repository = Modular.get<IDevice>();
@@ -23,16 +24,12 @@ class DeviceUseCase {
 
   Future<StepState> updateDeviceConfig(int step) async {
     if (step == 0) {
-      await flutterBlue.startScan(timeout: Duration(seconds: 4));
-      var subscription = flutterBlue.scanResults.listen((results) {
-        // do something with scan results
-        for (ScanResult r in results) {
-          print(
-              'BLUE: ${r.device.name} found! rssi: ${r.advertisementData.serviceUuids}');
-        }
-      });
-      flutterBlue.stopScan();
-      deviceModel = await repository.getDeviceId();
+      BluetoothDevice? device;
+      device = await _findDevice();
+      if (device != null) {
+        Map<String, dynamic>? response = await _readConfigs(device);
+        print(response!["message"]);
+      }
       if (deviceModel?.id != null) {
         return StepState.complete;
       } else {
@@ -44,6 +41,97 @@ class DeviceUseCase {
     } else {
       return StepState.error;
     }
+  }
+
+  Future<BluetoothDevice?> _connectToDevice(BluetoothDevice device) async {
+    try {
+      BluetoothDeviceState state = await device.state.first;
+      if (state == BluetoothDeviceState.connected) {
+        return device;
+      }
+      await device.connect(
+          timeout: const Duration(seconds: 5), autoConnect: true);
+    } catch (e) {
+      return null;
+    }
+    return device;
+  }
+
+  Future<BluetoothDevice?> _findDevice() async {
+    List<BluetoothDevice> deviceList = await flutterBlue.connectedDevices;
+    if (deviceList.isNotEmpty) {
+      for (BluetoothDevice d in deviceList) {
+        if (d.name.toUpperCase().contains("ESP32")) {
+          return d;
+        }
+      }
+    }
+    await flutterBlue.startScan(timeout: const Duration(seconds: 5));
+    flutterBlue.stopScan();
+    List<ScanResult> results = await flutterBlue.scanResults.first;
+    for (ScanResult result in results) {
+      if (result.device.name.toUpperCase().contains("ESP32")) {
+        return await _connectToDevice(result.device);
+      }
+    }
+    return null;
+  }
+
+  Future<BluetoothCharacteristic?> _selectCharacteristic(
+      BluetoothService service, String chart) async {
+    List<BluetoothCharacteristic> characteristics = service.characteristics;
+    for (BluetoothCharacteristic c in characteristics) {
+      if (c.uuid.toString() == chart) {
+        return c;
+      }
+    }
+    return null;
+  }
+
+  Future<bool> _writeConfigs(
+      BluetoothDevice device, List<int> hexString) async {
+    List<BluetoothService> services = await device.discoverServices();
+    BluetoothCharacteristic? blue;
+    for (var service in services) {
+      if (service.uuid.toString() == "6e400001-b5a3-f393-e0a9-e50e24dcca9e") {
+        blue = await _selectCharacteristic(
+            service, "6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+      }
+    }
+    if (blue != null) {
+      blue.write(hexString);
+      return true;
+    }
+    return false;
+  }
+
+  Future<Map<String, dynamic>?> _readConfigs(BluetoothDevice device) async {
+    List<BluetoothService> services = await device.discoverServices();
+    BluetoothCharacteristic? blue;
+    for (var service in services) {
+      if (service.uuid.toString() == "6e400001-b5a3-f393-e0a9-e50e24dcca9e") {
+        blue = await _selectCharacteristic(
+            service, "6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+      }
+    }
+    if (blue != null) {
+      List<int> hex = await blue.read();
+      List<String> stringHex = [];
+      print("READ: ${hex.length}");
+      for (var i in hex) {
+        stringHex.add(String.fromCharCode(i));
+      }
+      print(json.decode(stringHex.join()));
+      return json.decode(stringHex.join());
+    }
+    return null;
+  }
+
+  bool _wifiStepValidation() {
+    if (wifiModel?.ssid != null && wifiModel?.password != null) {
+      return true;
+    }
+    return false;
   }
 
   Future<StepState> updateWifiConfig(int step, WifiDTO wifiDTO) async {
@@ -71,6 +159,14 @@ class DeviceUseCase {
     return StepState.complete;
   }
 
+  bool _finishStepValidation() {
+    if (deviceModel?.id != null &&
+        (deviceModel?.name != null && deviceModel!.name!.length > 1)) {
+      return true;
+    }
+    return false;
+  }
+
   Future<StepState> updateFinishConfig(int step, DeviceDTO deviceDTO) async {
     if (step == 2) {
       deviceModel?.name = deviceDTO.name;
@@ -87,6 +183,13 @@ class DeviceUseCase {
       return StepState.error;
     }
     return StepState.complete;
+  }
+
+  bool _deviceStepValidation() {
+    if (deviceModel?.id != null) {
+      return true;
+    }
+    return false;
   }
 
   int updateStep(int step) {
@@ -109,27 +212,5 @@ class DeviceUseCase {
       default:
     }
     return 0;
-  }
-
-  bool _deviceStepValidation() {
-    if (deviceModel?.id != null) {
-      return true;
-    }
-    return false;
-  }
-
-  bool _wifiStepValidation() {
-    if (wifiModel?.ssid != null && wifiModel?.password != null) {
-      return true;
-    }
-    return false;
-  }
-
-  bool _finishStepValidation() {
-    if (deviceModel?.id != null &&
-        (deviceModel?.name != null && deviceModel!.name!.length > 1)) {
-      return true;
-    }
-    return false;
   }
 }
