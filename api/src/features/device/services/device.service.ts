@@ -168,7 +168,7 @@ export default class DeviceService extends Services{
         mqttDTO.server = validateEnv.MQTT_HOST;
         mqttDTO.user = validateEnv.MQTT_USER;
         mqttDTO.password = validateEnv.MQTT_PASS;
-        mqttDTO.port = validateEnv.PORT.toString();
+        mqttDTO.port = validateEnv.MQTT_PORT.toString();
         return mqttDTO;
     }
 }

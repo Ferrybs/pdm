@@ -1,11 +1,8 @@
-import 'package:json_annotation/json_annotation.dart';
-
-@JsonSerializable()
 class ResponseModel {
-  final bool? ok;
-  final String? message;
+  final bool ok;
+  final String message;
 
-  ResponseModel({this.message, this.ok});
+  ResponseModel({required this.ok, required this.message});
 
   factory ResponseModel.fromJson(Map<String, dynamic> json) =>
       ResponseModel(ok: json["ok"], message: json["message"]);

@@ -1,4 +1,3 @@
-import 'package:basearch/src/features/device/data/dto/device_dto.dart';
 import 'package:basearch/src/features/device/data/dto/mqtt_dto.dart';
 import 'package:basearch/src/features/device/data/dto/wifi_dto.dart';
 import 'package:basearch/src/features/device/domain/usecase/device_usecase.dart';
@@ -35,10 +34,13 @@ abstract class _DeviceViewModel with Store {
   bool isFinishConfig = false;
 
   @observable
-  String name = '';
+  String deviceName = '';
 
   @observable
-  String errorName = '';
+  String errorDeviceName = '';
+
+  @observable
+  String errorWifi = '';
 
   @observable
   WifiDTO wifiDTO = WifiDTO();
@@ -46,17 +48,19 @@ abstract class _DeviceViewModel with Store {
   @observable
   MqttDTO mqttDTO = MqttDTO();
 
-  @observable
-  DeviceDTO deviceDTO = DeviceDTO();
-
   @action
-  updateName(String value) {
-    name = value;
+  updateDeviceName(String value) {
+    deviceName = value;
   }
 
   @action
-  updateErrorName(String value) {
-    errorName = value;
+  updateErrorDeviceName(String value) {
+    errorDeviceName = value;
+  }
+
+  @action
+  updateErrorWifi(String value) {
+    errorWifi = value;
   }
 
   @action
@@ -67,11 +71,6 @@ abstract class _DeviceViewModel with Store {
   @action
   updatePassword(String value) {
     wifiDTO.password = value;
-  }
-
-  @action
-  updateDeviceName(String value) {
-    deviceDTO.name = value;
   }
 
   @action
@@ -110,17 +109,12 @@ abstract class _DeviceViewModel with Store {
   }
 
   updateStep() async {
-    String? error = _usecase.updateErrorName(name);
-    if (error == null) {
-      updateErrorName('');
-      changeDeviceConfigStatus(
-          await _usecase.updateDeviceConfig(stepIndex, name));
-    } else {
-      updateErrorName(error);
-    }
+    updateErrorDeviceName(_usecase.updateDeviceErrorName(deviceName) ?? '');
+    changeDeviceConfigStatus(
+        await _usecase.updateDeviceConfig(stepIndex, deviceName));
+    updateErrorWifi(_usecase.updateWifiError(wifiDTO, stepIndex) ?? '');
     changeWifiConfigStatus(await _usecase.updateWifiConfig(stepIndex, wifiDTO));
-    changeFinishConfigStatus(
-        await _usecase.updateFinishConfig(stepIndex, deviceDTO));
+    changeFinishConfigStatus(await _usecase.updateFinishConfig(stepIndex));
     var stepFinish = _usecase.updateStep(stepIndex);
     if (stepFinish <= 2) {
       setStep(stepFinish);

@@ -121,6 +121,54 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
     });
   }
 
+  late final _$deviceNameAtom =
+      Atom(name: '_DeviceViewModel.deviceName', context: context);
+
+  @override
+  String get deviceName {
+    _$deviceNameAtom.reportRead();
+    return super.deviceName;
+  }
+
+  @override
+  set deviceName(String value) {
+    _$deviceNameAtom.reportWrite(value, super.deviceName, () {
+      super.deviceName = value;
+    });
+  }
+
+  late final _$errorDeviceNameAtom =
+      Atom(name: '_DeviceViewModel.errorDeviceName', context: context);
+
+  @override
+  String get errorDeviceName {
+    _$errorDeviceNameAtom.reportRead();
+    return super.errorDeviceName;
+  }
+
+  @override
+  set errorDeviceName(String value) {
+    _$errorDeviceNameAtom.reportWrite(value, super.errorDeviceName, () {
+      super.errorDeviceName = value;
+    });
+  }
+
+  late final _$errorWifiAtom =
+      Atom(name: '_DeviceViewModel.errorWifi', context: context);
+
+  @override
+  String get errorWifi {
+    _$errorWifiAtom.reportRead();
+    return super.errorWifi;
+  }
+
+  @override
+  set errorWifi(String value) {
+    _$errorWifiAtom.reportWrite(value, super.errorWifi, () {
+      super.errorWifi = value;
+    });
+  }
+
   late final _$wifiDTOAtom =
       Atom(name: '_DeviceViewModel.wifiDTO', context: context);
 
@@ -153,24 +201,41 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
     });
   }
 
-  late final _$deviceDTOAtom =
-      Atom(name: '_DeviceViewModel.deviceDTO', context: context);
-
-  @override
-  DeviceDTO get deviceDTO {
-    _$deviceDTOAtom.reportRead();
-    return super.deviceDTO;
-  }
-
-  @override
-  set deviceDTO(DeviceDTO value) {
-    _$deviceDTOAtom.reportWrite(value, super.deviceDTO, () {
-      super.deviceDTO = value;
-    });
-  }
-
   late final _$_DeviceViewModelActionController =
       ActionController(name: '_DeviceViewModel', context: context);
+
+  @override
+  dynamic updateDeviceName(String value) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.updateDeviceName');
+    try {
+      return super.updateDeviceName(value);
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateErrorDeviceName(String value) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.updateErrorDeviceName');
+    try {
+      return super.updateErrorDeviceName(value);
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateErrorWifi(String value) {
+    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
+        name: '_DeviceViewModel.updateErrorWifi');
+    try {
+      return super.updateErrorWifi(value);
+    } finally {
+      _$_DeviceViewModelActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic updateSSID(String value) {
@@ -189,17 +254,6 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
         name: '_DeviceViewModel.updatePassword');
     try {
       return super.updatePassword(value);
-    } finally {
-      _$_DeviceViewModelActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic updateDeviceName(String value) {
-    final _$actionInfo = _$_DeviceViewModelActionController.startAction(
-        name: '_DeviceViewModel.updateDeviceName');
-    try {
-      return super.updateDeviceName(value);
     } finally {
       _$_DeviceViewModelActionController.endAction(_$actionInfo);
     }
@@ -270,9 +324,11 @@ wifiConfigStatus: ${wifiConfigStatus},
 finishConfigStatus: ${finishConfigStatus},
 isWifiConfig: ${isWifiConfig},
 isFinishConfig: ${isFinishConfig},
+deviceName: ${deviceName},
+errorDeviceName: ${errorDeviceName},
+errorWifi: ${errorWifi},
 wifiDTO: ${wifiDTO},
-mqttDTO: ${mqttDTO},
-deviceDTO: ${deviceDTO}
+mqttDTO: ${mqttDTO}
     ''';
   }
 }

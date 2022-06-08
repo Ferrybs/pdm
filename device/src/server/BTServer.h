@@ -83,13 +83,14 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         BTJson["ok"] = result;
         if (result)
         {
-            console.log("SENTRIE");
             preferences.putConfigured(true);
+
             BTJson["message"] = "Device Configured!";
         }else{
             BTJson["message"] = "Wrong Json!";
         }
         serializeJson(BTJson, deviceConfigJson);
+        pCharacteristic->notify();
     }
 };
 
@@ -98,6 +99,7 @@ class BTServer
 private:
     BLEServer *pServer = NULL;
     BLECharacteristic * pTxCharacteristic;
+    BLECharacteristic * pRxCharacteristic;
     BLECharacteristic * DeviceConfigCharacteristic;
 public:
     void setup(){
@@ -114,7 +116,7 @@ public:
                                             );      
         pTxCharacteristic->addDescriptor(&deviceConfigDescriptor);
 
-        BLECharacteristic * pRxCharacteristic = pService->createCharacteristic(
+        pRxCharacteristic = pService->createCharacteristic(
                                                     CHARACTERISTIC_UUID_RX,
                                                     BLECharacteristic::PROPERTY_WRITE
                                                 );
@@ -123,7 +125,6 @@ public:
 
         // Start the service
         pService->start();
-
         // Start advertising
         pServer->getAdvertising()->start();
         Serial.println("Waiting a client connection to notify...");
@@ -132,6 +133,7 @@ public:
         if (deviceConnected) {
             if (strlen(deviceConfigJson)>1)
             {
+
                 pTxCharacteristic->setValue(deviceConfigJson);
                 pTxCharacteristic->notify();
             }
@@ -139,6 +141,7 @@ public:
 	    }
         if (!deviceConnected && oldDeviceConnected) {
             delay(500);
+            pRxCharacteristic->notify();
             pServer->startAdvertising();
             Serial.println("Start advertising...");
             oldDeviceConnected = deviceConnected;
@@ -147,6 +150,9 @@ public:
             oldDeviceConnected = deviceConnected;
         }
     };
+    void stop(){
+        BLEDevice::deinit(true);
+    }
 };
  
 BTServer btserver;

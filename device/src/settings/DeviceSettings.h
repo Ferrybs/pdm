@@ -21,11 +21,10 @@ void DeviceSettings::configure(){
     {
         console.blink();
         btserver.setup();
-        console.blink();
-        console.blink();
         while (!preferences.isConfigured()){
             btserver.run();
         }
+        btserver.stop();
         console.blink();
     }
     if (!wifiNetwork.start())

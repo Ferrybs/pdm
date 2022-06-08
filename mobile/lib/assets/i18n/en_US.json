@@ -53,6 +53,7 @@
     "device-connection":"Device Connection",
     "device-name": "Device Name",
     "error-device-name": "Invalid Device Name",
+    "error-wifi": "Invalid SSID or Password",
     "step":"Step",
     "step1-device-config":"Pair with bluetooth device", 
     "click-on": "Click on"

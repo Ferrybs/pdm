@@ -1,7 +1,7 @@
 class DeviceModel {
-  DeviceModel({this.id, this.name});
-  String? id;
-  String? name;
+  DeviceModel({required this.id, required this.name});
+  String id;
+  String name;
 
   factory DeviceModel.fromJson(Map<String, dynamic> json) =>
       DeviceModel(id: json["id"], name: json["name"]);

@@ -54,7 +54,7 @@ class _DevicePage extends State<DevicePage> {
   String _updateErrorName() {
     String error = '';
     setState(() {
-      error = _viewModel.errorName;
+      error = _viewModel.errorDeviceName;
     });
     return error;
   }
@@ -100,8 +100,8 @@ class _DevicePage extends State<DevicePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DeviceTextInput(
-              errorText: _viewModel.errorName,
-              onChange: _viewModel.updateName,
+              errorText: _viewModel.errorDeviceName,
+              onChange: _viewModel.updateDeviceName,
               label: "device-name".i18n(),
             )
           ],
@@ -132,18 +132,13 @@ class _DevicePage extends State<DevicePage> {
     return Column(
       children: [
         DeviceTextInput(
-          errorText: _viewModel.errorName,
-          onChange: _viewModel.updateDeviceName,
-          label: "Device Name",
-        ),
-        DeviceTextInput(
-          errorText: _viewModel.errorName,
+          errorText: _viewModel.errorWifi,
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-SSID".i18n(),
           onChange: _viewModel.updateSSID,
         ),
         DeviceTextInput(
-          errorText: _viewModel.errorName,
+          errorText: _viewModel.errorWifi,
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-password".i18n(),
           onChange: _viewModel.updatePassword,

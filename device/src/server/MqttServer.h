@@ -5,10 +5,6 @@
 #include <ArduinoJson.h>
 #include "core/Console.h"
 
-WiFiClientSecure espClient;
-PubSubClient client(espClient);
-Timezone myTZ;
-DynamicJsonDocument json(4096);
 
 static const char *root_ca PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
@@ -43,6 +39,11 @@ mRGunUHBcnWEvgJBQl9nJEiU0Zsnvgc/ubhPgXRR4Xq37Z0j4r7g1SgEEzwxA57d
 emyPxgcYxn/eR44/KJ4EBs+lVDR3veyJm+kXQ99b21/+jh5Xos1AnX5iItreGCc=
 -----END CERTIFICATE-----
 )EOF";
+
+WiFiClientSecure espClient;
+PubSubClient client(espClient);
+Timezone myTZ;
+DynamicJsonDocument json(4096);
 
 void callback(char* topic, byte* payload, unsigned int length) {
     DynamicJsonDocument jsonIn(4096);
@@ -138,19 +139,22 @@ boolean MqttServer::postMeasure(float value,int type){
     return status;
 }
 void MqttServer::setup(){
+    espClient.stop();
     espClient.setCACert(root_ca);
+    espClient.setHandshakeTimeout(30);
     String host = preferences.getMqttServer();
     static char pHost[64] = {0};
     strcpy(pHost, host.c_str());
     client.setBufferSize(4096);
-    client.setServer(pHost, preferences.getMqttPort());
+    client.setServer(pHost, 8883);
     client.setCallback(callback);
     console.blink();
+    delay(1000);
     connect();
 }
 boolean MqttServer::connect(){
     int count = 0;
-    while (!client.connected() && count<20) {
+    while (!client.connected() && count<5) {
         count++;
         console.log("Attempting MQTT connection...",false);
         if (client.connect(preferences.getId().c_str(),
@@ -167,8 +171,8 @@ boolean MqttServer::connect(){
             console.log("try again in 2 seconds");
             console.log("Count: ",false);
             console.log(count,false);
-            console.log(" Up to 20",false);
-            console.blink(20);
+            console.log(" Up to 5 ",false);
+            console.blink(5);
         }
   }
   return client.connected();
