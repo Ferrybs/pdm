@@ -1,9 +1,8 @@
 import 'package:basearch/src/features/device/presentation/view/widget/device_app_bar.dart';
-import 'package:basearch/src/features/device/presentation/view/widget/device_blue_on.dart';
 import 'package:basearch/src/features/device/presentation/view/widget/device_text_input.dart';
 import 'package:basearch/src/features/device/presentation/viewmodel/device_viewmodel.dart';
+import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -23,40 +22,45 @@ class _DevicePage extends State<DevicePage> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return SafeArea(
-        child: Scaffold(
-      appBar: const DeviceAppBar(),
-      body: Column(
-        children: [
-          _tittle(),
-          Expanded(child: Observer(
-            builder: (context) {
-              return SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.all(1),
-                    child: Stepper(
-                      steps: [
-                        _deviceConnection(),
-                        _deviceConfig(),
-                        _finishConfig()
-                      ],
-                      currentStep: _viewModel.stepIndex,
-                      onStepContinue: _onStepContinue,
-                      onStepCancel: _onStepCancel,
-                    )),
-              );
-            },
-          ))
-        ],
-      ),
-    ));
+        child: Observer(
+            builder: (_) => FutureBuilder(builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError || _viewModel.loadError != null) {
+                      return Container(
+                        color: _theme.colorScheme.background,
+                        child: DialogContainer(
+                          message:
+                              _viewModel.loadError ?? "error-get-client".i18n(),
+                          buttonText: "try-again".i18n(),
+                          onClick: () {
+                            _viewModel.navigateToLogin();
+                          },
+                        ),
+                      );
+                    }
+                  }
+                  return Scaffold(appBar: const DeviceAppBar(), body: _body());
+                })));
   }
 
-  String _updateErrorName() {
-    String error = '';
-    setState(() {
-      error = _viewModel.errorDeviceName;
-    });
-    return error;
+  Column _body() {
+    return Column(children: [
+      _tittle(),
+      Expanded(
+          child: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.all(1), child: _stepList())))
+    ]);
+  }
+
+  Observer _stepList() {
+    return Observer(
+        builder: (context) => Stepper(
+              steps: [_deviceConnection(), _deviceConfig(), _finishConfig()],
+              currentStep: _viewModel.stepIndex,
+              onStepContinue: _onStepContinue,
+              onStepCancel: _onStepCancel,
+            ));
   }
 
   _onStepCancel() async {
@@ -77,10 +81,11 @@ class _DevicePage extends State<DevicePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _configStep("Step 1 ", "Connect back to your wifi."),
-            _configStep("Step 2 ", "click-on".i18n() + "continue".i18n())
+            _configStep("click-on".i18n() + "continue".i18n()),
+            _configStep("finish-device-config".i18n()),
           ],
-        ));
+        ),
+        state: _viewModel.finishConfigStatus);
   }
 
   Step _deviceConfig() {
@@ -109,22 +114,15 @@ class _DevicePage extends State<DevicePage> {
         state: _viewModel.deviceConfigStatus);
   }
 
-  Padding _configStep(String step, String text) {
+  Padding _configStep(String text) {
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              step,
-              style: _theme.textTheme.bodySmall,
-            ),
-            Text(
-              text,
-              style: _theme.textTheme.bodySmall,
-            )
-          ]),
+      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+      child: Column(children: [
+        Text(
+          text,
+          style: _theme.textTheme.bodySmall,
+        )
+      ]),
     );
   }
 
@@ -142,6 +140,7 @@ class _DevicePage extends State<DevicePage> {
           prefixIcon: const Icon(Icons.wifi),
           label: "wireless-password".i18n(),
           onChange: _viewModel.updatePassword,
+          obscureText: true,
         ),
       ],
     );

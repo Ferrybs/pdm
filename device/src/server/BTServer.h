@@ -7,8 +7,8 @@
 
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
+bool isDeviceConfig= false;
 StaticJsonDocument<4096> BTJson;
-char deviceConfigJson[4096];
 
 #define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" // UART service UUID
 #define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
@@ -69,28 +69,25 @@ class MyCallbacks: public BLECharacteristicCallbacks {
         console.log("device_name: "+ device_name);
         console.log("device_key: "+ device_key);
         console.log("client_id: "+ client_id);
-        preferences.putName(device_name);
-        preferences.putApiKey(device_key);
-        preferences.putClientId(client_id);
-        preferences.putMqttServer(mqtt_server);
-        preferences.putMqttUser(mqtt_user);
-        preferences.putMqttPassword(mqtt_password);
-        preferences.putMqttPort(mqtt_port.toInt());
-        preferences.putWifiSettings(ssid,password);
-        String settings =  result ? "TRUE" : "FALSE";
-        console.log("Settings Recived: " + settings);
-        BTJson.clear();
-        BTJson["ok"] = result;
         if (result)
         {
-            preferences.putConfigured(true);
-
-            BTJson["message"] = "Device Configured!";
-        }else{
-            BTJson["message"] = "Wrong Json!";
+            preferences.putName(device_name);
+            preferences.putApiKey(device_key);
+            preferences.putClientId(client_id);
+            preferences.putMqttServer(mqtt_server);
+            preferences.putMqttUser(mqtt_user);
+            preferences.putMqttPassword(mqtt_password);
+            preferences.putMqttPort(mqtt_port.toInt());
+            preferences.putWifiSettings(ssid,password);
+            
         }
-        serializeJson(BTJson, deviceConfigJson);
-        pCharacteristic->notify();
+        String settings =  result ? "TRUE" : "FALSE";
+        console.log("Settings Recived: " + settings);
+        
+        if (result)
+        {
+            isDeviceConfig=true;
+        }
     }
 };
 
@@ -101,6 +98,7 @@ private:
     BLECharacteristic * pTxCharacteristic;
     BLECharacteristic * pRxCharacteristic;
     BLECharacteristic * DeviceConfigCharacteristic;
+    char deviceConfigJson[4096];
 public:
     void setup(){
         BLEDevice::init("Esp32 Sensor");
@@ -130,18 +128,8 @@ public:
         Serial.println("Waiting a client connection to notify...");
     };
     void run(){
-        if (deviceConnected) {
-            if (strlen(deviceConfigJson)>1)
-            {
-
-                pTxCharacteristic->setValue(deviceConfigJson);
-                pTxCharacteristic->notify();
-            }
-            delay(10);
-	    }
         if (!deviceConnected && oldDeviceConnected) {
             delay(500);
-            pRxCharacteristic->notify();
             pServer->startAdvertising();
             Serial.println("Start advertising...");
             oldDeviceConnected = deviceConnected;
@@ -150,6 +138,26 @@ public:
             oldDeviceConnected = deviceConnected;
         }
     };
+    void setConfigured(bool wifiStatus){
+        BTJson.clear();
+        BTJson["ok"] = wifiStatus;
+        if (wifiStatus)
+        {
+            BTJson["message"] = "Device Configured!";
+        }else{
+            BTJson["message"] = "At least one fields are wrong!";
+        }
+        serializeJson(BTJson, deviceConfigJson);
+        if (deviceConnected) {
+            if (strlen(deviceConfigJson)>1)
+            {
+                pTxCharacteristic->setValue(deviceConfigJson);
+                pTxCharacteristic->notify();
+            }
+            delay(10);
+	    }
+
+    }
     void stop(){
         BLEDevice::deinit(true);
     }

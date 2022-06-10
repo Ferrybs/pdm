@@ -54,8 +54,7 @@
     "device-name": "Device Name",
     "error-device-name": "Invalid Device Name",
     "error-wifi": "Invalid SSID or Password",
-    "step":"Step",
-    "step1-device-config":"Pair with bluetooth device", 
+    "finish-device-config":"If you are not redirected to the home screen, please check the data and try again. ",
     "click-on": "Click on"
 
 }

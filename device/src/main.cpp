@@ -10,10 +10,7 @@ void setup() {
   preferences.putPosted(false);
   if (device.isConnected()&& mqtt.isConnected())
   {
-    if (!device.isPosted())
-    {
-      mqtt.postDevice();
-    }
+    mqtt.postDevice();
     location_t loc = localizationController.getLocalization();
     mqtt.postLocalization(loc.lat,loc.lon);
   }else{

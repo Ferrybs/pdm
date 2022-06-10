@@ -21,7 +21,7 @@ bool WifiNetwork::start(){
     WiFi.begin(ssid.c_str(),password.c_str());
     console.log("Try to connect to WiFi ..",false);
     digitalWrite(2,HIGH);
-    while (WiFi.status() != WL_CONNECTED && count < 30) {
+    while (WiFi.status() != WL_CONNECTED && count < 9) {
         console.log(".",false);
         digitalWrite(2,HIGH);
         console.blink(2,300);
@@ -30,7 +30,7 @@ bool WifiNetwork::start(){
         count++;
     }
     console.log();
-    if (count == 30 && WiFi.status() != WL_CONNECTED)
+    if (WiFi.status() != WL_CONNECTED)
     {
         return false;
     }else{

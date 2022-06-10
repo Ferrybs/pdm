@@ -56,48 +56,59 @@ public:
     };
 void ClientSettings::putHumidity(float humidity){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putFloat(this->_humidity,humidity);
     _preferences.end();
 }
 void ClientSettings::putMoisture(float moisture){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putFloat(this->_moisture,moisture);
     _preferences.end();
 }
 void ClientSettings::putTemperature(float temperature){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putFloat(this->_temperature,temperature);
     _preferences.end();
 }
 void ClientSettings::putLuminosity(float luminosity){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putFloat(this->_luminosity,luminosity);
     _preferences.end();
 }
 void ClientSettings::putConfigured(bool status){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putBool(this->_configured,status);
     _preferences.end();
 }
 void ClientSettings::putPosted(bool posted){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putBool(this->_posted,posted);
     _preferences.end();
 }
 void ClientSettings::putApiKey(String key){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putString(this->_api_key,key);
     _preferences.end();
 }
 void ClientSettings::putName(String name){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putString(this->_name,name);
     _preferences.end();
 }
 void ClientSettings::putClientId(String id){
-    _preferences.begin(this->_appName,false);
-    _preferences.putString(this->_client_id,id);
-    _preferences.end();
+    if (!id.isEmpty())
+    {
+        _preferences.begin(this->_appName,false);
+        _preferences.putString(this->_client_id,id);
+        _preferences.end();
+    }
 }
 void ClientSettings::putMqttServer(String server){
     _preferences.begin(this->_appName,false);
@@ -106,22 +117,27 @@ void ClientSettings::putMqttServer(String server){
 }
 void ClientSettings::putMqttUser(String name){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putString(this->_mqtt_user,name);
     _preferences.end();
 }
 void ClientSettings::putMqttPassword(String password){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putString(this->_mqtt_password,password);
     _preferences.end();
 }
 void ClientSettings::putMqttPort(int port){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putInt(this->_mqtt_port,port);
     _preferences.end();
 }
 void ClientSettings::putWifiSettings(String ssid, String password){
     _preferences.begin(this->_appName,false);
+    
     _preferences.putString(this->_ssid,ssid);
+    
     _preferences.putString(this->_password,password);
     _preferences.end();
 }

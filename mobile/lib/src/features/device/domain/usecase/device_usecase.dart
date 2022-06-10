@@ -1,8 +1,9 @@
-import 'package:basearch/src/features/device/data/dto/device_dto.dart';
+import 'dart:async';
 import 'package:basearch/src/features/device/data/dto/wifi_dto.dart';
 import 'package:basearch/src/features/device/domain/model/blu_device_config_model.dart';
 import 'package:basearch/src/features/device/domain/model/client_model.dart';
 import 'package:basearch/src/features/device/domain/model/device_config_model.dart';
+import 'package:basearch/src/features/device/domain/model/response_model.dart';
 import 'package:basearch/src/features/device/domain/model/wifi_model.dart';
 import 'package:basearch/src/features/device/domain/repository/device_interface.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
@@ -15,6 +16,7 @@ import 'dart:convert';
 class DeviceUseCase {
   final repository = Modular.get<IDevice>();
   BluDeviceConfigModel? bluDeviceConfigModel;
+  bool isConfigured = false;
   ClientModel? clientModel;
   DeviceConfigModel? deviceConfigModel;
   BluetoothDevice? device;
@@ -23,8 +25,9 @@ class DeviceUseCase {
   final encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
-  String? updateDeviceErrorName(String name) {
-    if (name.length > 2) {
+  String? updateDeviceErrorName(String? name) {
+    String _name = name ?? "";
+    if (_name.length > 2) {
       return null;
     }
     return "error-device-name".i18n();
@@ -42,10 +45,19 @@ class DeviceUseCase {
     return null;
   }
 
+  Future<String?> getClient() async {
+    String token = await encryptedPreferences.getString("AccessToken");
+    clientModel = await repository.getClient(token);
+    if (clientModel != null) {
+      return null;
+    }
+    return "";
+  }
+
   Future<bool> getDeviceConfigModel() async {
     String token = await encryptedPreferences.getString("AccessToken");
     try {
-      clientModel = await repository.getClient(token);
+      clientModel = clientModel ?? await repository.getClient(token);
       deviceConfigModel = await repository.getDeviceConfigs(token);
       if (clientModel != null && deviceConfigModel != null) {
         return true;
@@ -56,11 +68,10 @@ class DeviceUseCase {
     return false;
   }
 
-  Future<StepState> updateDeviceConfig(int step, String deviceName) async {
+  Future<StepState> updateDeviceConfig(int step, String? deviceName) async {
     if (step == 0) {
-      _deviceName = deviceName;
-      print(_deviceName);
-      if (deviceName.length > 2 && await getDeviceConfigModel()) {
+      _deviceName = deviceName ?? "";
+      if (_deviceName!.length > 2 && await getDeviceConfigModel()) {
         return StepState.complete;
       } else {
         return StepState.error;
@@ -81,6 +92,7 @@ class DeviceUseCase {
       }
       await device.connect(
           timeout: const Duration(seconds: 5), autoConnect: true);
+      state = await device.state.first;
     } catch (e) {
       return null;
     }
@@ -96,15 +108,15 @@ class DeviceUseCase {
         }
       }
     }
-    await flutterBlue.startScan(timeout: const Duration(seconds: 3));
-    flutterBlue.stopScan();
+    await flutterBlue.startScan(timeout: const Duration(seconds: 5));
+    await flutterBlue.stopScan();
     List<ScanResult> results = await flutterBlue.scanResults.first;
     for (ScanResult result in results) {
-      print(result.device.name.toUpperCase());
       if (result.device.name.toUpperCase().contains("ESP32")) {
         return await _connectToDevice(result.device);
       }
     }
+
     return null;
   }
 
@@ -130,17 +142,15 @@ class DeviceUseCase {
       }
     }
     if (blue != null) {
-      print("WRITE");
-      print(blue.uuid);
-      print(hexString);
-      await blue.write(hexString);
-      await device.disconnect();
+      await blue.write(
+        hexString,
+      );
       return true;
     }
     return false;
   }
 
-  Future<Map<String, dynamic>?> _readConfigs(BluetoothDevice device) async {
+  Future<Map<String, dynamic>> _readConfigs(BluetoothDevice device) async {
     List<BluetoothService> services = await device.discoverServices();
     BluetoothCharacteristic? blue;
     for (var service in services) {
@@ -150,16 +160,21 @@ class DeviceUseCase {
       }
     }
     if (blue != null) {
-      List<int> hex = await blue.read();
       List<String> stringHex = [];
-      print("READ: ${hex.length}");
-      for (var i in hex) {
-        stringHex.add(String.fromCharCode(i));
+      List<int> hex = [];
+      BluetoothDeviceState state = await device.state.first;
+      while (hex.isEmpty && state == BluetoothDeviceState.connected) {
+        hex = await blue.read();
+        state = await device.state.first;
       }
-      print(json.decode(stringHex.join()));
-      return json.decode(stringHex.join());
+      if (hex.isNotEmpty) {
+        for (var i in hex) {
+          stringHex.add(String.fromCharCode(i));
+        }
+        return json.decode(stringHex.join());
+      }
     }
-    return null;
+    return ResponseModel(message: "device-not-found", ok: false).toJson();
   }
 
   bool _wifiStepValidation() {
@@ -182,7 +197,9 @@ class DeviceUseCase {
 
   Future<StepState> updateWifiConfig(int step, WifiDTO wifiDTO) async {
     if (step == 1) {
-      if (wifiDTO.ssid!.length > 2 && wifiDTO.password!.length > 2) {
+      String ssid = wifiDTO.ssid ?? "";
+      String password = wifiDTO.password ?? "";
+      if (ssid.length > 2 && password.length > 2) {
         wifiModel = WifiModel(ssid: wifiDTO.ssid!, password: wifiDTO.password!);
         try {
           bluDeviceConfigModel = BluDeviceConfigModel(
@@ -209,7 +226,7 @@ class DeviceUseCase {
   }
 
   bool _finishStepValidation() {
-    if (bluDeviceConfigModel != null) {
+    if (bluDeviceConfigModel != null && isConfigured) {
       return true;
     }
     return false;
@@ -217,21 +234,25 @@ class DeviceUseCase {
 
   Future<StepState> updateFinishConfig(int step) async {
     if (step == 2) {
-      if (_finishStepValidation()) {
+      if (bluDeviceConfigModel != null) {
         try {
-          //List<int> hexString = [];
           device = await _findDevice();
           String bluString = bluDeviceConfigModel!.toJson().toString();
-          print(bluString);
           if (device != null) {
             await _writeConfigs(device!, bluString.codeUnits);
           }
-          return StepState.error;
+          ResponseModel responseModel =
+              ResponseModel.fromJson(await _readConfigs(device!));
+
+          if (responseModel.ok == true) {
+            isConfigured = true;
+            return StepState.complete;
+          } else {
+            return StepState.error;
+          }
         } catch (e) {
-          print(e);
           return StepState.error;
         }
-        return StepState.complete;
       } else {
         return StepState.error;
       }
@@ -267,9 +288,9 @@ class DeviceUseCase {
         return 1;
       case 2:
         if (_finishStepValidation()) {
-          return 2;
+          return 3;
         }
-        return 2;
+        return 1;
       default:
     }
     return 0;

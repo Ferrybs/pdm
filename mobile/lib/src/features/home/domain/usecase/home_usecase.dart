@@ -25,12 +25,12 @@ class HomeUseCase {
       if (_clientModel != null) {
         return null;
       } else {
-        return "error-home-tittle".i18n();
+        return "session-error-tittle".i18n();
       }
     } on DioError {
-      return "error-home-tittle".i18n();
+      return "session-error-tittle".i18n();
     } catch (e) {
-      return "error-home-tittle".i18n();
+      return "session-error-tittle".i18n();
     }
   }
 

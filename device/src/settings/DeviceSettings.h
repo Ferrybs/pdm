@@ -21,10 +21,9 @@ void DeviceSettings::configure(){
     {
         console.blink();
         btserver.setup();
-        while (!preferences.isConfigured()){
+        while (!isDeviceConfig){
             btserver.run();
         }
-        btserver.stop();
         console.blink();
     }
     if (!wifiNetwork.start())
@@ -32,9 +31,14 @@ void DeviceSettings::configure(){
         console.blink();
         console.log("Failed to connect!");
         preferences.putConfigured(false);
+        isDeviceConfig=false;
         console.blink();
-        configure();
+        ESP.restart();
     }
+    btserver.setConfigured(true);
+    preferences.putConfigured(true);
+    console.blink(10);
+    btserver.stop();
     console.log("Device configured successfully!");
     console.ledOff();
 

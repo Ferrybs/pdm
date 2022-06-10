@@ -125,15 +125,31 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
       Atom(name: '_DeviceViewModel.deviceName', context: context);
 
   @override
-  String get deviceName {
+  String? get deviceName {
     _$deviceNameAtom.reportRead();
     return super.deviceName;
   }
 
   @override
-  set deviceName(String value) {
+  set deviceName(String? value) {
     _$deviceNameAtom.reportWrite(value, super.deviceName, () {
       super.deviceName = value;
+    });
+  }
+
+  late final _$loadErrorAtom =
+      Atom(name: '_DeviceViewModel.loadError', context: context);
+
+  @override
+  String? get loadError {
+    _$loadErrorAtom.reportRead();
+    return super.loadError;
+  }
+
+  @override
+  set loadError(String? value) {
+    _$loadErrorAtom.reportWrite(value, super.loadError, () {
+      super.loadError = value;
     });
   }
 
@@ -141,13 +157,13 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
       Atom(name: '_DeviceViewModel.errorDeviceName', context: context);
 
   @override
-  String get errorDeviceName {
+  String? get errorDeviceName {
     _$errorDeviceNameAtom.reportRead();
     return super.errorDeviceName;
   }
 
   @override
-  set errorDeviceName(String value) {
+  set errorDeviceName(String? value) {
     _$errorDeviceNameAtom.reportWrite(value, super.errorDeviceName, () {
       super.errorDeviceName = value;
     });
@@ -157,13 +173,13 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
       Atom(name: '_DeviceViewModel.errorWifi', context: context);
 
   @override
-  String get errorWifi {
+  String? get errorWifi {
     _$errorWifiAtom.reportRead();
     return super.errorWifi;
   }
 
   @override
-  set errorWifi(String value) {
+  set errorWifi(String? value) {
     _$errorWifiAtom.reportWrite(value, super.errorWifi, () {
       super.errorWifi = value;
     });
@@ -205,7 +221,7 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
       ActionController(name: '_DeviceViewModel', context: context);
 
   @override
-  dynamic updateDeviceName(String value) {
+  dynamic updateDeviceName(String? value) {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
         name: '_DeviceViewModel.updateDeviceName');
     try {
@@ -216,7 +232,7 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
   }
 
   @override
-  dynamic updateErrorDeviceName(String value) {
+  dynamic updateErrorDeviceName(String? value) {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
         name: '_DeviceViewModel.updateErrorDeviceName');
     try {
@@ -227,7 +243,7 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
   }
 
   @override
-  dynamic updateErrorWifi(String value) {
+  dynamic updateErrorWifi(String? value) {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
         name: '_DeviceViewModel.updateErrorWifi');
     try {
@@ -238,7 +254,7 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
   }
 
   @override
-  dynamic updateSSID(String value) {
+  dynamic updateSSID(String? value) {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
         name: '_DeviceViewModel.updateSSID');
     try {
@@ -249,7 +265,7 @@ mixin _$DeviceViewModel on _DeviceViewModel, Store {
   }
 
   @override
-  dynamic updatePassword(String value) {
+  dynamic updatePassword(String? value) {
     final _$actionInfo = _$_DeviceViewModelActionController.startAction(
         name: '_DeviceViewModel.updatePassword');
     try {
@@ -325,6 +341,7 @@ finishConfigStatus: ${finishConfigStatus},
 isWifiConfig: ${isWifiConfig},
 isFinishConfig: ${isFinishConfig},
 deviceName: ${deviceName},
+loadError: ${loadError},
 errorDeviceName: ${errorDeviceName},
 errorWifi: ${errorWifi},
 wifiDTO: ${wifiDTO},

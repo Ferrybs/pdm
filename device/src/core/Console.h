@@ -77,7 +77,7 @@ void Console::blink(int tick, int size){
         delay(rand()%size);
         count++;
     }
-    digitalWrite(ledPin,LOW);
+    digitalWrite(ledPin,HIGH);
 }
 Console console;
 

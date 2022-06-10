@@ -34,13 +34,16 @@ abstract class _DeviceViewModel with Store {
   bool isFinishConfig = false;
 
   @observable
-  String deviceName = '';
+  String? deviceName;
 
   @observable
-  String errorDeviceName = '';
+  String? loadError;
 
   @observable
-  String errorWifi = '';
+  String? errorDeviceName;
+
+  @observable
+  String? errorWifi;
 
   @observable
   WifiDTO wifiDTO = WifiDTO();
@@ -49,27 +52,27 @@ abstract class _DeviceViewModel with Store {
   MqttDTO mqttDTO = MqttDTO();
 
   @action
-  updateDeviceName(String value) {
+  updateDeviceName(String? value) {
     deviceName = value;
   }
 
   @action
-  updateErrorDeviceName(String value) {
+  updateErrorDeviceName(String? value) {
     errorDeviceName = value;
   }
 
   @action
-  updateErrorWifi(String value) {
+  updateErrorWifi(String? value) {
     errorWifi = value;
   }
 
   @action
-  updateSSID(String value) {
+  updateSSID(String? value) {
     wifiDTO.ssid = value;
   }
 
   @action
-  updatePassword(String value) {
+  updatePassword(String? value) {
     wifiDTO.password = value;
   }
 
@@ -108,11 +111,15 @@ abstract class _DeviceViewModel with Store {
     }
   }
 
+  getClient() async {
+    loadError = await _usecase.getClient();
+  }
+
   updateStep() async {
-    updateErrorDeviceName(_usecase.updateDeviceErrorName(deviceName) ?? '');
+    updateErrorDeviceName(_usecase.updateDeviceErrorName(deviceName));
     changeDeviceConfigStatus(
         await _usecase.updateDeviceConfig(stepIndex, deviceName));
-    updateErrorWifi(_usecase.updateWifiError(wifiDTO, stepIndex) ?? '');
+    updateErrorWifi(_usecase.updateWifiError(wifiDTO, stepIndex));
     changeWifiConfigStatus(await _usecase.updateWifiConfig(stepIndex, wifiDTO));
     changeFinishConfigStatus(await _usecase.updateFinishConfig(stepIndex));
     var stepFinish = _usecase.updateStep(stepIndex);
@@ -125,5 +132,9 @@ abstract class _DeviceViewModel with Store {
 
   navigateToHome() {
     Modular.to.navigate("/home/");
+  }
+
+  navigateToLogin() {
+    Modular.to.navigate("/login/");
   }
 }

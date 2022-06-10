@@ -8,7 +8,6 @@ class DeviceAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     return AppBar(
-      leading: _createLeading(themeData.brightness),
       title: _createTitle(),
       actions: [],
     );

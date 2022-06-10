@@ -62,7 +62,7 @@ abstract class _HomeViewModelBase with Store {
     if (name != null) {
       updateClientName(name);
     } else {
-      updateError("error-home-tittle".i18n());
+      updateError("session-error-tittle".i18n());
       return;
     }
     List<PlantStatsModel>? list = await _usecase.getPlantList();
@@ -90,7 +90,7 @@ abstract class _HomeViewModelBase with Store {
     if (personDTO.name != null) {
       return personDTO.name! + ", " + "home-tittle".i18n();
     } else {
-      return "error-home-tittle".i18n();
+      return "session-error-tittle".i18n();
     }
   }
 
@@ -98,7 +98,7 @@ abstract class _HomeViewModelBase with Store {
     if (personDTO.name != null) {
       return personDTO.name! + ", " + "home-device-tittle".i18n();
     } else {
-      return "error-home-tittle".i18n();
+      return "session-error-tittle".i18n();
     }
   }
 
