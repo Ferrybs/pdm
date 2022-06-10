@@ -178,9 +178,9 @@ export default class DeviceController extends Controller{
         try {
           const dataStoreToken = request.dataStoreToken;
           await this.clientService.getClientBySessionId(dataStoreToken.id);
-          const mqttDTO = this.deviceService.getConfigs();
-          if (mqttDTO) {
-            response.status(200).send({ok: true,mqttDTO});
+          const configsDTO = this.deviceService.getConfigs();
+          if (configsDTO) {
+            response.status(200).send({ok: true,configsDTO});
           }else{
             response.status(200).send({ok: false});
           }

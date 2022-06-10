@@ -11,6 +11,8 @@ import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
 import validateEnv from "../../../utils/validateEnv";
+import { Console } from "console";
+import { stringify } from "querystring";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
@@ -45,9 +47,6 @@ export default class ChatbotService extends Services{
       }
 
       var chatbotSession = await this._chatbotDatabase.findChatbotSessionBySessionId(chatbotMessageRequestDTO.sessionId);
-      if (! (await this.isMatchSessionChatbot(chatbotSession.id,clientDTO.id))) {
-        throw new NotFoundHttpException("ChatbotSession");
-      }
       if (!chatbotSession){
         const client = new Client();
         client.id = clientDTO.id;
@@ -57,6 +56,8 @@ export default class ChatbotService extends Services{
         newChatbotSession.id = chatbotMessageRequestDTO.sessionId;
 
         chatbotSession = await this._chatbotDatabase.insertChatbotSession(newChatbotSession);
+      } else if (! (await this.isMatchSessionChatbot(chatbotSession.id,clientDTO.id))) {
+          throw new NotFoundHttpException("ChatbotSession");
       }
 
       const chatbotMessage = new ChatbotMessage();
@@ -99,7 +100,7 @@ export default class ChatbotService extends Services{
         newChatbotMessage.message = res[0].queryResult.fulfillmentText;
         newChatbotMessage.date = new Date();
         newChatbotMessage.type = this.getBotTypeMessage();
-        newChatbotMessage.chatbotSession = chatbotSession;
+        newChatbotMessage.chatbotSession = chatbotSession;        
 
         await this._chatbotDatabase.insertChatbotMessage(newChatbotMessage);
 
@@ -108,6 +109,15 @@ export default class ChatbotService extends Services{
         newChatbotMessageDTO.date = newChatbotMessage.date.toString();
         newChatbotMessageDTO.sessionId = newChatbotMessage.chatbotSession.id;
         newChatbotMessageDTO.type = newChatbotMessage.type;
+
+        try {
+          if(res[0]?.queryResult?.fulfillmentMessages[1]?.payload?.fields["suggestions"]["listValue"]["values"]){
+            var suggestions = res[0]?.queryResult?.fulfillmentMessages[1]?.payload?.fields["suggestions"]["listValue"]["values"];
+            newChatbotMessageDTO.suggestions = suggestions.map((value)=>value["stringValue"]);
+          }
+        } catch (error) {
+          throw new HttpException(400,error.message);
+        }
 
         return newChatbotMessageDTO;
     }
