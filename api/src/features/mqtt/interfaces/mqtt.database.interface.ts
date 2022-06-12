@@ -4,7 +4,11 @@ import Measure from "../../../features/device/entities/measure.entity";
 import Device from "../../../features/device/entities/device.entity";
 
 export default interface MqttDatabase{
-    saveDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization>;
+    findDeviceLocalizationByDeviceId(deviceId: string): Promise<DeviceLocalization>;
+    
+    insertDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization>;
+    
+    updateDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<boolean>;
     saveDevicePreferences(devicePreferences: DevicePreferences): Promise<DevicePreferences>;
     insertMeasure(measure: Measure): Promise<Measure>;
     saveDevice(device: Device): Promise<Device>;

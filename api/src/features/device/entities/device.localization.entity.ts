@@ -3,7 +3,7 @@ import Device from "./device.entity";
 
 @Entity()
 export default class DeviceLocalization{
-    @PrimaryGeneratedColumn("increment")
+    @PrimaryGeneratedColumn("uuid")
     public id?: string;
     @Column({nullable: false})
     public latitude?: string;

@@ -12,10 +12,26 @@ export default class MqttPostgresDatabase implements MqttDatabase{
     constructor(dataSource: DataSource){
         this._appDataSource = dataSource;
     }
-
-    public async saveDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization> {
+    public async findDeviceLocalizationByDeviceId(deviceId: string): Promise<DeviceLocalization> {
+        try {
+            const device = new Device();
+            device.id = deviceId;
+            return await this._appDataSource.manager.findOne(DeviceLocalization,{where:{device}});
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        } 
+    }
+    public async insertDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization> {
         try {
             return await this._appDataSource.manager.save(deviceLocalization);
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        } 
+    }
+    public async updateDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<boolean> {
+        try {
+            await this._appDataSource.manager.update(DeviceLocalization,deviceLocalization.id,deviceLocalization);
+            return true;
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         } 

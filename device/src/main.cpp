@@ -15,7 +15,7 @@ void setup() {
   }else{
     ESP.restart();
   }
-  
+  console.ledOff();
 }
 void loop() {
   float temperature = measure.getTemperature();

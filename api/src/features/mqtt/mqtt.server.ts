@@ -8,6 +8,7 @@ import { plainToInstance } from "class-transformer";
 import { DataSource } from "typeorm";
 import MqttDatabase from "./interfaces/mqtt.database.interface";
 import MqttPostgresDatabase from "./database/mqtt.postgres.database";
+import DeviceLocalization from "../../features/device/entities/device.localization.entity";
 
 export default class MqttServer {
     private _mqqtClient = client;
@@ -22,61 +23,114 @@ export default class MqttServer {
             console.log("Mqtt Connected!");
         });
         this._mqqtClient.subscribe("device");
-
-        }
-    private async addMeasure(measure: Measure){
-        await this._database.insertMeasure(measure);
+        this._mqqtClient.subscribe("localization");
+        this._mqqtClient.subscribe("measure");    
     }
-    private async start(): Promise<void> {
+    private async start(){
         try {
             this._mqqtClient.on("message",async (topic,payload)=>{
-                var device: Device;
-                var measure: Measure;
                 var message: any;
                 try {
                     message = JSON.parse(payload.toString());
                 } catch (error) {
                     console.log("MQTT WRONG JSON: "+error.message)
-                } 
-                if (topic === "device" && message != null) {
-                    try {
-                        device = this.plainToDevice(message["deviceDTO"]);
-                        console.log(device);
-                    } catch (error) {
-                        console.log("MQTT ERROR: ",error.message);
-                    }
-                    if (device) {
-                        try {
-                            await this._database.saveDevice(device);
-                        } catch (error) {
-                            console.log("MQTT DATABASE ERROR: ",error.message);
-                        }
-                    }else{
-                        console.log("MQTT DEVICE NULL!");
-                    }
                 }
-                if (topic === "measure" && message != null) {
-                    try {
-                        measure = this.plainToMeasure(message["measureDTO"]);
-                        console.log(measure);
-                    } catch (error) {
-                        console.log("MQTT ERROR: ",error.message);
-                    }
-                    if (measure) {
-                        try {
-                            await this.addMeasure(measure);
-                        } catch (error) {
-                            console.log("MQTT DATABASE ERROR: ",error.message);
-                        }
-                    }else{
-                        console.log("MQTT MEASURE NULL!");
-                    }
+                switch (topic) {
+                    case "device":
+                        this.saveDevice(message);
+                    break;
+                    case "measure":
+                        this.addMeasure(message);
+                    break;
+                    case "localization":
+                        this.saveLocalization(message);
+                    break;
+                    default:
+                        
+                        break;
                 }
             }
         );
         } catch (error) {
             console.log("MQTT ERROR: "+error.message);
         }
+    }
+    private async saveLocalization(message: any){
+        var localization: DeviceLocalization;
+        if (message != null) {
+            try {
+                localization = this.plaintToDeviceLocalization(message["deviceLocalizationDTO"]);
+                console.log(localization);
+            } catch (error) {
+                console.log("MQTT ERROR: ",error.message);
+            }
+            if (localization) {
+                try {
+                    const old_localization = await this._database.findDeviceLocalizationByDeviceId(localization.device.id);
+                    if(old_localization){
+                        localization.id = old_localization.id;
+                        await this._database.updateDeviceLocalization(localization);
+                    }else{
+                        await this._database.insertDeviceLocalization(localization);
+                    }
+                } catch (error) {
+                    console.log("MQTT DATABASE ERROR: ",error.message);
+                }
+            }else{
+                console.log("MQTT MEASURE NULL!");
+            }
+        }
+    }
+    private async addMeasure(message: any){
+        var measure: Measure;
+        if (message != null) {
+            try {
+                measure = this.plainToMeasure(message["measureDTO"]);
+                console.log(measure);
+            } catch (error) {
+                console.log("MQTT ERROR: ",error.message);
+            }
+            if (measure) {
+                try {
+                    await this._database.insertMeasure(measure);
+                } catch (error) {
+                    console.log("MQTT DATABASE ERROR: ",error.message);
+                }
+            }else{
+                console.log("MQTT MEASURE NULL!");
+            }
+        }
+    }
+    private async saveDevice(message: any){
+        var device: Device;
+        if (message != null) {
+            try {
+                device = this.plainToDevice(message["deviceDTO"]);
+                console.log(device);
+            } catch (error) {
+                console.log("MQTT ERROR: ",error.message);
+            }
+            if (device) {
+                try {
+                    await this._database.saveDevice(device);
+                } catch (error) {
+                    console.log("MQTT DATABASE ERROR: ",error.message);
+                }
+            }else{
+                console.log("MQTT DEVICE NULL!");
+            }
+        }
+    }
+    private plaintToDeviceLocalization(message: any){
+        const deviceLocalization = new DeviceLocalization();
+        try {
+            deviceLocalization.device = plainToInstance(Device,message["deviceDTO"]);
+            deviceLocalization.latitude = message["latitude"];
+            deviceLocalization.longitude = message["longitude"];
+        } catch (error) {
+            throw new Error("Wrong Type Of Message Recived!"+ error.message);
+        }
+        return deviceLocalization
     }
     private plainToDevice(message: any){
         const device = new Device();
