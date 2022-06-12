@@ -7,14 +7,14 @@ class DeviceSettings
 {
 private:
 public:
-    void configure();
+    void configure(bool inLoop=false);
     bool isConnected();
     bool isPosted();
 };
 bool DeviceSettings::isConnected(){
     return wifiNetwork.isConnected();
 }
-void DeviceSettings::configure(){
+void DeviceSettings::configure(bool inLoop){
     console.ledOn();
     console.log("Starting configuration!");
     if (!preferences.isConfigured())
@@ -26,7 +26,7 @@ void DeviceSettings::configure(){
         }
         console.blink();
     }
-    if (!wifiNetwork.start())
+    if (!wifiNetwork.start(inLoop))
     {
         console.blink();
         console.log("Failed to connect!");

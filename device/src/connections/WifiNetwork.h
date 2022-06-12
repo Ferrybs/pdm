@@ -4,13 +4,13 @@
 class WifiNetwork{
 private:
 public:
-    bool start();
+    bool start(bool inLoop=false);
     bool isConnected();
 };
 bool WifiNetwork::isConnected(){
     return WiFi.isConnected();
 }
-bool WifiNetwork::start(){
+bool WifiNetwork::start(bool inLoop){
     int count = 0;
     String ssid, password;
     digitalWrite(2,LOW);
@@ -32,6 +32,10 @@ bool WifiNetwork::start(){
     console.log();
     if (WiFi.status() != WL_CONNECTED)
     {
+        if (inLoop)
+        {
+            ESP.restart();
+        }
         return false;
     }else{
         console.log("Connected!",false);

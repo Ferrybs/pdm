@@ -7,7 +7,6 @@ void setup() {
   device.configure();
   mqtt.setup();
   delay(500);
-  preferences.putPosted(false);
   if (device.isConnected()&& mqtt.isConnected())
   {
     mqtt.postDevice();
@@ -36,7 +35,7 @@ void loop() {
       mqtt.connect();
     }
   }else{
-    device.configure();
+    device.configure(true);
   }
   measureController.setTemperature(temperature);
   measureController.setHumidity(humidity);

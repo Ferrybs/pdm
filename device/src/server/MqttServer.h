@@ -130,9 +130,14 @@ boolean MqttServer::postMeasure(float value,int type){
         // console.log("message["+String(type)+"]: ",false);
         // console.log(buffer);
         status = client.publish(this->_measure,buffer,false);
+        if (status)
+        {
+            console.log("Type["+String(type) +"]: "+String(value));
+        }
+        
     }
     console.log("Status:",false);
-    console.log(status ? "Message send!": "Message was Not Send!");
+    console.log(status ? " Message send!": " Message was Not Send!");
     
     memset(buffer,0,sizeof(buffer));
     json.clear();
@@ -157,9 +162,11 @@ boolean MqttServer::connect(){
     while (!client.connected() && count<5) {
         count++;
         console.log("Attempting MQTT connection...",false);
+        
         if (client.connect(preferences.getId().c_str(),
-        preferences.getMqttUser().c_str(),
-        preferences.getMqttPassword().c_str())
+            preferences.getMqttUser().c_str(),
+            preferences.getMqttPassword().c_str(),
+            NULL, 2, false, NULL)
          ) {
             Serial.println("connected");
             String url = preferences.getId()+"/"+this->_settings;
@@ -173,6 +180,11 @@ boolean MqttServer::connect(){
             console.log(count,false);
             console.log(" Up to 5 ",false);
             console.blink(5);
+            //retirar depois que o bug for corrigido
+            if (count ==5)
+            {
+                ESP.restart();
+            }
         }
   }
   return client.connected();

@@ -3,6 +3,7 @@ import AuthJwtMiddleware from "../middleware/auth.client.jwt.middleware";
 import { DataSource } from "typeorm";
 import ClientController from "../controller/client.controller";
 import AuthMiddleware from "../interface/auth.client.middleware.interface";
+import MqttServer from "features/mqtt/mqtt.server";
 
 
 export default class ClientRoutes {
@@ -11,8 +12,8 @@ export default class ClientRoutes {
     private _controller;
     private _authMiddleware: AuthMiddleware = new AuthJwtMiddleware();;
 
-    constructor(appDataSource: DataSource){
-        this._controller = new ClientController(appDataSource);
+    constructor(appDataSource: DataSource,mqttServer: MqttServer){
+        this._controller = new ClientController(appDataSource,mqttServer);
         this.initializeRoutes();
     }
     

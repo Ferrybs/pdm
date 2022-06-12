@@ -15,5 +15,5 @@ export default interface DeviceDatabase{
     insertDevice(device: Device): Promise<Device>;
     insertMeasure(measure: Measure): Promise<Measure>;
     insertDevicePreferences(devicePreferences: DevicePreferences): Promise<DevicePreferences>;
-    insertDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization>;   
+    insertDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization>;
 }

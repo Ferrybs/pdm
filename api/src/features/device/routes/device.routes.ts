@@ -5,6 +5,7 @@ import DeviceAuth from "../interfaces/device.auth.interface";
 import DeviceAuthMiddleware from "../middlewares/device.auth.middleware";
 import DeviceValidation from "../interfaces/device.validation.interface";
 import DeviceValidationMiddleware from "../middlewares/device.validation.middleware";
+import MqttServer from "../../../features/mqtt/mqtt.server";
 
 
 export default class DeviceRoutes {
@@ -14,8 +15,8 @@ export default class DeviceRoutes {
     private _validationMiddleware: DeviceValidation = new DeviceValidationMiddleware();
     private _authMiddleware: DeviceAuth = new DeviceAuthMiddleware();
 
-    constructor(appDataSource: DataSource){
-        this._controller = new DeviceController(appDataSource);
+    constructor(appDataSource: DataSource,mqttServer: MqttServer){
+        this._controller = new DeviceController(appDataSource,mqttServer);
         this.initializeRoutes();
     }
     

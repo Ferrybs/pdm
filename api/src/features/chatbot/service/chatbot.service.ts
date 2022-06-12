@@ -11,8 +11,6 @@ import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
 import validateEnv from "../../../utils/validateEnv";
-import { Console } from "console";
-import { stringify } from "querystring";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;

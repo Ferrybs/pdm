@@ -41,11 +41,21 @@ float Measure::getTemperature(){
     }
 }
 float Measure::getLumiosity(){
-    float temt = analogRead(luminosity);
+    int count = 0;
+    float total = 0;
+    float average = 0;
+    while (count<250)
+    {
+        total += analogRead(luminosity);
+        delay(20);
+        count++;
+    }
+    average = total/count;
+    
     // console.log("Luminosity: ",false);
-    // Serial.print(temt);
-    // console.log(" LUX");
-    return temt;
+    // Serial.println(total);
+    // Serial.println(average);
+    return average;
 } 
 
 float Measure::getHumidity(){

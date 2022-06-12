@@ -5,6 +5,7 @@ import AuthMiddleware from "../middlewares/auth.middleware";
 import { DataSource } from "typeorm";
 import AuthValidation from "../interfaces/auth.validation.interface";
 import AuthValidationMiddleware from "../middlewares/auth.validation.middleware";
+import MqttServer from "features/mqtt/mqtt.server";
 export default class AuthRoutes {
     public path : string = '/auth';
     public router : Router = express.Router();
@@ -12,9 +13,9 @@ export default class AuthRoutes {
     private _validationMiddleware: AuthValidation;
     private _authMiddleware: Auth;
 
-    constructor(appDataSource: DataSource){
+    constructor(appDataSource: DataSource,mqttServer: MqttServer){
         this._validationMiddleware = new AuthValidationMiddleware();
-        this._controller = new AuthController(appDataSource);
+        this._controller = new AuthController(appDataSource,mqttServer);
         this._authMiddleware = new AuthMiddleware();
         this.initializeRoutes();
     }

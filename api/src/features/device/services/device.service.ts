@@ -24,9 +24,9 @@ import ConfigsDTO from "../dto/device.configs";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
-    constructor(dataSource: DataSource){
+    constructor(dataSource: DataSource,mqttServer: MqttServer){
         super(dataSource);
-        this._mqtt = new MqttServer(this._deviceDatabase);
+        this._mqtt = mqttServer;
     }
     public  async addDevice(deviceDTO: DeviceDTO, clientDTO: ClientDTO): Promise<boolean>{
         if(await this._deviceDatabase.findDeviceById(deviceDTO.id)){
