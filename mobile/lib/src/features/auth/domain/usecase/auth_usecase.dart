@@ -1,30 +1,21 @@
 import 'dart:async';
 import 'package:basearch/src/features/auth/data/dto/login_dto.dart';
 import 'package:basearch/src/features/auth/data/dto/person_dto.dart';
-import 'package:basearch/src/features/auth/data/dto/register_dto.dart';
-import 'package:basearch/src/features/auth/domain/model/client_model.dart';
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/login_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
 import 'package:basearch/src/features/auth/domain/model/register_model.dart';
 import 'package:basearch/src/features/auth/domain/model/token_data_model.dart';
+import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:basearch/src/validators/validator.dart';
 import 'package:dio/dio.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import '../repository/auth_interface.dart';
 
 class AuthUseCase {
   final repository = Modular.get<IAuth>();
-  final _encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
-
-  setAccessToken(TokenDataModel? tokeData) async {
-    String? token = tokeData?.token;
-    if (token != null) {
-      await _encryptedPreferences.setString("AccessToken", token);
-    }
-  }
+  final _preferences = Modular.get<PreferenceUsecase>();
 
   Future<String?> resetPassword(String email) async {
     var credentials = CredentialsModel(email: email);
@@ -61,7 +52,7 @@ class AuthUseCase {
           LoginModel(email: loginDTO.email, password: loginDTO.password);
       TokenDataModel? tokenData = await repository.login(loginModel);
       if (tokenData?.token != null) {
-        await setAccessToken(tokenData);
+        await _preferences.setAccessToken(tokenData!.token!);
         return null;
       } else {
         final requestOptions = RequestOptions(path: "/auth/login");

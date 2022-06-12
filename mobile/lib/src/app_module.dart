@@ -1,7 +1,7 @@
 import 'package:basearch/src/features/auth/auth_module.dart';
 import 'package:basearch/src/features/device/device_module.dart';
 import 'package:basearch/src/features/onboarding/onboarding_module.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_config/flutter_config.dart';
 
@@ -14,7 +14,7 @@ class AppModule extends Module {
         Bind((i) async {
           await FlutterConfig.loadEnvVariables();
         }),
-        Bind(((i) => EncryptedSharedPreferences()))
+        Bind(((i) => PreferenceUsecase()))
       ];
 
   @override

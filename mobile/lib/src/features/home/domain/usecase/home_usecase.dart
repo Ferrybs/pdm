@@ -2,8 +2,8 @@ import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/device_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
+import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:dio/dio.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 
@@ -11,7 +11,7 @@ import '../repository/home_interface.dart';
 
 class HomeUseCase {
   final repository = Modular.get<IHome>();
-  final encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
+  final _preference = Modular.get<PreferenceUsecase>();
   ClientModel? _clientModel;
   List<DeviceModel>? _deviceModelList;
   String? getPersonName() {
@@ -20,24 +20,32 @@ class HomeUseCase {
 
   Future<String?> getClientFromRepository() async {
     try {
-      String token = await encryptedPreferences.getString("AccessToken");
-      _clientModel = await repository.getClient(token);
-      if (_clientModel != null) {
-        return null;
+      String? token = await _preference.getAccessToken();
+      if (token != null) {
+        _clientModel = await repository.getClient(token);
       } else {
         return "session-error-tittle".i18n();
       }
+      if (_clientModel != null) {
+        return null;
+      } else {
+        return "error-get-client".i18n();
+      }
     } on DioError {
-      return "session-error-tittle".i18n();
+      return "error-get-client".i18n();
     } catch (e) {
-      return "session-error-tittle".i18n();
+      return "error-get-client".i18n();
     }
   }
 
   Future<String?> getDevicesFromRepository() async {
     try {
-      String token = await encryptedPreferences.getString("AccessToken");
-      _deviceModelList = await repository.getDevices(token);
+      String? token = await _preference.getAccessToken();
+      if (token != null) {
+        _deviceModelList = await repository.getDevices(token);
+      } else {
+        return "session-error-tittle".i18n();
+      }
       return null;
     } catch (e) {
       return "server-error".i18n();

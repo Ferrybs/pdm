@@ -6,7 +6,7 @@ import 'package:basearch/src/features/device/domain/model/device_config_model.da
 import 'package:basearch/src/features/device/domain/model/response_model.dart';
 import 'package:basearch/src/features/device/domain/model/wifi_model.dart';
 import 'package:basearch/src/features/device/domain/repository/device_interface.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -14,15 +14,15 @@ import 'package:localization/localization.dart';
 import 'dart:convert';
 
 class DeviceUseCase {
-  final repository = Modular.get<IDevice>();
-  BluDeviceConfigModel? bluDeviceConfigModel;
-  bool isConfigured = false;
-  ClientModel? clientModel;
-  DeviceConfigModel? deviceConfigModel;
-  BluetoothDevice? device;
+  final _repository = Modular.get<IDevice>();
+  final _preference = Modular.get<PreferenceUsecase>();
+  BluDeviceConfigModel? _bluDeviceConfigModel;
+  bool _isConfigured = false;
+  ClientModel? _clientModel;
+  DeviceConfigModel? _deviceConfigModel;
+  BluetoothDevice? _device;
   WifiModel? wifiModel;
   String? _deviceName;
-  final encryptedPreferences = Modular.get<EncryptedSharedPreferences>();
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
   String? updateDeviceErrorName(String? name) {
@@ -46,20 +46,24 @@ class DeviceUseCase {
   }
 
   Future<String?> getClient() async {
-    String token = await encryptedPreferences.getString("AccessToken");
-    clientModel = await repository.getClient(token);
-    if (clientModel != null) {
+    String? token = await _preference.getAccessToken();
+    if (token != null) {
+      _clientModel = await _repository.getClient(token);
+    }
+    if (_clientModel != null) {
       return null;
     }
-    return "";
+    return "error-get-client".i18n();
   }
 
   Future<bool> getDeviceConfigModel() async {
-    String token = await encryptedPreferences.getString("AccessToken");
+    String? token = await _preference.getAccessToken();
     try {
-      clientModel = clientModel ?? await repository.getClient(token);
-      deviceConfigModel = await repository.getDeviceConfigs(token);
-      if (clientModel != null && deviceConfigModel != null) {
+      if (token != null) {
+        _clientModel = _clientModel ?? await _repository.getClient(token);
+        _deviceConfigModel = await _repository.getDeviceConfigs(token);
+      }
+      if (_clientModel != null && _deviceConfigModel != null) {
         return true;
       }
     } catch (e) {
@@ -185,11 +189,11 @@ class DeviceUseCase {
   }
 
   bool validateBluDeviceConfig() {
-    if (bluDeviceConfigModel?.id != null &&
-        bluDeviceConfigModel?.key != null &&
-        bluDeviceConfigModel?.mqtt != null &&
-        bluDeviceConfigModel?.name != null &&
-        bluDeviceConfigModel?.wifi != null) {
+    if (_bluDeviceConfigModel?.id != null &&
+        _bluDeviceConfigModel?.key != null &&
+        _bluDeviceConfigModel?.mqtt != null &&
+        _bluDeviceConfigModel?.name != null &&
+        _bluDeviceConfigModel?.wifi != null) {
       return true;
     }
     return false;
@@ -202,11 +206,11 @@ class DeviceUseCase {
       if (ssid.length > 2 && password.length > 2) {
         wifiModel = WifiModel(ssid: wifiDTO.ssid!, password: wifiDTO.password!);
         try {
-          bluDeviceConfigModel = BluDeviceConfigModel(
-              id: clientModel!.id!,
-              key: deviceConfigModel!.key!,
+          _bluDeviceConfigModel = BluDeviceConfigModel(
+              id: _clientModel!.id!,
+              key: _deviceConfigModel!.key!,
               name: _deviceName!,
-              mqtt: deviceConfigModel!.mqtt!,
+              mqtt: _deviceConfigModel!.mqtt!,
               wifi: wifiModel!);
         } catch (e) {
           return StepState.error;
@@ -226,7 +230,7 @@ class DeviceUseCase {
   }
 
   bool _finishStepValidation() {
-    if (bluDeviceConfigModel != null && isConfigured) {
+    if (_bluDeviceConfigModel != null && _isConfigured) {
       return true;
     }
     return false;
@@ -234,18 +238,18 @@ class DeviceUseCase {
 
   Future<StepState> updateFinishConfig(int step) async {
     if (step == 2) {
-      if (bluDeviceConfigModel != null) {
+      if (_bluDeviceConfigModel != null) {
         try {
-          device = await _findDevice();
-          String bluString = bluDeviceConfigModel!.toJson().toString();
-          if (device != null) {
-            await _writeConfigs(device!, bluString.codeUnits);
+          _device = await _findDevice();
+          String bluString = _bluDeviceConfigModel!.toJson().toString();
+          if (_device != null) {
+            await _writeConfigs(_device!, bluString.codeUnits);
           }
           ResponseModel responseModel =
-              ResponseModel.fromJson(await _readConfigs(device!));
+              ResponseModel.fromJson(await _readConfigs(_device!));
 
           if (responseModel.ok == true) {
-            isConfigured = true;
+            _isConfigured = true;
             return StepState.complete;
           } else {
             return StepState.error;
@@ -268,7 +272,7 @@ class DeviceUseCase {
 
   bool _deviceStepValidation() {
     String deviceName = _deviceName ?? '';
-    if (deviceConfigModel != null && deviceName.length > 2) {
+    if (_deviceConfigModel != null && deviceName.length > 2) {
       return true;
     }
     return false;
