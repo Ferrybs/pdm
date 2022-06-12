@@ -107,16 +107,16 @@ export default class ChatbotService extends Services{
         newChatbotMessageDTO.date = newChatbotMessage.date.toString();
         newChatbotMessageDTO.sessionId = newChatbotMessage.chatbotSession.id;
         newChatbotMessageDTO.type = newChatbotMessage.type;
-
+        const suggestionsList: string[] = []
         try {
           if(res[0]?.queryResult?.fulfillmentMessages[1]?.payload?.fields["suggestions"]["listValue"]["values"]){
             var suggestions = res[0]?.queryResult?.fulfillmentMessages[1]?.payload?.fields["suggestions"]["listValue"]["values"];
-            newChatbotMessageDTO.suggestions = suggestions.map((value)=>value["stringValue"]);
+            suggestions.map((value)=> suggestionsList.push(value["stringValue"]));
           }
         } catch (error) {
           throw new HttpException(400,error.message);
         }
-
+        newChatbotMessageDTO.suggestions = suggestionsList;
         return newChatbotMessageDTO;
     }
 
