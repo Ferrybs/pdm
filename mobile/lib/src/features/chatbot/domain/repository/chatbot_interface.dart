@@ -10,7 +10,7 @@ abstract class IChatbot {
   //retorno: lista de sugestões, type, date, text, sessionId
   //delete messages
 
-  Future<ClientModel?> getClient(String token);
-  Future<ChatbotMessageResponseModel?> sendText(
+  Future<ClientModel> getClient(String token);
+  Future<ChatbotMessageResponseModel> sendText(
       ChatbotMessageRequestModel chatbotMessageRequestModel, String token);
 }

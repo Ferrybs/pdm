@@ -8,7 +8,7 @@ import '../../domain/repository/chatbot_interface.dart';
 
 class ChatbotRepository extends ChatbotRepositoryBase implements IChatbot {
   @override
-  Future<ChatbotMessageResponseModel?> sendText(
+  Future<ChatbotMessageResponseModel> sendText(
       ChatbotMessageRequestModel chatbotMessageRequestModel,
       String token) async {
     try {
@@ -17,29 +17,23 @@ class ChatbotRepository extends ChatbotRepositoryBase implements IChatbot {
       response = await dio.post("/chatbot/send/text",
           data: chatbotMessageRequestModel.toJson(),
           options: Options(headers: {"Authorization": "Bearer " + token}));
-      if (response.statusCode == 200) {
-        var messageResponse = ChatbotMessageResponseModel.fromJson(
-            response.data['chatbotMessageDTO']);
-        return messageResponse;
-      }
-      return null;
+      var messageResponse = ChatbotMessageResponseModel.fromJson(
+          response.data['chatbotMessageDTO']);
+      return messageResponse;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<ClientModel?> getClient(String token) async {
+  Future<ClientModel> getClient(String token) async {
     try {
       Response response;
       var dio = Dio(options);
       response = await dio.get("/client/",
           options: Options(headers: {"Authorization": "Bearer " + token}));
-      if (response.statusCode == 200) {
-        var messageResponse = ClientModel.fromJson(response.data['clientDTO']);
-        return messageResponse;
-      }
-      return null;
+      var messageResponse = ClientModel.fromJson(response.data['clientDTO']);
+      return messageResponse;
     } catch (e) {
       rethrow;
     }
