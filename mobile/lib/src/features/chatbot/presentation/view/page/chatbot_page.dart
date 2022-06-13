@@ -1,4 +1,3 @@
-import 'package:basearch/src/features/chatbot/presentation/view/page/data.dart';
 import 'package:basearch/src/features/chatbot/presentation/viewmodel/chatbot_viewmodel.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
@@ -94,22 +93,4 @@ class _ChatbotPage extends State<ChatbotPage> {
       onPressed: () => {_viewModel.navigateToHome()},
     );
   }
-
-  // Future<String?> _sendMessageRequest(String m) async {
-  //   if (await _viewModel.sendText(m) == null) {
-  //     var response = _viewModel.messageResponse();
-  //     return response;
-  //   }
-  // }
-
-  // _addMessageResponse() {
-  //   var m = ChatMessage(
-  //     text: _viewModel.text,
-  //     user: ChatUser(id: "0", firstName: _viewModel.getChatbotTitle()),
-  //     createdAt: DateTime.now(),
-  //     quickReplies: _createSuggestionsList(),
-  //   );
-
-  //   return m;
-  // }
 }

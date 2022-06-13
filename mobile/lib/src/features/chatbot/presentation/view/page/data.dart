@@ -14,5 +14,3 @@ List<ChatMessage> quickReplies = <ChatMessage>[
     ],
   ),
 ];
-
-List<ChatMessage> d = <ChatMessage>[];

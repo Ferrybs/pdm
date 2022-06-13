@@ -8,7 +8,6 @@ import 'package:mobx/mobx.dart';
 import '../../data/dto/person_dto.dart';
 import '../../data/dto/response_dto.dart';
 import '../../domain/usecase/chatbot_usecase.dart';
-import '../view/page/data.dart';
 
 part 'chatbot_viewmodel.g.dart';
 
@@ -60,6 +59,7 @@ abstract class _ChatbotViewModel with Store {
     if (response != null) {
       insertMessage(ChatMessage(
           user: botUser,
+          text: response.text!,
           createdAt: DateTime.parse(response.date!),
           quickReplies: _createSuggestionsList(response.suggestions!)));
     }
@@ -99,30 +99,7 @@ abstract class _ChatbotViewModel with Store {
     return sessionId;
   }
 
-  Future<String> setDate() async {
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(now);
-    return formattedDate;
-  }
-
-  Future<String?> sendText(String m) async {
-    String date = await setDate();
-    String? sessionId = await setSessionId();
-    String? response = await _usecase.sendText(m, date, sessionId!);
-
-    if (response == null) {
-      return _usecase.messageResponse.text;
-    }
-
-    return response;
-  }
-
   void navigateToHome() {
     Modular.to.navigate('/home/');
   }
-
-  // List<ChatMessage> get messages {
-  //   List<ChatMessage> messages = quickReplies;
-  //   return messages;
-  // }
 }
