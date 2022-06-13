@@ -53,6 +53,6 @@
     "device-connection":"Device Connection",
     "step":"Step",
     "step1-device-config":"Connect to device Access Point",
-    "click-on": "Click on"
-
+    "click-on": "Click on",
+    "chatbot-title": "Plantie"
 }

@@ -1,6 +1,7 @@
 import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/home/data/dto/person_dto.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -107,7 +108,8 @@ abstract class _HomeViewModelBase with Store {
   }
 
   void navigateToMap() {
-    Modular.to.navigate('/map/');
+    // Modular.to.navigate('/map/');
+    Modular.to.navigate('/chatbot');
   }
 
   void navigateToDevice() {

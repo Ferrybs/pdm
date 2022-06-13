@@ -32,6 +32,9 @@ dependencies:
   geolocator: ^8.2.1
   google_maps_flutter: ^2.1.5
   dotenv: ^4.0.1
+  dash_chat_2: ^0.0.6
+  uuid: ^3.0.6
+  intl: ^0.17.0
 
 
 dev_dependencies:
