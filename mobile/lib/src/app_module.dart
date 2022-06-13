@@ -5,6 +5,7 @@ import 'package:basearch/src/features/preference/domain/usecase/preference_useca
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_config/flutter_config.dart';
 
+import 'features/chatbot/chatbot_module.dart';
 import 'features/home/home_module.dart';
 import 'features/map/map_module.dart';
 
@@ -23,6 +24,7 @@ class AppModule extends Module {
         ModuleRoute('/auth', module: AuthModule()),
         ModuleRoute('/home', module: HomeModule()),
         ModuleRoute('/map', module: MapModule()),
-        ModuleRoute('/device', module: DeviceModule())
+        ModuleRoute('/device', module: DeviceModule()),
+        ModuleRoute('/chatbot', module: ChatbotModule())
       ];
 }

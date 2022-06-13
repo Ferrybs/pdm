@@ -56,6 +56,8 @@
     "error-device-name": "Invalid Device Name",
     "error-wifi": "Invalid SSID or Password",
     "finish-device-config":"If you are not redirected to the home screen, please check the data and try again. ",
-    "click-on": "Click on"
-
+    "step":"Step",
+    "step1-device-config":"Connect to device Access Point",
+    "click-on": "Click on",
+    "chatbot-title": "Plantie"
 }
