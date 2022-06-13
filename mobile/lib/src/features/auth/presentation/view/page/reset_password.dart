@@ -62,7 +62,7 @@ class _ResetPassord extends State<ResetPassword> {
         _dialog("email-send-success".i18n(), "continue".i18n(),
             _viewModel.navigateToLoginPage);
       } else {
-        _dialog(result, "try-agin".i18n(), null);
+        _dialog(result, "try-again".i18n(), null);
       }
     }
   }

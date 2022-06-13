@@ -14,50 +14,64 @@ import 'package:localization/localization.dart';
 import '../repository/auth_interface.dart';
 
 class AuthUseCase {
-  final repository = Modular.get<IAuth>();
+  final _repository = Modular.get<IAuth>();
   final _preferences = Modular.get<PreferenceUsecase>();
 
-  Future<String?> resetPassword(String email) async {
-    var credentials = CredentialsModel(email: email);
-    try {
-      if (await repository.resetPassword(credentials)) {
-        return null;
-      } else {
-        final requestOptions = RequestOptions(path: "/auth/reset-password");
-        throw DioError(requestOptions: requestOptions);
-      }
-    } on DioError catch (e) {
-      if (e.response != null) {
-        switch (e.response?.statusCode) {
-          case 401:
-            return "not-found".i18n();
-          case 404:
-            return "server-error".i18n();
-          default:
-            if (e.response?.data) {
-              var data = e.response?.data;
-              if (data["message"] != null) {
-                return data["message"];
-              }
-            }
-        }
-      }
-      return "server-error".i18n();
+  Future<bool> hasValidToken() async {
+    if (await _preferences.getAccessToken() != null) {
+      return true;
+    } else {
+      return false;
     }
   }
 
-  Future<String?> login(LoginDTO loginDTO) async {
-    try {
-      var loginModel =
-          LoginModel(email: loginDTO.email, password: loginDTO.password);
-      TokenDataModel? tokenData = await repository.login(loginModel);
-      if (tokenData?.token != null) {
-        await _preferences.setAccessToken(tokenData!.token!);
-        return null;
-      } else {
-        final requestOptions = RequestOptions(path: "/auth/login");
-        throw DioError(requestOptions: requestOptions);
+  Future<String?> resetPassword(String? email) async {
+    CredentialsModel? credentials;
+    if (email != null) {
+      credentials = CredentialsModel(email: email);
+      try {
+        if (await _repository.resetPassword(credentials)) {
+          return null;
+        } else {
+          final requestOptions = RequestOptions(path: "/auth/reset-password");
+          throw DioError(requestOptions: requestOptions);
+        }
+      } on DioError catch (e) {
+        if (e.response != null) {
+          switch (e.response?.statusCode) {
+            case 401:
+              return "not-found".i18n();
+            case 404:
+              return "server-error".i18n();
+            default:
+              if (e.response?.data) {
+                var data = e.response?.data;
+                if (data["message"] != null) {
+                  return data["message"];
+                }
+              }
+          }
+        }
+      } catch (e) {
+        return "server-error".i18n();
       }
+    }
+    return "server-error".i18n();
+  }
+
+  Future<String?> login(LoginDTO loginDTO, bool isRefreshToken) async {
+    try {
+      LoginModel loginModel = LoginModel(
+          email: loginDTO.email?.trim() ?? '',
+          password: loginDTO.password?.trim() ?? '');
+      TokenDataModel tokenData = await _repository.login(loginModel);
+      await _preferences.setAccessToken(tokenData.token);
+      if (isRefreshToken) {
+        TokenDataModel refreshToken =
+            await _repository.getRefreshToken(tokenData.token);
+        await _preferences.setRefreshToken(refreshToken.token);
+      }
+      return null;
     } on DioError catch (e) {
       if (e.response != null) {
         switch (e.response?.statusCode) {
@@ -77,17 +91,22 @@ class AuthUseCase {
         }
       }
       return "server-error".i18n();
+    } catch (e) {
+      return "server-error".i18n();
     }
   }
 
   Future<String?> register(LoginDTO loginDTO, PersonDTO personDTO) async {
-    var loginModel =
-        LoginModel(email: loginDTO.email, password: loginDTO.password);
-    var personModel =
-        PersonModel(name: personDTO.name, lastName: personDTO.lastName);
-    var registerModel = RegisterModel(login: loginModel, person: personModel);
+    LoginModel loginModel = LoginModel(
+        email: loginDTO.email?.trim() ?? '',
+        password: loginDTO.password?.trim() ?? '');
+    PersonModel personModel = PersonModel(
+        name: personDTO.name?.trim() ?? '',
+        lastName: personDTO.lastName?.trim() ?? "");
+    RegisterModel registerModel =
+        RegisterModel(login: loginModel, person: personModel);
     try {
-      if (await repository.register(registerModel)) {
+      if (await _repository.register(registerModel)) {
         return null;
       } else {
         final requestOptions = RequestOptions(path: "/auth/register");

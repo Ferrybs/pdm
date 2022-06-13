@@ -1,9 +1,10 @@
 class TokenDataModel {
-  final String? token;
-  final int? expiresIn;
-  final int? iat;
+  final String token;
+  final int expiresIn;
+  final int iat;
 
-  TokenDataModel({this.token, this.expiresIn, this.iat});
+  TokenDataModel(
+      {required this.token, required this.expiresIn, required this.iat});
 
   factory TokenDataModel.fromJson(Map<String, dynamic> json) => TokenDataModel(
       token: json["token"], expiresIn: json["expiresIn"], iat: json["iat"]);

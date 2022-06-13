@@ -104,7 +104,7 @@ export default class ChatbotService extends Services{
 
         const newChatbotMessageDTO = new ChatbotMessageResponseDTO();
         newChatbotMessageDTO.text = newChatbotMessage.message;
-        newChatbotMessageDTO.date = newChatbotMessage.date.toString();
+        newChatbotMessageDTO.date = newChatbotMessage.date.toISOString();
         newChatbotMessageDTO.sessionId = newChatbotMessage.chatbotSession.id;
         newChatbotMessageDTO.type = newChatbotMessage.type;
         const suggestionsList: string[] = []

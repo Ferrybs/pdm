@@ -13,13 +13,13 @@ mixin _$AuthViewModel on _AuthViewModelBase, Store {
       Atom(name: '_AuthViewModelBase.name', context: context);
 
   @override
-  String get name {
+  String? get name {
     _$nameAtom.reportRead();
     return super.name;
   }
 
   @override
-  set name(String value) {
+  set name(String? value) {
     _$nameAtom.reportWrite(value, super.name, () {
       super.name = value;
     });
@@ -29,13 +29,13 @@ mixin _$AuthViewModel on _AuthViewModelBase, Store {
       Atom(name: '_AuthViewModelBase.lastName', context: context);
 
   @override
-  String get lastName {
+  String? get lastName {
     _$lastNameAtom.reportRead();
     return super.lastName;
   }
 
   @override
-  set lastName(String value) {
+  set lastName(String? value) {
     _$lastNameAtom.reportWrite(value, super.lastName, () {
       super.lastName = value;
     });
@@ -45,13 +45,13 @@ mixin _$AuthViewModel on _AuthViewModelBase, Store {
       Atom(name: '_AuthViewModelBase.email', context: context);
 
   @override
-  String get email {
+  String? get email {
     _$emailAtom.reportRead();
     return super.email;
   }
 
   @override
-  set email(String value) {
+  set email(String? value) {
     _$emailAtom.reportWrite(value, super.email, () {
       super.email = value;
     });
@@ -61,13 +61,13 @@ mixin _$AuthViewModel on _AuthViewModelBase, Store {
       Atom(name: '_AuthViewModelBase.password', context: context);
 
   @override
-  String get password {
+  String? get password {
     _$passwordAtom.reportRead();
     return super.password;
   }
 
   @override
-  set password(String value) {
+  set password(String? value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
     });
@@ -77,20 +77,63 @@ mixin _$AuthViewModel on _AuthViewModelBase, Store {
       Atom(name: '_AuthViewModelBase.confirmPassword', context: context);
 
   @override
-  String get confirmPassword {
+  String? get confirmPassword {
     _$confirmPasswordAtom.reportRead();
     return super.confirmPassword;
   }
 
   @override
-  set confirmPassword(String value) {
+  set confirmPassword(String? value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
     });
   }
 
+  late final _$hasTokenAtom =
+      Atom(name: '_AuthViewModelBase.hasToken', context: context);
+
+  @override
+  bool get hasToken {
+    _$hasTokenAtom.reportRead();
+    return super.hasToken;
+  }
+
+  @override
+  set hasToken(bool value) {
+    _$hasTokenAtom.reportWrite(value, super.hasToken, () {
+      super.hasToken = value;
+    });
+  }
+
+  late final _$isRefreshTokenAtom =
+      Atom(name: '_AuthViewModelBase.isRefreshToken', context: context);
+
+  @override
+  bool get isRefreshToken {
+    _$isRefreshTokenAtom.reportRead();
+    return super.isRefreshToken;
+  }
+
+  @override
+  set isRefreshToken(bool value) {
+    _$isRefreshTokenAtom.reportWrite(value, super.isRefreshToken, () {
+      super.isRefreshToken = value;
+    });
+  }
+
   late final _$_AuthViewModelBaseActionController =
       ActionController(name: '_AuthViewModelBase', context: context);
+
+  @override
+  dynamic changeRefresh(bool? value) {
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.changeRefresh');
+    try {
+      return super.changeRefresh(value);
+    } finally {
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic updateName(String value) {
@@ -148,13 +191,26 @@ mixin _$AuthViewModel on _AuthViewModelBase, Store {
   }
 
   @override
+  dynamic updateToken(bool value) {
+    final _$actionInfo = _$_AuthViewModelBaseActionController.startAction(
+        name: '_AuthViewModelBase.updateToken');
+    try {
+      return super.updateToken(value);
+    } finally {
+      _$_AuthViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 name: ${name},
 lastName: ${lastName},
 email: ${email},
 password: ${password},
-confirmPassword: ${confirmPassword}
+confirmPassword: ${confirmPassword},
+hasToken: ${hasToken},
+isRefreshToken: ${isRefreshToken}
     ''';
   }
 }

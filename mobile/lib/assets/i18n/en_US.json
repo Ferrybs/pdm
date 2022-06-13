@@ -28,6 +28,7 @@
     "invalid-passwordMatch": "Password dit not Match",
     "reset-password": "Reset Password",
     "reset": "Reset",
+    "remember-me": "Remember me",
     "create-account-success": "Your account has been created!",
     "email-send-success": "Email send with success!",
     "create-account-failed": "Ooops, something went wrong!",

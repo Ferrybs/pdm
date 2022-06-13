@@ -2,6 +2,7 @@ import 'package:basearch/src/features/auth/presentation/view/widget/dialog_conta
 import 'package:basearch/src/features/auth/presentation/view/widget/text_field_login.dart';
 import 'package:basearch/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,43 +23,100 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(children: [
-            _logo(),
-            _loginText(context),
-            _signIn(),
-            TextInputAuth(
-              errorText: emailError,
-              onChange: (value) {
-                _viewModel.updateEmail(value);
-              },
-              label: 'email'.i18n(),
-              prefixIcon: const Icon(
-                IconData(0xe780, fontFamily: 'MaterialIcons'),
-              ),
-            ),
-            TextInputAuth(
-                errorText: passwordError,
-                onChange: (value) {
-                  _viewModel.updatePassword(value);
-                },
-                prefixIcon: const Icon(
-                  IconData(0xeb71, fontFamily: 'MaterialIcons'),
-                ),
-                obscureText: true,
-                label: 'password'.i18n()),
-            _button(_login, Text('login'.i18n().toUpperCase())),
-            Center(
-              child: TextButton(
-                child: Text('forgot-password'.i18n()),
-                onPressed: () => Modular.to.pushNamed('/auth/reset-password'),
-              ),
-            ),
-            const SizedBox(height: 25),
-            _row(_theme)
-          ]),
+        child: Observer(
+      builder: (_) => FutureBuilder(
+          builder: ((context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (_viewModel.hasToken) {
+                _viewModel.navigateToHomePage();
+              } else {
+                return Scaffold(
+                  body: SingleChildScrollView(
+                    child: Column(children: [
+                      _logo(),
+                      _loginText(context),
+                      _signIn(),
+                      _emailInput(),
+                      _passwordInput(),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                            child: Observer(
+                              builder: ((context) => Checkbox(
+                                  fillColor: MaterialStateProperty.resolveWith(
+                                      _getColor),
+                                  value: _viewModel.isRefreshToken,
+                                  onChanged: _viewModel.changeRefresh)),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
+                            child: Text("remember-me".i18n()),
+                          )
+                        ],
+                      ),
+                      _button(_login, Text('login'.i18n().toUpperCase())),
+                      _forgotPassword(),
+                      const SizedBox(height: 25),
+                      _row(_theme)
+                    ]),
+                  ),
+                );
+              }
+            }
+            return Center(
+                child: CircularProgressIndicator(
+              color: _theme.backgroundColor,
+            ));
+          }),
+          future: _viewModel.loadData()),
+    ));
+  }
+
+  Color? _getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return _theme.backgroundColor;
+    }
+    return _theme.backgroundColor;
+  }
+
+  Center _forgotPassword() {
+    return Center(
+      child: TextButton(
+        child: Text('forgot-password'.i18n()),
+        onPressed: () => Modular.to.pushNamed('/auth/reset-password'),
+      ),
+    );
+  }
+
+  TextInputAuth _passwordInput() {
+    return TextInputAuth(
+        errorText: passwordError,
+        onChange: (value) {
+          _viewModel.updatePassword(value);
+        },
+        prefixIcon: const Icon(
+          IconData(0xeb71, fontFamily: 'MaterialIcons'),
         ),
+        obscureText: true,
+        label: 'password'.i18n());
+  }
+
+  TextInputAuth _emailInput() {
+    return TextInputAuth(
+      errorText: emailError,
+      onChange: (value) {
+        _viewModel.updateEmail(value);
+      },
+      label: 'email'.i18n(),
+      prefixIcon: const Icon(
+        IconData(0xe780, fontFamily: 'MaterialIcons'),
       ),
     );
   }
@@ -96,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_viewModel.signInValidation()) {
       var result = await _doLogin();
       if (result != null) {
-        _dialog(result, "try-agin".i18n());
+        _dialog(result, "try-again".i18n());
       }
     }
   }

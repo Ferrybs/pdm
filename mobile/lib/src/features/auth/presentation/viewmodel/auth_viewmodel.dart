@@ -14,19 +14,30 @@ abstract class _AuthViewModelBase with Store {
   final _usecase = Modular.get<AuthUseCase>();
 
   @observable
-  String name = '';
+  String? name;
 
   @observable
-  String lastName = '';
+  String? lastName;
 
   @observable
-  String email = '';
+  String? email;
 
   @observable
-  String password = '';
+  String? password;
 
   @observable
-  String confirmPassword = '';
+  String? confirmPassword;
+
+  @observable
+  bool hasToken = false;
+
+  @observable
+  bool isRefreshToken = false;
+
+  @action
+  changeRefresh(bool? value) {
+    isRefreshToken = value!;
+  }
 
   @action
   updateName(String value) {
@@ -40,7 +51,7 @@ abstract class _AuthViewModelBase with Store {
 
   @action
   updateEmail(String value) {
-    email = value;
+    email = value.trim();
   }
 
   @action
@@ -53,15 +64,24 @@ abstract class _AuthViewModelBase with Store {
     confirmPassword = value;
   }
 
+  @action
+  updateToken(bool value) {
+    hasToken = value;
+  }
+
   Future<String?> resetPassword() async {
     return _usecase.resetPassword(email);
   }
 
+  loadData() async {
+    updateToken(await _usecase.hasValidToken());
+  }
+
   Future<String?> login() async {
     var loginDTO = LoginDTO(email, password);
-    var result = await _usecase.login(loginDTO);
+    var result = await _usecase.login(loginDTO, isRefreshToken);
     if (result == null) {
-      Modular.to.navigate("/home/");
+      navigateToHomePage();
     }
     return result;
   }
@@ -119,5 +139,9 @@ abstract class _AuthViewModelBase with Store {
 
   void navigateToLoginPage() {
     Modular.to.navigate("/auth/");
+  }
+
+  void navigateToHomePage() {
+    Modular.to.navigate("/home/");
   }
 }

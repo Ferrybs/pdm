@@ -1,15 +1,13 @@
 import 'package:basearch/src/features/auth/domain/model/credentials_model.dart';
 import 'package:basearch/src/features/auth/domain/model/person_model.dart';
-import 'package:basearch/src/features/auth/domain/model/response_model.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
 class ClientModel {
-  final String? id;
-  final CredentialsModel? credentials;
-  final PersonModel? person;
+  final String id;
+  final CredentialsModel credentials;
+  final PersonModel person;
 
-  ClientModel({this.id, this.credentials, this.person});
+  ClientModel(
+      {required this.id, required this.credentials, required this.person});
 
   factory ClientModel.fromJson(Map<dynamic, dynamic> json) => ClientModel(
       id: json["id"],

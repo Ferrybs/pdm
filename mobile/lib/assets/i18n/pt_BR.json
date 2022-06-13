@@ -28,6 +28,7 @@
     "invalid-passwordMatch": "Senhas não são iguais",
     "reset-password": "Redefinir Senha",
     "reset": "Redefinir",
+    "remember-me": "Lembre-se de mim",
     "create-account-success": "Sua conta foi criada!",
     "email-send-success": "Email enviado com sucesso!",
     "create-account-failed": "Ooops, algo saiu errado!",
