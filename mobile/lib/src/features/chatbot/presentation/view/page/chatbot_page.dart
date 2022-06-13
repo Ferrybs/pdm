@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
-import 'package:mobx/mobx.dart';
-
 import '../widget/dialog_container.dart';
 
 class ChatbotPage extends StatefulWidget {

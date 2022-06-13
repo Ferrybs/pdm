@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/presentation/view/page/home_chat_page.dart';
 import 'package:basearch/src/features/home/presentation/view/page/home_device_page.dart';
 import 'package:basearch/src/features/home/presentation/view/page/home_plant_page.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
@@ -23,6 +24,7 @@ class _HomePage extends State<HomePage> {
   List widgetOptions = [
     const HomeDevicePage(),
     const HomePlantPage(),
+    const HomeChatPage()
   ];
   @override
   Widget build(BuildContext context) {

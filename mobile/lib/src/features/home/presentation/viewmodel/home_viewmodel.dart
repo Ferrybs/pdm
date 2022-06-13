@@ -87,6 +87,19 @@ abstract class _HomeViewModelBase with Store {
     }
   }
 
+  getChatData() async {
+    String? errorLocal;
+    errorLocal = await _usecase.getClientFromRepository() ?? errorLocal;
+    updateError(errorLocal);
+    String? name = _usecase.getPersonName();
+    if (name != null) {
+      updateClientName(name);
+    } else {
+      updateError("session-error-tittle".i18n());
+      return;
+    }
+  }
+
   String gethomeTittle() {
     if (personDTO.name != null) {
       return personDTO.name! + ", " + "home-tittle".i18n();
@@ -103,13 +116,24 @@ abstract class _HomeViewModelBase with Store {
     }
   }
 
+  String getChathomeTittle() {
+    if (personDTO.name != null) {
+      return personDTO.name! + ", " + "home-chat-tittle".i18n();
+    } else {
+      return "session-error-tittle".i18n();
+    }
+  }
+
   void navigateToLogin() {
     Modular.to.navigate("/auth/");
   }
 
   void navigateToMap() {
-    // Modular.to.navigate('/map/');
-    Modular.to.navigate('/chatbot');
+    Modular.to.navigate('/map/');
+  }
+
+  void navigateToChatbot() {
+    Modular.to.navigate('/chatbot/');
   }
 
   void navigateToDevice() {

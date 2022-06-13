@@ -3,7 +3,6 @@ import 'package:basearch/src/features/chatbot/domain/model/chatbot_message_respo
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
 import 'package:localization/localization.dart';
 import 'package:uuid/uuid.dart';
 
