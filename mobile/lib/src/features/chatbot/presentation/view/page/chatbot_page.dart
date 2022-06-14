@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/chatbot/presentation/view/widget/chatbot_app_bar.dart';
 import 'package:basearch/src/features/chatbot/presentation/viewmodel/chatbot_viewmodel.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +22,7 @@ class _ChatbotPage extends State<ChatbotPage> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: _createTitle(_viewModel.getChatbotTitle()),
-        actions: [_createAction()],
-      ),
+      appBar: ChatbotAppBar(),
       body: Observer(
           builder: (_) => FutureBuilder(
               builder: ((context, snapshot) {

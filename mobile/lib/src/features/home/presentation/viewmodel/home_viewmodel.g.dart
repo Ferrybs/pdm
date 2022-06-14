@@ -41,6 +41,22 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+  late final _$chatbotSessionsAtom =
+      Atom(name: '_HomeViewModelBase.chatbotSessions', context: context);
+
+  @override
+  List<ChatbotSessionDTO> get chatbotSessions {
+    _$chatbotSessionsAtom.reportRead();
+    return super.chatbotSessions;
+  }
+
+  @override
+  set chatbotSessions(List<ChatbotSessionDTO> value) {
+    _$chatbotSessionsAtom.reportWrite(value, super.chatbotSessions, () {
+      super.chatbotSessions = value;
+    });
+  }
+
   late final _$currentIndexAtom =
       Atom(name: '_HomeViewModelBase.currentIndex', context: context);
 
@@ -148,10 +164,22 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+  void updateChatbotSession(List<ChatbotSessionDTO> list) {
+    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
+        name: '_HomeViewModelBase.updateChatbotSession');
+    try {
+      return super.updateChatbotSession(list);
+    } finally {
+      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 personDTO: ${personDTO},
 devicelist: ${devicelist},
+chatbotSessions: ${chatbotSessions},
 currentIndex: ${currentIndex},
 error: ${error},
 plantList: ${plantList}

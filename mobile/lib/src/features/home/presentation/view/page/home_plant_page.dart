@@ -27,7 +27,8 @@ class _HomePlantPage extends State<HomePlantPage> {
                     return Container(
                       color: _theme.colorScheme.background,
                       child: DialogContainer(
-                        message: _viewModel.error ?? "error-get-client".i18n(),
+                        message:
+                            _viewModel.error ?? "session-error-tittle".i18n(),
                         buttonText: "try-again".i18n(),
                         onClick: () {
                           _viewModel.navigateToLogin();

@@ -53,7 +53,7 @@ class DeviceUseCase {
     if (_clientModel != null) {
       return null;
     }
-    return "error-get-client".i18n();
+    return "session-error-tittle".i18n();
   }
 
   Future<bool> getDeviceConfigModel() async {

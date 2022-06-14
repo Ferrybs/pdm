@@ -34,5 +34,10 @@ export default class ChatbotRoutes {
             `${this.path}/:id`,
             this._chatbotAuthMiddleware.verifyAccessToken(),
             this._controller.deleteAllMessagesBySessionId.bind(this._controller));
+        this.router.get(
+                `${this.path}`,
+                this._chatbotAuthMiddleware.verifyAccessToken(),
+                this._controller.getAllChatbotSessions.bind(this._controller));
+        
     }
 }

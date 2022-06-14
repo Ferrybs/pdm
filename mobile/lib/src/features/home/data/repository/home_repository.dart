@@ -1,18 +1,18 @@
 import 'dart:async';
 
 import 'package:basearch/src/features/home/data/repository/home_repository_base.dart';
+import 'package:basearch/src/features/home/domain/model/chatbot_session_model.dart';
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/device_model.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
-import 'package:basearch/src/features/home/domain/model/response_model.dart';
 import 'package:dio/dio.dart';
 import '../../domain/model/chart_serie.dart';
 import '../../domain/repository/home_interface.dart';
 
 class HomeRepository extends HomeRepositoryBase implements IHome {
   @override
-  Future<List<PlantStatsModel>?> getPlantStats() {
-    Future<List<PlantStatsModel>?> list = Future.value(
+  Future<List<PlantStatsModel>> getPlantStats() {
+    Future<List<PlantStatsModel>> list = Future.value(
       [
         PlantStatsModel(
           name: "planta #1",
@@ -192,40 +192,43 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   }
 
   @override
-  Future<ClientModel?> getClient(String token) async {
+  Future<ClientModel> getClient(String token) async {
     try {
       Response response;
       var dio = Dio(APIoptions);
       response = await dio.get("/client/",
           options: Options(headers: {"Authorization": "Bearer " + token}));
-      if (response.statusCode == 200) {
-        final data = ResponseModel.fromJson(response.data);
-        if (data.ok == true) {
-          return ClientModel.fromJson(response.data["clientDTO"]);
-        }
-      }
-      return null;
+      return ClientModel.fromJson(response.data["clientDTO"]);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<List<DeviceModel>?> getDevices(String token) async {
+  Future<List<DeviceModel>> getDevices(String token) async {
     try {
       Response response;
       var dio = Dio(APIoptions);
       response = await dio.get("/device",
           options: Options(headers: {"Authorization": "Bearer " + token}));
-      if (response.statusCode == 200) {
-        final data = ResponseModel.fromJson(response.data);
-        if (data.ok == true) {
-          return (response.data['deviceDTO'] as List)
-              .map((device) => DeviceModel.fromJson(device))
-              .toList();
-        }
-      }
-      return null;
+      return (response.data['deviceDTO'] as List)
+          .map((device) => DeviceModel.fromJson(device))
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ChatbotSessionModel>> getChatbotSessions(String token) async {
+    try {
+      Response response;
+      var dio = Dio(APIoptions);
+      response = await dio.get("/chatbot",
+          options: Options(headers: {"Authorization": "Bearer " + token}));
+      return (response.data['chatbotSessionsDTO'] as List)
+          .map((session) => ChatbotSessionModel.fromJson(session))
+          .toList();
     } catch (e) {
       rethrow;
     }

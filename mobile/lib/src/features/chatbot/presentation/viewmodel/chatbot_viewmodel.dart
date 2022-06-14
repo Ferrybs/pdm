@@ -80,7 +80,7 @@ abstract class _ChatbotViewModel with Store {
           lastName: personDTO.lastName!));
       updateSessionId("6776u9dg");
     } else {
-      updateErrorLoad("error-get-client".i18n());
+      updateErrorLoad("session-error-tittle".i18n());
     }
   }
 

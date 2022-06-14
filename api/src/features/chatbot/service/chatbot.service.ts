@@ -11,6 +11,10 @@ import ClientChatbotDTO from "../dto/client.chatbot.dto";
 import ChatbotMessage from "../entities/chatbot.message.entity";
 import Client from "../../../features/client/entities/client.entity";
 import validateEnv from "../../../utils/validateEnv";
+import ChatbotSessionDTO from "../dto/chatbot.session.dto";
+import ChatbotMessageDTO from "../dto/chatbot.message.dto";
+import { plainToInstance } from "class-transformer";
+import ChatbotTypeMessageDTO from "../dto/chatbot.type.message.dto";
 
 export default class ChatbotService extends Services{
     private _privateKey: string;
@@ -119,8 +123,29 @@ export default class ChatbotService extends Services{
         newChatbotMessageDTO.suggestions = suggestionsList;
         return newChatbotMessageDTO;
     }
-
-
+    public async getAllSessions(clientDTO: ClientChatbotDTO): Promise<ChatbotSessionDTO[]>{
+      try {
+        const chatbotSessionsDTO: ChatbotSessionDTO[] = []; 
+        const chatbotSession = await this._chatbotDatabase.findAllChatbotSessionByClientId(clientDTO.id);
+        if (chatbotSession) {
+          chatbotSession.forEach((chatbotSession)=>{
+            const _chatbotSessionDTO = new ChatbotSessionDTO();
+            _chatbotSessionDTO.id = chatbotSession.id;
+            _chatbotSessionDTO.chatbotMessagesDTO = chatbotSession.chatbotMessages?.map((message)=>{
+              const messageDTO = new ChatbotMessageDTO();
+              messageDTO.date = message.date.toISOString();
+              messageDTO.message = message.message;
+              messageDTO.typeDTO = plainToInstance(ChatbotTypeMessageDTO,message.type);
+              return messageDTO;
+            } );
+            chatbotSessionsDTO.push(_chatbotSessionDTO);
+          })
+        }
+        return chatbotSessionsDTO;
+      } catch (error) {
+        throw new HttpException(400,error.message);
+      }
+    }
     public async getAllMessagesSession(clientDTO: ClientChatbotDTO, id: string): Promise<ChatbotMessageResponseDTO[]>{
 
       if (!id){
@@ -134,7 +159,7 @@ export default class ChatbotService extends Services{
             chatbotMessages.forEach((chatbotMessage) => {
               const newChatbotMessageDTO = new ChatbotMessageResponseDTO();
               newChatbotMessageDTO.sessionId = chatbotMessage.id;
-              newChatbotMessageDTO.date = chatbotMessage.date.toString();
+              newChatbotMessageDTO.date = chatbotMessage.date.toISOString();
               newChatbotMessageDTO.text = chatbotMessage.message;
               newChatbotMessageDTO.type = chatbotMessage.type;
     

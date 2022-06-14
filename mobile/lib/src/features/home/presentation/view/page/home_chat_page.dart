@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/presentation/view/widget/chatbot_card.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/device_card.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _HomeChatPage extends State<HomeChatPage> {
               return Container(
                 color: _theme.colorScheme.background,
                 child: DialogContainer(
-                  message: _viewModel.error ?? "error-get-client".i18n(),
+                  message: _viewModel.error ?? "session-error-tittle".i18n(),
                   buttonText: "try-again".i18n(),
                   onClick: () {
                     _viewModel.navigateToLogin();
@@ -45,11 +46,7 @@ class _HomeChatPage extends State<HomeChatPage> {
                   SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [],
-                      ),
+                      child: _chatList(),
                     ),
                   ),
                   _addDeviceButton()
@@ -80,10 +77,19 @@ class _HomeChatPage extends State<HomeChatPage> {
         ));
   }
 
-  List<Widget> _deviceList() {
-    return _viewModel.devicelist
-        .map((device) => DeviceCard(deviceDTO: device))
-        .toList();
+  ListView _chatList() {
+    return ListView.builder(
+        itemCount: _viewModel.chatbotSessions.length,
+        shrinkWrap: true,
+        padding: EdgeInsets.only(top: 16),
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: ((context, index) {
+          return ChatbotCard(
+              onTap: _viewModel.navigateToDevice,
+              id: _viewModel.chatbotSessions[index].id,
+              index: index,
+              messageDTO: _viewModel.chatbotSessions[index].chatbotMessageDTO);
+        }));
   }
 
   _createTitle(String tittle) {

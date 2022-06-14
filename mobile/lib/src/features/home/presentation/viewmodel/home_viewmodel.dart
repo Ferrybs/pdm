@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/data/dto/chatbot_session_dto.dart';
 import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/home/data/dto/person_dto.dart';
@@ -20,6 +21,9 @@ abstract class _HomeViewModelBase with Store {
 
   @observable
   List<DeviceDTO> devicelist = [];
+
+  @observable
+  List<ChatbotSessionDTO> chatbotSessions = [];
 
   @observable
   int currentIndex = 1;
@@ -53,6 +57,11 @@ abstract class _HomeViewModelBase with Store {
   @action
   void updateDeviceList(List<DeviceDTO> list) {
     devicelist = list;
+  }
+
+  @action
+  void updateChatbotSession(List<ChatbotSessionDTO> list) {
+    chatbotSessions = list;
   }
 
   getHomeData() async {
@@ -90,14 +99,14 @@ abstract class _HomeViewModelBase with Store {
   getChatData() async {
     String? errorLocal;
     errorLocal = await _usecase.getClientFromRepository() ?? errorLocal;
+    errorLocal =
+        await _usecase.getChatbotSessionsFromRepository() ?? errorLocal;
     updateError(errorLocal);
     String? name = _usecase.getPersonName();
     if (name != null) {
       updateClientName(name);
-    } else {
-      updateError("session-error-tittle".i18n());
-      return;
     }
+    updateChatbotSession(_usecase.getChatbotSessions() ?? []);
   }
 
   String gethomeTittle() {
@@ -136,7 +145,7 @@ abstract class _HomeViewModelBase with Store {
     Modular.to.navigate('/chatbot/');
   }
 
-  void navigateToDevice() {
-    Modular.to.navigate('/device/');
+  void navigateToDevice(String id) {
+    Modular.to.navigate('/device/' + id);
   }
 }
