@@ -16,6 +16,8 @@ class ChatbotModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute('/', child: (_, __) => const ChatbotPage(), children: []),
+    ChildRoute('/:id',
+        child: (_, args) => ChatbotPage(id: args.params['id'] ?? ''),
+        children: []),
   ];
 }

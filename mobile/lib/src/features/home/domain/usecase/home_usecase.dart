@@ -9,7 +9,7 @@ import 'package:basearch/src/features/preference/domain/usecase/preference_useca
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
-
+import 'package:uuid/uuid.dart';
 import '../repository/home_interface.dart';
 
 class HomeUseCase {
@@ -18,6 +18,11 @@ class HomeUseCase {
   ClientModel? _clientModel;
   List<DeviceModel>? _deviceModelList;
   List<ChatbotSessionModel>? _chatbotSessionList;
+
+  String getNewChatbotSessionId() {
+    return Uuid().v4();
+  }
+
   String? getPersonName() {
     return _clientModel?.person.name;
   }

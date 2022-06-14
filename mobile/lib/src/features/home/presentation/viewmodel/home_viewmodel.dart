@@ -141,11 +141,15 @@ abstract class _HomeViewModelBase with Store {
     Modular.to.navigate('/map/');
   }
 
-  void navigateToChatbot() {
-    Modular.to.navigate('/chatbot/');
+  void navigateToChatbot(String id) {
+    Modular.to.navigate('/chatbot/' + id);
   }
 
-  void navigateToDevice(String id) {
-    Modular.to.navigate('/device/' + id);
+  String getNewChatbotSessionID() {
+    return _usecase.getNewChatbotSessionId();
+  }
+
+  void navigateToDevice() {
+    Modular.to.pushNamed('/device/');
   }
 }

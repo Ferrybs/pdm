@@ -8,7 +8,8 @@ import 'package:localization/localization.dart';
 import '../widget/dialog_container.dart';
 
 class ChatbotPage extends StatefulWidget {
-  const ChatbotPage({Key? key}) : super(key: key);
+  final String id;
+  const ChatbotPage({Key? key, required this.id}) : super(key: key);
 
   @override
   State<ChatbotPage> createState() => _ChatbotPage();

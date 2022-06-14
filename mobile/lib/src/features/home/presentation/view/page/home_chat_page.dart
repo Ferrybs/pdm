@@ -49,7 +49,7 @@ class _HomeChatPage extends State<HomeChatPage> {
                       child: _chatList(),
                     ),
                   ),
-                  _addDeviceButton()
+                  _addchatButton()
                 ],
               ));
             }
@@ -63,14 +63,14 @@ class _HomeChatPage extends State<HomeChatPage> {
     });
   }
 
-  Padding _addDeviceButton() {
+  Padding _addchatButton() {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Align(
           alignment: Alignment.bottomRight,
           child: FloatingActionButton(
             onPressed: (() {
-              _viewModel.navigateToChatbot();
+              _viewModel.navigateToChatbot(_viewModel.getNewChatbotSessionID());
             }),
             child: const Icon(Icons.add),
           ),
@@ -85,7 +85,7 @@ class _HomeChatPage extends State<HomeChatPage> {
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: ((context, index) {
           return ChatbotCard(
-              onTap: _viewModel.navigateToDevice,
+              onTap: _viewModel.navigateToChatbot,
               id: _viewModel.chatbotSessions[index].id,
               index: index,
               messageDTO: _viewModel.chatbotSessions[index].chatbotMessageDTO);
