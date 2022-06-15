@@ -13,13 +13,13 @@ mixin _$ChatbotViewModel on _ChatbotViewModel, Store {
       Atom(name: '_ChatbotViewModel.chatUser', context: context);
 
   @override
-  ChatUser get chatUser {
+  ChatUser? get chatUser {
     _$chatUserAtom.reportRead();
     return super.chatUser;
   }
 
   @override
-  set chatUser(ChatUser value) {
+  set chatUser(ChatUser? value) {
     _$chatUserAtom.reportWrite(value, super.chatUser, () {
       super.chatUser = value;
     });
@@ -29,13 +29,13 @@ mixin _$ChatbotViewModel on _ChatbotViewModel, Store {
       Atom(name: '_ChatbotViewModel.sessionId', context: context);
 
   @override
-  String get sessionId {
+  String? get sessionId {
     _$sessionIdAtom.reportRead();
     return super.sessionId;
   }
 
   @override
-  set sessionId(String value) {
+  set sessionId(String? value) {
     _$sessionIdAtom.reportWrite(value, super.sessionId, () {
       super.sessionId = value;
     });
@@ -77,13 +77,13 @@ mixin _$ChatbotViewModel on _ChatbotViewModel, Store {
       Atom(name: '_ChatbotViewModel.messageList', context: context);
 
   @override
-  List<ChatMessage> get messageList {
+  ObservableList<ChatMessage> get messageList {
     _$messageListAtom.reportRead();
     return super.messageList;
   }
 
   @override
-  set messageList(List<ChatMessage> value) {
+  set messageList(ObservableList<ChatMessage> value) {
     _$messageListAtom.reportWrite(value, super.messageList, () {
       super.messageList = value;
     });
@@ -131,6 +131,17 @@ mixin _$ChatbotViewModel on _ChatbotViewModel, Store {
         name: '_ChatbotViewModel.insertMessage');
     try {
       return super.insertMessage(m);
+    } finally {
+      _$_ChatbotViewModelActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic insertMessageList(List<ChatMessage> m) {
+    final _$actionInfo = _$_ChatbotViewModelActionController.startAction(
+        name: '_ChatbotViewModel.insertMessageList');
+    try {
+      return super.insertMessageList(m);
     } finally {
       _$_ChatbotViewModelActionController.endAction(_$actionInfo);
     }

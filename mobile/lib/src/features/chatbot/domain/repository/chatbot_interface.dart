@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/chatbot/domain/model/chatbot_message_model.dart';
 import 'package:basearch/src/features/chatbot/domain/model/chatbot_message_request_model.dart';
 
 import '../model/chatbot_message_response_model.dart';
@@ -13,4 +14,5 @@ abstract class IChatbot {
   Future<ClientModel> getClient(String token);
   Future<ChatbotMessageResponseModel> sendText(
       ChatbotMessageRequestModel chatbotMessageRequestModel, String token);
+  Future<List<ChatbotMessageModel>> getChatbotMessages(String token, String id);
 }

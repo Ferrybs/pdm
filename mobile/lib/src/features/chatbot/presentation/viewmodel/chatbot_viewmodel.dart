@@ -1,7 +1,6 @@
-import 'package:basearch/src/features/modelo/domain/usecase/modelo_usecase.dart';
+import 'package:basearch/src/features/home/data/dto/chatbot_message_dto.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:intl/intl.dart';
 import 'package:localization/localization.dart';
 import 'package:mobx/mobx.dart';
 
@@ -17,10 +16,10 @@ abstract class _ChatbotViewModel with Store {
   final _usecase = Modular.get<ChatbotUseCase>();
 
   @observable
-  late ChatUser chatUser = ChatUser(id: "1");
+  ChatUser? chatUser;
 
   @observable
-  String sessionId = "";
+  String? sessionId;
 
   @observable
   ChatUser botUser = ChatUser(id: "0", firstName: "Plantie");
@@ -29,7 +28,7 @@ abstract class _ChatbotViewModel with Store {
   String? errorLoad;
 
   @observable
-  List<ChatMessage> messageList = [];
+  ObservableList<ChatMessage> messageList = ObservableList<ChatMessage>();
 
   @action
   updateChatUser(ChatUser value) {
@@ -51,11 +50,14 @@ abstract class _ChatbotViewModel with Store {
     messageList.insert(0, m);
   }
 
-  onSend(ChatMessage m) async {
-    insertMessage(m);
-    await _usecase.sendText(m.text, m.createdAt.toString(), sessionId);
-    ResponseDTO? response = _usecase.responseDTO;
+  @action
+  insertMessageList(List<ChatMessage> m) {
+    messageList = m.asObservable();
+  }
 
+  onSend(ChatMessage m) async {
+    final response = await _usecase.sendText(
+        m.text, m.createdAt.toUtc().toIso8601String(), sessionId ?? '');
     if (response != null) {
       insertMessage(ChatMessage(
           user: botUser,
@@ -71,17 +73,20 @@ abstract class _ChatbotViewModel with Store {
         .toList();
   }
 
-  getData() async {
+  Future<void> getData(String id) async {
     PersonDTO? personDTO = await _usecase.getClient();
     if (personDTO != null) {
-      updateChatUser(ChatUser(
+      ChatUser user = ChatUser(
           id: personDTO.id!,
           firstName: personDTO.name!,
-          lastName: personDTO.lastName!));
-      updateSessionId("6776u9dg");
+          lastName: personDTO.lastName!);
+      updateChatUser(user);
+      updateSessionId(id);
+      insertMessageList(await _usecase.getHistory(user, botUser, id));
     } else {
       updateErrorLoad("session-error-tittle".i18n());
     }
+    return;
   }
 
   String getChatbotTitle() {
@@ -90,13 +95,6 @@ abstract class _ChatbotViewModel with Store {
 
   void navigateToLogin() {
     Modular.to.navigate("/auth/");
-  }
-
-  Future<String?> setSessionId() async {
-    // var uuid = Uuid();
-    // var sessionId = uuid.v1();
-    sessionId = "6776u9dg";
-    return sessionId;
   }
 
   void navigateToHome() {

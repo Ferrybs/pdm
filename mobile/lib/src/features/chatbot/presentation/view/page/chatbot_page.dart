@@ -17,7 +17,14 @@ class ChatbotPage extends StatefulWidget {
 
 class _ChatbotPage extends State<ChatbotPage> {
   late ThemeData _theme;
+  late Future<void> result;
   final _viewModel = Modular.get<ChatbotViewModel>();
+  List<ChatMessage> messages = [];
+  @override
+  void initState() {
+    super.initState();
+    result = _viewModel.getData(widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,54 +47,53 @@ class _ChatbotPage extends State<ChatbotPage> {
                       ),
                     );
                   } else {
-                    return DashChat(
-                      currentUser: _viewModel.chatUser,
-                      onSend: (ChatMessage m) async {
-                        await _viewModel.onSend(m);
-                      },
-                      quickReplyOptions: QuickReplyOptions(
-                        onTapQuickReply: (QuickReply r) {
-                          final ChatMessage resp = ChatMessage(
-                            user: _viewModel.chatUser,
-                            text: r.value ?? r.title,
-                            createdAt: DateTime.now(),
-                          );
-                          _viewModel.onSend(resp);
+                    return Observer(builder: (_) {
+                      return DashChat(
+                        currentUser: _viewModel.chatUser!,
+                        onSend: (ChatMessage m) async {
+                          _viewModel.insertMessage(m);
+                          _updateMessages();
+                          await _viewModel.onSend(m);
+                          _updateMessages();
                         },
-                        quickReplyTextStyle: _theme.textTheme.titleSmall,
-                        quickReplyStyle: BoxDecoration(
-                            border: Border.all(
-                                color: _theme.colorScheme.tertiary, width: 1),
-                            borderRadius: BorderRadius.circular(16)),
-                      ),
-                      messages: _viewModel.messageList,
-                      inputOptions: InputOptions(
-                          inputTextStyle: _theme.textTheme.bodyMedium),
-                    );
+                        quickReplyOptions: QuickReplyOptions(
+                          onTapQuickReply: (QuickReply r) {
+                            final ChatMessage resp = ChatMessage(
+                              user: _viewModel.chatUser!,
+                              text: r.value ?? r.title,
+                              createdAt: DateTime.now().toUtc(),
+                            );
+                            _viewModel.insertMessage(resp);
+                            _updateMessages();
+                            _viewModel.onSend(resp);
+                            _updateMessages();
+                          },
+                          quickReplyTextStyle: _theme.textTheme.titleSmall,
+                          quickReplyStyle: BoxDecoration(
+                              border: Border.all(
+                                  color: _theme.colorScheme.tertiary, width: 1),
+                              borderRadius: BorderRadius.circular(16)),
+                        ),
+                        messages: messages.isEmpty
+                            ? _viewModel.messageList
+                            : messages,
+                        inputOptions: InputOptions(
+                            inputTextStyle: _theme.textTheme.bodyMedium),
+                      );
+                    });
                   }
                 }
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }),
-              future: _viewModel.getData())),
+              future: result)),
     );
   }
 
-  _createTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        title,
-        style: _theme.textTheme.headlineMedium,
-      ),
-    );
-  }
-
-  _createAction() {
-    return IconButton(
-      icon: const Icon(Icons.home),
-      onPressed: () => {_viewModel.navigateToHome()},
-    );
+  _updateMessages() {
+    setState(() {
+      messages = _viewModel.messageList;
+    });
   }
 }

@@ -56,8 +56,8 @@ export default class ChatbotController extends Controller{
           try {
             const dataStoreToken = request.dataStoreToken;
             const clientDTO = await this.clientService.getClientBySessionId(dataStoreToken.id);
-            const chatbotMessage = await this.chatbotService.getAllMessagesSession(clientDTO, request.params.id);
-            response.status(200).send({ok: true,chatbotMessage});
+            const chatbotMessagesDTO = await this.chatbotService.getAllMessagesSession(clientDTO, request.params.id);
+            response.status(200).send({ok: true,chatbotMessagesDTO});
           } catch (error) {
             if(error instanceof(HttpException)){
               response.status(error.status).send(error.data);

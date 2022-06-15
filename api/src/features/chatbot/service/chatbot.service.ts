@@ -109,7 +109,6 @@ export default class ChatbotService extends Services{
         const newChatbotMessageDTO = new ChatbotMessageResponseDTO();
         newChatbotMessageDTO.text = newChatbotMessage.message;
         newChatbotMessageDTO.date = newChatbotMessage.date.toISOString();
-        newChatbotMessageDTO.sessionId = newChatbotMessage.chatbotSession.id;
         newChatbotMessageDTO.type = newChatbotMessage.type;
         const suggestionsList: string[] = []
         try {
@@ -158,7 +157,6 @@ export default class ChatbotService extends Services{
           if (chatbotMessages){
             chatbotMessages.forEach((chatbotMessage) => {
               const newChatbotMessageDTO = new ChatbotMessageResponseDTO();
-              newChatbotMessageDTO.sessionId = chatbotMessage.id;
               newChatbotMessageDTO.date = chatbotMessage.date.toISOString();
               newChatbotMessageDTO.text = chatbotMessage.message;
               newChatbotMessageDTO.type = chatbotMessage.type;
