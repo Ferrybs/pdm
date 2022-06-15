@@ -8,6 +8,7 @@ import HttpData from "../interfaces/http.data.interface";
 import MeasureQueryDTO from "../dto/measure.query.dto";
 import DevicePreferencesDTO from "../dto/device.preferences.dto";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
+import { identity, result } from "lodash";
 
 export default class DeviceController extends Controller{
 
@@ -184,6 +185,30 @@ export default class DeviceController extends Controller{
           }else{
             response.status(200).send({ok: false});
           }
+        } catch (error) {
+          if(error instanceof(HttpException)){
+            response.status(error.status).send(error.data);
+          }else{
+            const httpData: HttpData = { ok: false, message: error.message};
+            response.status(500).send(httpData);
+          }
+        
+        }
+      }
+    }
+    public async deleteDevice(request: RequestWithToken, response: Response){
+      if (request.error) {
+        const httpData: HttpData = { ok: false, message: request.error};
+        response.status(400).send(httpData);
+      }else{
+        try {
+          var result = false;
+          const dataStoreToken = request.dataStoreToken;
+          const deviceId = request.params['id'];
+          if (this.deviceService.isMatchSessionDevice(dataStoreToken.id,deviceId)) {
+            result = await this.deviceService.deleteDevice(deviceId);
+          }    
+          response.status(200).send({ok: result});      
         } catch (error) {
           if(error instanceof(HttpException)){
             response.status(error.status).send(error.data);

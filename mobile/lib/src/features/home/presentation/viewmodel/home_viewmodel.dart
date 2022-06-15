@@ -111,8 +111,13 @@ abstract class _HomeViewModelBase with Store {
     updateChatbotSession(_usecase.getChatbotSessions() ?? []);
   }
 
-  Future<void> onDelete(String id) async {
+  Future<void> onDeleteChatSession(String id) async {
     await _usecase.deleteChatbotSession(id);
+  }
+
+  Future<void> onDeleteDevice(String id) async {
+    await _usecase.deleteDevice(id);
+    Modular.to.navigate("/home/0");
   }
 
   String gethomeTittle() {

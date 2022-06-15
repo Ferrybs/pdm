@@ -246,4 +246,17 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
       rethrow;
     }
   }
+
+  @override
+  Future<bool> deleteDevice(String token, String id) async {
+    try {
+      Response response;
+      var dio = Dio(APIoptions);
+      response = await dio.delete("/device/" + id,
+          options: Options(headers: {"Authorization": "Bearer " + token}));
+      return response.data['ok'];
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

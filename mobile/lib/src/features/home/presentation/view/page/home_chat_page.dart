@@ -85,7 +85,7 @@ class _HomeChatPage extends State<HomeChatPage> {
         itemBuilder: ((context, index) {
           return ChatbotCard(
               onTap: _viewModel.navigateToChatbot,
-              onDelete: _viewModel.onDelete,
+              onDelete: _viewModel.onDeleteChatSession,
               id: _viewModel.chatbotSessions[index].id,
               index: index,
               messageDTO: _viewModel

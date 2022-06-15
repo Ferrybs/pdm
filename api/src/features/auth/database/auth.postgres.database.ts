@@ -79,13 +79,12 @@ export default class AuthPostgresDatabase implements AuthDatabase{
         }
     }
 
-    public async deleteClientSessions(session: Session): Promise<boolean> {
+    public async deleteAllClientSessionsExpired(clientId:string,iat: number): Promise<boolean> {
         try {
-            const result: DeleteResult = await this._appDataSource.manager.delete(Session,session.id);
-            if(result.affected != null && result.affected>0) {
-                return true;
-            }
-            return false;
+            const result = await this._appDataSource.manager.createQueryBuilder()
+            .delete().from(Session).where("(expiresIn < :iat OR typeId = '2') AND clientId = :clientId ",{iat,clientId})
+            .execute();
+            return true;
         } catch (error) {
             throw (new DatabaseHttpException(error.message));
         }

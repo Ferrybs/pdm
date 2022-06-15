@@ -32,6 +32,11 @@ export default class DeviceRoutes {
             this._authMiddleware.verifyAccessToken(),
             this._controller.getDevices.bind(this._controller)
             );
+        this.router.delete(
+            `${this.path}/:id`,
+            this._authMiddleware.verifyAccessToken(),
+            this._controller.deleteDevice.bind(this._controller)
+            );
         this.router.post(
             `${this.path}/measure`,
             this._authMiddleware.verifyAccessToken(),

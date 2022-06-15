@@ -60,10 +60,10 @@ class MqttServer
 {
 private:
     char buffer[4096];
-    const char *_measure = "measure-test";
+    const char *_measure = "measure";
     const char *_localization = "localization";
     const char *_device = "device";
-    const char *_settings = "settings-test";
+    const char *_settings = "settings";
 public:
     boolean isConnected();
     void setup();

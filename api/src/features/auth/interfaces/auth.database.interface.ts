@@ -14,5 +14,5 @@ export default interface AuthDatabase {
 
     updateCredentials(credentiats: Credentials): Promise<boolean>;
 
-    deleteClientSessions(session: Session): Promise<boolean>;
+    deleteAllClientSessionsExpired(clientId: string, iat: number): Promise<boolean>;
 }

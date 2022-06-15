@@ -1,14 +1,11 @@
 import 'package:basearch/src/features/home/presentation/view/widget/device_card.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
-import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
-import 'package:mobx/mobx.dart';
 
 import '../../viewmodel/home_viewmodel.dart';
-import '../widget/plant_stats_widget.dart';
 
 class HomeDevicePage extends StatefulWidget {
   const HomeDevicePage({Key? key}) : super(key: key);
@@ -85,7 +82,10 @@ class _HomeDevicePage extends State<HomeDevicePage> {
 
   List<Widget> _deviceList() {
     return _viewModel.devicelist
-        .map((device) => DeviceCard(deviceDTO: device))
+        .map((device) => DeviceCard(
+            onDelete: _viewModel.onDeleteDevice,
+            onEdit: _viewModel.getChatData,
+            deviceDTO: device))
         .toList();
   }
 

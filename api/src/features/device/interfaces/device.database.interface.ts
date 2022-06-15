@@ -16,4 +16,6 @@ export default interface DeviceDatabase{
     insertMeasure(measure: Measure): Promise<Measure>;
     insertDevicePreferences(devicePreferences: DevicePreferences): Promise<DevicePreferences>;
     insertDeviceLocalization(deviceLocalization: DeviceLocalization): Promise<DeviceLocalization>;
+
+    deleteDeviceByDeviceId(id: string): Promise<boolean>;
 }

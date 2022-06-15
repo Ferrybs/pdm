@@ -119,5 +119,31 @@ export default class DevicePostgresDatabase implements DeviceDatabase{
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }
-    }   
+    }
+    public async deleteDeviceByDeviceId(id: string): Promise<boolean> {
+        try {
+            await this._appDataSource.createQueryBuilder()
+            .delete().from(DeviceLocalization)
+            .where("deviceId = :id",{id})
+            .execute();
+
+            await this._appDataSource.createQueryBuilder()
+            .delete().from(DevicePreferences)
+            .where("deviceId = :id",{id})
+            .execute();
+
+            await this._appDataSource.createQueryBuilder()
+            .delete().from(Measure)
+            .where("deviceId = :id",{id})
+            .execute();
+
+            const result =await this._appDataSource.manager.delete(Device,id);
+            if(result.affected){
+                return result.affected > 0;
+            }
+            return false;
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
 }

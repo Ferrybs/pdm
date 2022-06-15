@@ -147,18 +147,9 @@ export default class AuthService extends Services{
     throw new NotFoundHttpException("CLIENT");
   }
   
-  public async updateClientSessionsByClientId(id: string){
-    const sessions = await this._authDatabase.findSessionsByClientid(id);
+  public async updateClientSessionsByClientId(clientId: string){
     const time: number = Math.floor(Date.now() / 1000);
-    sessions.forEach( async (session) => {
-      if (session.expiresIn < time || session.type.id == "2") {
-        try{
-          await this._authDatabase.deleteClientSessions(session);
-        } catch (error) {
-          throw new DatabaseHttpException(error.message);
-        }
-      }
-    });
+    await this._authDatabase.deleteAllClientSessionsExpired(clientId,time);
   }
 
   public async login(loginDTO: LoginDTO): Promise<TokenData> {

@@ -9,4 +9,5 @@ abstract class IHome {
   Future<List<DeviceModel>> getDevices(String token);
   Future<List<ChatbotSessionModel>> getChatbotSessions(String token);
   Future<bool> deleteChatBotSession(String token, String id);
+  Future<bool> deleteDevice(String token, String id);
 }

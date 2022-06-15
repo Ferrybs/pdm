@@ -175,4 +175,12 @@ export default class DeviceService extends Services{
         configsDTO.key = validateEnv.DEVICE_API;
         return configsDTO;
     }
+    async deleteDevice(deviceId: string){
+        try {
+            return await this._deviceDatabase.deleteDeviceByDeviceId(deviceId);
+        } catch (error) {
+            throw new NotFoundHttpException("DEVICE");
+        }
+
+    }
 }

@@ -110,6 +110,20 @@ class HomeUseCase {
     }
   }
 
+  Future<String?> deleteDevice(String id) async {
+    try {
+      String? token = await _preference.getAccessToken();
+      if (token != null) {
+        await repository.deleteDevice(token, id);
+      } else {
+        return "server-error".i18n();
+      }
+      return null;
+    } catch (e) {
+      return "server-error".i18n();
+    }
+  }
+
   Future<List<PlantStatsModel>?> getPlantList() async {
     return await repository.getPlantStats();
   }
