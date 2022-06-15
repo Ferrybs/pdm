@@ -36,7 +36,7 @@ class DeviceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: onEdit,
                 icon: const Icon(Icons.edit),
                 splashRadius: 18,
                 color: _theme.colorScheme.secondary,

@@ -84,7 +84,7 @@ class _HomeDevicePage extends State<HomeDevicePage> {
     return _viewModel.devicelist
         .map((device) => DeviceCard(
             onDelete: _viewModel.onDeleteDevice,
-            onEdit: _viewModel.getChatData,
+            onEdit: _viewModel.onEditDevice,
             deviceDTO: device))
         .toList();
   }

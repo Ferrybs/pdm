@@ -120,6 +120,10 @@ abstract class _HomeViewModelBase with Store {
     Modular.to.navigate("/home/0");
   }
 
+  onEditDevice() {
+    Modular.to.navigate("/device/edit");
+  }
+
   String gethomeTittle() {
     if (personDTO.name != null) {
       return personDTO.name! + ", " + "home-tittle".i18n();

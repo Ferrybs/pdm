@@ -8,13 +8,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
 
-class DevicePage extends StatefulWidget {
-  const DevicePage({Key? key}) : super(key: key);
+class DevicePageEdit extends StatefulWidget {
+  const DevicePageEdit({Key? key}) : super(key: key);
   @override
-  State<DevicePage> createState() => _DevicePage();
+  State<DevicePageEdit> createState() => _DevicePageEdit();
 }
 
-class _DevicePage extends State<DevicePage> {
+class _DevicePageEdit extends State<DevicePageEdit> {
   late ThemeData _theme;
   final _viewModel = Modular.get<DeviceViewModel>();
 
@@ -76,7 +76,7 @@ class _DevicePage extends State<DevicePage> {
 
   Step _finishConfig() {
     return Step(
-        title: _painelTittle("finish-configuration"),
+        title: _painelTittle("Finish Configuration"),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +90,7 @@ class _DevicePage extends State<DevicePage> {
 
   Step _deviceConfig() {
     return Step(
-        title: _painelTittle("wireless-configuration".i18n()),
+        title: _painelTittle("Wireless Configuration"),
         content: _wifiDeviceConfig(),
         state: _viewModel.wifiConfigStatus);
   }
@@ -162,7 +162,7 @@ class _DevicePage extends State<DevicePage> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: Text(
-          "new-plant-tittle".i18n(),
+          "edit-plant-tittle".i18n(),
           style: _theme.textTheme.headlineMedium,
         ),
       ),
