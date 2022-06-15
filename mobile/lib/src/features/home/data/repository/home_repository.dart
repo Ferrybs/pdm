@@ -233,4 +233,17 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
       rethrow;
     }
   }
+
+  @override
+  Future<bool> deleteChatBotSession(String token, String id) async {
+    try {
+      Response response;
+      var dio = Dio(APIoptions);
+      response = await dio.delete("/chatbot/" + id,
+          options: Options(headers: {"Authorization": "Bearer " + token}));
+      return response.data['ok'];
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

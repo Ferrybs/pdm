@@ -20,7 +20,12 @@ class HomeUseCase {
   List<ChatbotSessionModel>? _chatbotSessionList;
 
   String getNewChatbotSessionId() {
-    return Uuid().v4();
+    return const Uuid().v4();
+  }
+
+  logout() async {
+    await _preference.logout();
+    Modular.to.navigate('/auth/');
   }
 
   String? getPersonName() {
@@ -89,6 +94,20 @@ class HomeUseCase {
               message: session.message[session.message.length - 1].message,
               date: session.message[session.message.length - 1].date));
     }).toList();
+  }
+
+  Future<String?> deleteChatbotSession(String id) async {
+    try {
+      String? token = await _preference.getAccessToken();
+      if (token != null) {
+        await repository.deleteChatBotSession(token, id);
+      } else {
+        return "server-error".i18n();
+      }
+      return null;
+    } catch (e) {
+      return "server-error".i18n();
+    }
   }
 
   Future<List<PlantStatsModel>?> getPlantList() async {

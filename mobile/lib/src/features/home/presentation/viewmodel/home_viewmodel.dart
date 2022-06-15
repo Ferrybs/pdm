@@ -2,8 +2,6 @@ import 'package:basearch/src/features/home/data/dto/chatbot_session_dto.dart';
 import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/home/data/dto/person_dto.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:localization/localization.dart';
@@ -41,7 +39,11 @@ abstract class _HomeViewModelBase with Store {
 
   @action
   void updateCurrentIndex(int idx) {
-    currentIndex = idx;
+    if (idx == 3) {
+      ObservableFuture(_usecase.logout());
+    } else {
+      currentIndex = idx;
+    }
   }
 
   @action
@@ -107,6 +109,10 @@ abstract class _HomeViewModelBase with Store {
       updateClientName(name);
     }
     updateChatbotSession(_usecase.getChatbotSessions() ?? []);
+  }
+
+  Future<void> onDelete(String id) async {
+    await _usecase.deleteChatbotSession(id);
   }
 
   String gethomeTittle() {

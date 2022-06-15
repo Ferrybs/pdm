@@ -1,5 +1,4 @@
 import 'package:basearch/src/features/home/presentation/view/widget/chatbot_card.dart';
-import 'package:basearch/src/features/home/presentation/view/widget/device_card.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -86,9 +85,12 @@ class _HomeChatPage extends State<HomeChatPage> {
         itemBuilder: ((context, index) {
           return ChatbotCard(
               onTap: _viewModel.navigateToChatbot,
+              onDelete: _viewModel.onDelete,
               id: _viewModel.chatbotSessions[index].id,
               index: index,
-              messageDTO: _viewModel.chatbotSessions[index].chatbotMessageDTO);
+              messageDTO: _viewModel
+                  .chatbotSessions[_viewModel.chatbotSessions.length - 1]
+                  .chatbotMessageDTO);
         }));
   }
 

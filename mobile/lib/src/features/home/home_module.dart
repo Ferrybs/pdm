@@ -18,8 +18,8 @@ class HomeModule extends Module {
   final List<ModularRoute> routes = [
     ChildRoute('/:id',
         child: (_, args) => HomePage(
-              idx: args.params['id'].toString().length > 1
-                  ? args.params['id'].cast<int>()
+              idx: args.params['id'].toString().isNotEmpty
+                  ? int.parse(args.params['id'])
                   : 1,
             ),
         children: []),

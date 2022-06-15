@@ -95,7 +95,11 @@ export default class ChatbotPostgresDatabase implements ChatbotDatabase{
         try {
             const chatbotSession = new ChatbotSession();
             chatbotSession.id = sessionId;
-            
+            await this._appDataSource.createQueryBuilder()
+            .delete()
+            .from(ChatbotMessage)
+            .where("chatbotSessionId = :id",{id:sessionId})
+            .execute();
             const result: DeleteResult =  await this._appDataSource.manager.delete(ChatbotSession, chatbotSession);
             return result?.affected >= 1;
         } catch (error) {

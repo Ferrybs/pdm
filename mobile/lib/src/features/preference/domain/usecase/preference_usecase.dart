@@ -15,7 +15,18 @@ class PreferenceUsecase {
     await _encryptedSharedPreferences.setString("refresh-token", token);
   }
 
+  logout() async {
+    await _encryptedSharedPreferences.clear();
+  }
+
   Future<String?> getAccessToken() async {
+    String accessToken =
+        await _encryptedSharedPreferences.getString("access-token");
+    if (accessToken.length > 2) {
+      if (await _repository.isValidAccessToken(accessToken)) {
+        return accessToken;
+      }
+    }
     String refreshToken =
         await _encryptedSharedPreferences.getString("refresh-token");
     if (refreshToken.length > 2) {
@@ -26,13 +37,7 @@ class PreferenceUsecase {
         return tokenModel.token;
       }
     }
-    String accessToken =
-        await _encryptedSharedPreferences.getString("access-token");
-    if (accessToken.length > 2) {
-      if (await _repository.isValidAccessToken(accessToken)) {
-        return accessToken;
-      }
-    }
+
     return null;
   }
 }

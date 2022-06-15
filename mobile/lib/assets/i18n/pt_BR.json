@@ -61,5 +61,8 @@
     "click-on": "Aperte em ",
     "get-id": "Obter ID",
     "chatbot-title": "Plantie",
-    "home-chat-tittle": "suas mensagens do chatbot"
+    "home-chat-tittle": "suas mensagens com chatbot",
+    "confirm-delete-chat": "Deletar?",
+    "yes": "Sim",
+    "not": "Não"
 }

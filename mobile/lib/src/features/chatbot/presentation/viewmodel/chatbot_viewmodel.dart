@@ -98,6 +98,6 @@ abstract class _ChatbotViewModel with Store {
   }
 
   void navigateToHome() {
-    Modular.to.navigate('/home/');
+    Modular.to.navigate('/home/2');
   }
 }

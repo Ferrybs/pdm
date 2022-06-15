@@ -60,5 +60,8 @@
     "step1-device-config":"Connect to device Access Point",
     "click-on": "Click on",
     "chatbot-title": "Plantie",
-    "home-chat-tittle": "your chatbot messages"
+    "home-chat-tittle": "your chatbot messages",
+    "confirm-delete-chat": "Delete?",
+    "yes": "Yes",
+    "not": "No"
 }
