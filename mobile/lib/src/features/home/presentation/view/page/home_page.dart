@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:localization/localization.dart';
 import 'package:mobx/mobx.dart';
 
@@ -14,7 +15,8 @@ import '../../viewmodel/home_viewmodel.dart';
 import '../widget/plant_stats_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int idx;
+  const HomePage({Key? key, required this.idx}) : super(key: key);
   @override
   State<HomePage> createState() => _HomePage();
 }
@@ -26,8 +28,16 @@ class _HomePage extends State<HomePage> {
     const HomePlantPage(),
     const HomeChatPage()
   ];
+  late ThemeData _theme;
+  @override
+  void initState() {
+    super.initState();
+    _viewModel.updateCurrentIndex(widget.idx);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
     return SafeArea(
         child: Scaffold(
       appBar: HomeAppBar(onCloudPressed: _viewModel.navigateToMap),
@@ -39,19 +49,22 @@ class _HomePage extends State<HomePage> {
 
   _bottomNavigationBar() {
     return Observer(
-        builder: (_) => BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.developer_board),
-                  label: 'Device',
-                ),
-                BottomNavigationBarItem(
+        builder: (_) => CustomNavigationBar(
+              iconSize: 25,
+              selectedColor: _theme.colorScheme.primary,
+              strokeColor: _theme.colorScheme.surface,
+              unSelectedColor: _theme.colorScheme.secondary,
+              backgroundColor: _theme.shadowColor,
+              items: <CustomNavigationBarItem>[
+                CustomNavigationBarItem(icon: Icon(Icons.developer_board)),
+                CustomNavigationBarItem(
                   icon: Icon(Icons.home),
-                  label: 'Home',
                 ),
-                BottomNavigationBarItem(
+                CustomNavigationBarItem(
                   icon: Icon(FontAwesomeIcons.robot),
-                  label: 'Help',
+                ),
+                CustomNavigationBarItem(
+                  icon: Icon(Icons.exit_to_app_outlined),
                 ),
               ],
               currentIndex: _viewModel.currentIndex,

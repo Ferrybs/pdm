@@ -16,6 +16,12 @@ class HomeModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute('/', child: (_, __) => const HomePage(), children: []),
+    ChildRoute('/:id',
+        child: (_, args) => HomePage(
+              idx: args.params['id'].toString().length > 1
+                  ? args.params['id'].cast<int>()
+                  : 1,
+            ),
+        children: []),
   ];
 }
