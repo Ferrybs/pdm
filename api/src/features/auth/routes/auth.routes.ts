@@ -31,7 +31,7 @@ export default class AuthRoutes {
                 this._validationMiddleware.login(),
                 this._controller.login.bind(this._controller)
                 );
-            this.router.post(
+            this.router.get(
                 `${this.path}/refresh-token`,
                 this._authMiddleware.verifyAccessToken(),
                 this._controller.newRefreshToken.bind(this._controller)

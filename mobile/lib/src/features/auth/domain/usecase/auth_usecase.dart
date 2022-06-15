@@ -65,12 +65,13 @@ class AuthUseCase {
           email: loginDTO.email?.trim() ?? '',
           password: loginDTO.password?.trim() ?? '');
       TokenDataModel tokenData = await _repository.login(loginModel);
-      await _preferences.setAccessToken(tokenData.token);
+
       if (isRefreshToken) {
         TokenDataModel refreshToken =
             await _repository.getRefreshToken(tokenData.token);
         await _preferences.setRefreshToken(refreshToken.token);
       }
+      await _preferences.setAccessToken(tokenData.token);
       return null;
     } on DioError catch (e) {
       if (e.response != null) {
