@@ -1,5 +1,5 @@
 
-import mqtt, { MqttClient } from "mqtt";
+import mqtt from "mqtt";
 import validateEnv from "../utils/validateEnv";
 
 const client = mqtt.connect({

@@ -21,6 +21,8 @@ import TypeMeasure from "../entities/type.measure.entity";
 import Client from "../../../features/client/entities/client.entity";
 import MqttDTO from "../dto/mqtt.dto";
 import ConfigsDTO from "../dto/device.configs";
+import DeviceQueryLocalizationDTO from "../dto/device_query_localization";
+import Localization from "../interfaces/localization";
 
 export default class DeviceService extends Services{
     private _mqtt: MqttServer;
@@ -36,25 +38,6 @@ export default class DeviceService extends Services{
         device.client = plainToInstance(Client,clientDTO);
         if (await this._deviceDatabase.insertDevice(device)) {
             return true;
-        }
-        return false;
-    }
-    public async addLocalization(deviceLocalizationDTO: DeviceLocalizationDTO,dataStoreToken: DataStoreToken): Promise<boolean>{
-        const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceLocalizationDTO.deviceDTO.id);
-        if (device) {
-            deviceLocalizationDTO.deviceDTO = undefined;
-
-            const devicelocalization = new DeviceLocalization();
-            devicelocalization.latitude = deviceLocalizationDTO.latitude;
-            devicelocalization.longitude = deviceLocalizationDTO.longitude;
-            devicelocalization.device = device;
-            const deviceLocalization_old = await this._deviceDatabase.findDeviceLocalizationByDevice(device);
-            if (deviceLocalization_old) {
-                devicelocalization.id = deviceLocalization_old.id;
-            }
-            if(await this._deviceDatabase.insertDeviceLocalization(devicelocalization)){
-                return true;
-            }
         }
         return false;
     }
@@ -153,13 +136,23 @@ export default class DeviceService extends Services{
             throw new NotFoundHttpException("MEASURES");
         }
     }
-    public async getLocalization(deviceDTO: DeviceDTO,dataStoreToken: DataStoreToken): Promise<DeviceLocalizationDTO>{
-        const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceDTO.id);
-        if(device){    
-            const deviceLocalization = await this._deviceDatabase.findDeviceLocalizationByDevice(device);
-            deviceLocalization.device = undefined;
-            deviceLocalization.id = undefined;
-            return plainToInstance(DeviceLocalizationDTO,deviceLocalization);
+    public async getLocalization(deviceQueryLocDTO: DeviceQueryLocalizationDTO,dataStoreToken: DataStoreToken): Promise<DeviceLocalizationDTO[]>{
+        const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceQueryLocDTO.id);
+        const km = 0.009009009;
+        const result: DeviceLocalizationDTO[] = []
+        if(device){
+            const x: Localization = {latitude: deviceQueryLocDTO.lat -(km*(deviceQueryLocDTO.distance/2)),
+                                     longitude: deviceQueryLocDTO.long -(km*(deviceQueryLocDTO.distance/2))};
+            const y: Localization = {latitude: deviceQueryLocDTO.lat +(km*(deviceQueryLocDTO.distance/2)),
+                                    longitude: deviceQueryLocDTO.long +(km*(deviceQueryLocDTO.distance/2))};
+            const deviceLocalizations = await this._deviceDatabase.findDeviceLocalizationsByLocalization(x,y);
+            deviceLocalizations.forEach((value)=>{
+                value.device = undefined;
+                value.id = undefined;
+                result.push(plainToInstance(DeviceLocalizationDTO,value))
+            });
+
+            return result;
         }else{
             throw new NotFoundHttpException("MEASURES");
         }

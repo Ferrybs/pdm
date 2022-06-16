@@ -3,7 +3,6 @@ import 'package:basearch/src/features/chatbot/domain/repository/chatbot_interfac
 import 'package:basearch/src/features/chatbot/domain/usecase/chatbot_usecase.dart';
 import 'package:basearch/src/features/chatbot/presentation/view/page/chatbot_page.dart';
 import 'package:basearch/src/features/chatbot/presentation/viewmodel/chatbot_viewmodel.dart';
-import 'package:basearch/src/features/modelo/presentation/view/page/modelo_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ChatbotModule extends Module {

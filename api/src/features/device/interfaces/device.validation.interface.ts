@@ -6,4 +6,5 @@ export default interface DeviceValidation{
     preferences():  RequestHandler;
     localization():  RequestHandler;
     measureQuery(): RequestHandler;
+    localizationQuery(): RequestHandler;
 }

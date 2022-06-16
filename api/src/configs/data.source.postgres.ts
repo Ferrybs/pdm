@@ -24,7 +24,7 @@ export default class PostgresDataSource{
         this._appDataSource= new DataSource({
             type: "postgres",
             url: validateEnv.DATABASE_URL,
-            synchronize: true,
+            synchronize: false,
             logging: ["query"],
             entities: [
                 Credentials,Client,Person,Session,

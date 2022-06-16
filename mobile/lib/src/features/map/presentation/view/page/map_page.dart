@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/map/presentation/view/widget/map_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -14,7 +15,7 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends ModularState<MapPage, MapViewModel> {
+class _MapPageState extends State<MapPage> {
   late GoogleMapController mapController;
   late double lat;
   late double long;
@@ -29,9 +30,7 @@ class _MapPageState extends ModularState<MapPage, MapViewModel> {
     _theme = Theme.of(context);
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-          title: _createTitle(_viewModel.getMapTitle()),
-          actions: [_createAction()]),
+      appBar: MapAppBar(),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         child: GoogleMap(
@@ -108,13 +107,6 @@ class _MapPageState extends ModularState<MapPage, MapViewModel> {
         tittle,
         style: _theme.textTheme.headlineMedium,
       ),
-    );
-  }
-
-  _createAction() {
-    return IconButton(
-      icon: const Icon(Icons.home),
-      onPressed: () => {_viewModel.navigateToHome()},
     );
   }
 }

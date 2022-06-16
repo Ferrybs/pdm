@@ -8,6 +8,7 @@ import DatabaseHttpException from "../../../exceptions/database.http.exception";
 import { Between, DataSource } from "typeorm";
 import DeviceDatabase from "../interfaces/device.database.interface";
 import Client from "../../../features/client/entities/client.entity";
+import Localization from "../interfaces/localization";
 
 export default class DevicePostgresDatabase implements DeviceDatabase{
     private _appDataSource: DataSource;
@@ -16,14 +17,15 @@ export default class DevicePostgresDatabase implements DeviceDatabase{
         this._appDataSource = dataSource;
     }
 
-    public async findDeviceLocalizationByDevice(device: Device): Promise<DeviceLocalization> {
+    public async findDeviceLocalizationsByLocalization(x: Localization, y: Localization): Promise<DeviceLocalization[]> {
         try {
-            return await this._appDataSource.manager.findOne(
+            return await this._appDataSource.manager.find(
                 DeviceLocalization,
                 {where: {
-                    device: device 
-                }
-            });
+                    latitude: Between(y.latitude,x.latitude),
+                    longitude: Between(y.longitude,x.longitude)
+                }}
+            )      
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }

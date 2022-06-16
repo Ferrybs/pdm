@@ -9,8 +9,24 @@ import MeasureDTO from "../dto/measure.dto";
 import MeasureQueryDTO from "../dto/measure.query.dto";
 import TypeMeasureDTO from "../dto/type.measure.dto";
 import DeviceValidation from "../interfaces/device.validation.interface";
+import DeviceQueryLocalizationDTO from "../dto/device_query_localization";
 
 export default class DeviceValidationMiddleware implements DeviceValidation {
+  public localizationQuery(): RequestHandler {
+    return async (request: RequestWithError, response: Response, next: NextFunction) =>{
+      let message: string;
+      try {
+        const localization: DeviceQueryLocalizationDTO = request.body;
+        await transformAndValidate(DeviceQueryLocalizationDTO,localization);
+      } catch (err) {
+        message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+      }
+      if(message){
+        request.error = message;
+      }
+      next();
+    }
+  }
     public localization():RequestHandler {
         return async (request: RequestWithError, response: Response, next: NextFunction) =>{
           let message: string;

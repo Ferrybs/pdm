@@ -5,11 +5,11 @@ import Device from "./device.entity";
 export default class DeviceLocalization{
     @PrimaryGeneratedColumn("uuid")
     public id?: string;
-    @Column({nullable: false})
-    public latitude?: string;
+    @Column({nullable: false, type: "double precision"})
+    public latitude?: number;
 
-    @Column({nullable: false})
-    public longitude?: string;
+    @Column({nullable: false, type: "double precision"})
+    public longitude?: number;
 
     @OneToOne(() => Device, device => device, {nullable: false})
     @JoinColumn()

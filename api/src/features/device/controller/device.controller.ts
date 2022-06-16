@@ -9,6 +9,7 @@ import MeasureQueryDTO from "../dto/measure.query.dto";
 import DevicePreferencesDTO from "../dto/device.preferences.dto";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import { identity, result } from "lodash";
+import DeviceQueryLocalizationDTO from "../dto/device_query_localization";
 
 export default class DeviceController extends Controller{
 
@@ -34,26 +35,6 @@ export default class DeviceController extends Controller{
             }
           }
     }
-    public async addLocatization(request: RequestWithToken, response: Response) {
-      if (request.error) {
-        const httpData: HttpData = { ok: false, message: request.error};
-        response.status(400).send(httpData);
-      }else{
-        try {
-          const dataStoreToken = request.dataStoreToken;
-          const deviceLocalizationDTO: DeviceLocalizationDTO = request.body;
-          const result = await this.deviceService.addLocalization(deviceLocalizationDTO,dataStoreToken);
-          response.status(200).send({ok: result});
-        } catch (error) {
-          if(error instanceof(HttpException)){
-            response.status(error.status).send(error.data);
-          }else{
-            const httpData: HttpData = { ok: false, message: error.message};
-            response.status(500).send(httpData);
-          }
-        
-        }
-    }}
     public async addPreferences(request: RequestWithToken, response: Response) {
       if (request.error) {
         const httpData: HttpData = { ok: false, message: request.error};
@@ -107,8 +88,8 @@ export default class DeviceController extends Controller{
       }else{
         try {
           const dataStoreToken = request.dataStoreToken;
-          const deviceDTO: DeviceDTO = request.body;
-          const deviceLocalizationDTO = await this.deviceService.getLocalization(deviceDTO,dataStoreToken);
+          const deviceQueryLocDTO: DeviceQueryLocalizationDTO = request.body;
+          const deviceLocalizationDTO = await this.deviceService.getLocalization(deviceQueryLocDTO,dataStoreToken);
           if (deviceLocalizationDTO) {
             response.status(200).send({ok: true,deviceLocalizationDTO});
           }else{

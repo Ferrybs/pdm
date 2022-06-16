@@ -55,16 +55,10 @@ export default class DeviceRoutes {
             this._validationMiddleware.device(),
             this._controller.getPreferences.bind(this._controller)
             );
-        this.router.post(
-            `${this.path}/localization`,
-            this._authMiddleware.verifyAccessToken(),
-            this._validationMiddleware.localization(),
-            this._controller.addLocatization.bind(this._controller)
-            );
         this.router.get(
             `${this.path}/localization`,
             this._authMiddleware.verifyAccessToken(),
-            this._validationMiddleware.device(),
+            this._validationMiddleware.localizationQuery(),
             this._controller.getLocalization.bind(this._controller)
             );
         this.router.get(
