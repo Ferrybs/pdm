@@ -67,5 +67,7 @@
     "home-chat-tittle": "suas mensagens com chatbot",
     "confirm-delete-chat": "Deletar?",
     "yes": "Sim",
-    "not": "Não"
+    "not": "Não",
+    "select-device-name":"Selecione o Nome do Dispositivo",
+    "search-distance": "Distancia Procurada: "
 }

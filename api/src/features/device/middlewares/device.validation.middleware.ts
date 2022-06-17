@@ -9,7 +9,7 @@ import MeasureDTO from "../dto/measure.dto";
 import MeasureQueryDTO from "../dto/measure.query.dto";
 import TypeMeasureDTO from "../dto/type.measure.dto";
 import DeviceValidation from "../interfaces/device.validation.interface";
-import DeviceQueryLocalizationDTO from "../dto/device_query_localization";
+import DeviceQueryLocalizationDTO from "../dto/device.query.localization.dto";
 
 export default class DeviceValidationMiddleware implements DeviceValidation {
   public localizationQuery(): RequestHandler {

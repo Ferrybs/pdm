@@ -9,7 +9,7 @@ import MeasureQueryDTO from "../dto/measure.query.dto";
 import DevicePreferencesDTO from "../dto/device.preferences.dto";
 import DeviceLocalizationDTO from "../dto/device.localization.dto";
 import { identity, result } from "lodash";
-import DeviceQueryLocalizationDTO from "../dto/device_query_localization";
+import DeviceQueryLocalizationDTO from "../dto/device.query.localization.dto";
 
 export default class DeviceController extends Controller{
 
@@ -81,7 +81,7 @@ export default class DeviceController extends Controller{
         }
       }
     }
-    public async getLocalization(request: RequestWithToken, response: Response){
+    public async getMapLocalizations(request: RequestWithToken, response: Response){
       if (request.error) {
         const httpData: HttpData = { ok: false, message: request.error};
         response.status(400).send(httpData);
@@ -89,9 +89,9 @@ export default class DeviceController extends Controller{
         try {
           const dataStoreToken = request.dataStoreToken;
           const deviceQueryLocDTO: DeviceQueryLocalizationDTO = request.body;
-          const deviceLocalizationDTO = await this.deviceService.getLocalization(deviceQueryLocDTO,dataStoreToken);
-          if (deviceLocalizationDTO) {
-            response.status(200).send({ok: true,deviceLocalizationDTO});
+          const deviceMapDTO = await this.deviceService.getMapLocalization(deviceQueryLocDTO,dataStoreToken);
+          if (deviceMapDTO) {
+            response.status(200).send({ok: true,deviceMapDTO});
           }else{
             response.status(200).send({ok: false});
           }

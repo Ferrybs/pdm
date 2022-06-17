@@ -1,6 +1,7 @@
-import 'package:basearch/src/features/map/presentation/view/widget/map_appbar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:basearch/src/features/map/presentation/view/widget/map_dialog_container.dart';
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -23,28 +24,177 @@ class _MapPageState extends State<MapPage> {
 
   final _viewModel = Modular.get<MapViewModel>();
 
-  late final LatLng _position = const LatLng(-15.8306559, -47.9264053);
+  late final LatLng _position =
+      const LatLng(-15.842278224686755, -48.02358141956272);
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
+    return Observer(builder: (context) {
+      return FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (_viewModel.loadError != null) {
+              return Container(
+                color: _theme.colorScheme.background,
+                child: MapDialogContainer(
+                  message:
+                      _viewModel.loadError ?? "session-error-tittle".i18n(),
+                  buttonText: "try-again".i18n(),
+                  onClick: () {
+                    _viewModel.navigateToHome();
+                  },
+                ),
+              );
+            }
+            {
+              return _body();
+            }
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        future: _viewModel.loadPage(),
+      );
+    });
+  }
+
+  SafeArea _body() {
     return SafeArea(
-        child: Scaffold(
-      appBar: MapAppBar(),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Container(
-        child: GoogleMap(
-          onMapCreated: onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: _position,
-            zoom: 11.0,
-          ),
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          zoomControlsEnabled: true,
+        child: Stack(
+      children: [
+        Observer(builder: (context) {
+          return GoogleMap(
+            onMapCreated: onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _position,
+              zoom: 14.0,
+            ),
+            myLocationEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            compassEnabled: false,
+          );
+        }),
+        _appBar(),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: _bottomBar(),
+        )
+      ],
+    ));
+  }
+
+  ClipRRect _bottomBar() {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+      child: Container(
+        height: 120,
+        color: _theme.cardColor,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(22, 10, 0, 5),
+                  child: Text(
+                    "search-distance".i18n(),
+                    style: _theme.textTheme.titleMedium,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 11, 0, 5),
+                  child: Text(
+                    "100 Km",
+                    style: _theme.textTheme.titleMedium,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(12, 5, 12, 15),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(color: _theme.backgroundColor),
+                  child: _slider(),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-    ));
+    );
+  }
+
+  Row _slider() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+          flex: 3,
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
+              child: Slider(
+                value: 0,
+                max: 100,
+                divisions: 2,
+                onChanged: (double vaule) {},
+              )),
+        )
+      ],
+    );
+  }
+
+  Padding _appBar() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(12, 20, 12, 30),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: _theme.backgroundColor,
+          ),
+          child: _barItems(),
+        ),
+      ),
+    );
+  }
+
+  Row _barItems() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Flexible(
+            flex: 2,
+            child: Padding(
+              padding: EdgeInsets.only(top: 1),
+              child: IconButton(
+                  color: _theme.colorScheme.secondary,
+                  onPressed: _viewModel.navigateToHome,
+                  icon: Icon(Icons.arrow_back)),
+            )),
+        Expanded(
+          flex: 8,
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: CustomDropdownButton2(
+                icon: Icon(Icons.developer_board),
+                iconSize: 22,
+                iconEnabledColor: _theme.colorScheme.secondary,
+                hint: "select-device-name".i18n(),
+                buttonWidth: 400,
+                value: null,
+                dropdownItems: ["Intem 1", "Item 2"],
+                onChanged: (String? tipo) {}),
+          ),
+        )
+      ],
+    );
   }
 
   void onMapCreated(GoogleMapController controller) async {

@@ -5,10 +5,12 @@ import DevicePreferences from "../entities/device.preferences.entity";
 import Measure from "../entities/measure.entity";
 import Session from "../../../features/auth/entities/session.entity";
 import DatabaseHttpException from "../../../exceptions/database.http.exception";
-import { Between, DataSource } from "typeorm";
+import { Between, DataSource, In } from "typeorm";
 import DeviceDatabase from "../interfaces/device.database.interface";
 import Client from "../../../features/client/entities/client.entity";
 import Localization from "../interfaces/localization";
+import DevicePreferencesDTO from "../dto/device.preferences.dto";
+import DeviceLocalizationPreferencesQuery from "../interfaces/device.localiation.preferences.query";
 
 export default class DevicePostgresDatabase implements DeviceDatabase{
     private _appDataSource: DataSource;
@@ -16,7 +18,35 @@ export default class DevicePostgresDatabase implements DeviceDatabase{
     constructor(dataSource: DataSource){
         this._appDataSource = dataSource;
     }
-
+    public async findPreferencesAndLocalizationByDeviceIdList(idList: string[]): Promise<Device[]>{
+        try {
+            const devices: Device[] = [];
+            const query: DeviceLocalizationPreferencesQuery[] = await this._appDataSource.manager.createQueryBuilder()
+            .select()
+            .from(Device,"d")
+            .leftJoinAndSelect("d.localization","device_localization")
+            .leftJoinAndSelect("d.preferences","device_preferences")
+            .whereInIds(idList).execute();
+            query.forEach((value)=>{
+                const device = new Device();
+                device.id = value.device_localization_deviceId;
+                const localization = new DeviceLocalization();
+                localization.latitude = value.device_localization_latitude;
+                localization.longitude = value.device_localization_longitude;
+                device.localization = localization;
+                const preferences = new DevicePreferences();
+                preferences.humidity = value.device_preferences_humidity ?? "0";
+                preferences.luminosity = value.device_preferences_luminosity ?? "0";
+                preferences.moisture = value.device_preferences_moisture ?? "0";
+                preferences.temperature = value.device_preferences_temperature ?? "0";
+                device.preferences = preferences;
+                devices.push(device);
+            })
+            return devices;
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
     public async findDeviceLocalizationsByLocalization(x: Localization, y: Localization): Promise<DeviceLocalization[]> {
         try {
             return await this._appDataSource.manager.find(
@@ -24,8 +54,8 @@ export default class DevicePostgresDatabase implements DeviceDatabase{
                 {where: {
                     latitude: Between(y.latitude,x.latitude),
                     longitude: Between(y.longitude,x.longitude)
-                }}
-            )      
+                },relations: ["device"]}
+            );
         } catch (error) {
             throw( new DatabaseHttpException(error.message));
         }

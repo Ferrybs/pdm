@@ -24,31 +24,9 @@ class _HomePlantPage extends State<HomePlantPage> {
               builder: (ctx, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError || _viewModel.error != null) {
-                    return Container(
-                      color: _theme.colorScheme.background,
-                      child: DialogContainer(
-                        message:
-                            _viewModel.error ?? "session-error-tittle".i18n(),
-                        buttonText: "try-again".i18n(),
-                        onClick: () {
-                          _viewModel.navigateToLogin();
-                        },
-                      ),
-                    );
+                    return _loadErrorMessage();
                   } else {
-                    return SafeArea(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Column(
-                            children: [
-                              _createTitle(_viewModel.gethomeTittle()),
-                              ..._createPlantList(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                    return _body();
                   }
                 }
                 return const Center(
@@ -57,6 +35,35 @@ class _HomePlantPage extends State<HomePlantPage> {
               },
               future: _viewModel.getHomeData(),
             ));
+  }
+
+  SafeArea _body() {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            children: [
+              _createTitle(_viewModel.gethomeTittle()),
+              ..._createPlantList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _loadErrorMessage() {
+    return Container(
+      color: _theme.colorScheme.background,
+      child: DialogContainer(
+        message: _viewModel.error ?? "session-error-tittle".i18n(),
+        buttonText: "try-again".i18n(),
+        onClick: () {
+          _viewModel.navigateToLogin();
+        },
+      ),
+    );
   }
 
   _createTitle(String tittle) {

@@ -66,5 +66,7 @@
     "home-chat-tittle": "your chatbot messages",
     "confirm-delete-chat": "Delete?",
     "yes": "Yes",
-    "not": "No"
+    "not": "No",
+    "select-device-name":"Select Device Name",
+    "search-distance": "Search Distance: "
 }
