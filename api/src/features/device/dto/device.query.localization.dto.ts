@@ -5,10 +5,10 @@ export default class DeviceQueryLocalizationDTO {
     id?: string;
     @Min(-90)
     @Max(90)
-    lat?:number;
+    latitude?:number;
     @Min(-180)
     @Max(180)
-    long?: number;
+    longitude?: number;
     @Min(1)
     distance: number;
 }

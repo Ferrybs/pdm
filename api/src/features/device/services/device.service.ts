@@ -144,10 +144,10 @@ export default class DeviceService extends Services{
         const km = 0.009009009;
         const result: DeviceMapDTO[] = []
         if(device){
-            const x: Localization = {latitude: deviceQueryLocDTO.lat -(km*(deviceQueryLocDTO.distance/2)),
-                                     longitude: deviceQueryLocDTO.long -(km*(deviceQueryLocDTO.distance/2))};
-            const y: Localization = {latitude: deviceQueryLocDTO.lat +(km*(deviceQueryLocDTO.distance/2)),
-                                    longitude: deviceQueryLocDTO.long +(km*(deviceQueryLocDTO.distance/2))};
+            const x: Localization = {latitude: deviceQueryLocDTO.latitude -(km*(deviceQueryLocDTO.distance/2)),
+                                     longitude: deviceQueryLocDTO.longitude -(km*(deviceQueryLocDTO.distance/2))};
+            const y: Localization = {latitude: deviceQueryLocDTO.latitude +(km*(deviceQueryLocDTO.distance/2)),
+                                    longitude: deviceQueryLocDTO.longitude +(km*(deviceQueryLocDTO.distance/2))};
             const deviceLocalizations = await this._deviceDatabase.findDeviceLocalizationsByLocalization(x,y);
             const deviceIdList = deviceLocalizations.map((value)=>{return value.device.id})
             const device = await this._deviceDatabase.findPreferencesAndLocalizationByDeviceIdList(deviceIdList);

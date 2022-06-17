@@ -21,11 +21,18 @@ class _MapPageState extends State<MapPage> {
   late double lat;
   late double long;
   late ThemeData _theme;
+  late Future<void> result;
 
   final _viewModel = Modular.get<MapViewModel>();
 
   late final LatLng _position =
       const LatLng(-15.842278224686755, -48.02358141956272);
+
+  @override
+  void initState() {
+    super.initState();
+    result = _viewModel.loadPage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +62,7 @@ class _MapPageState extends State<MapPage> {
             child: CircularProgressIndicator(),
           );
         },
-        future: _viewModel.loadPage(),
+        future: result,
       );
     });
   }
@@ -182,15 +189,21 @@ class _MapPageState extends State<MapPage> {
           flex: 8,
           child: Padding(
             padding: EdgeInsets.all(5),
-            child: CustomDropdownButton2(
-                icon: Icon(Icons.developer_board),
-                iconSize: 22,
-                iconEnabledColor: _theme.colorScheme.secondary,
-                hint: "select-device-name".i18n(),
-                buttonWidth: 400,
-                value: null,
-                dropdownItems: ["Intem 1", "Item 2"],
-                onChanged: (String? tipo) {}),
+            child: Observer(builder: (context) {
+              return CustomDropdownButton2(
+                  icon: Icon(Icons.developer_board),
+                  iconSize: 22,
+                  iconEnabledColor: _theme.colorScheme.secondary,
+                  hint: "select-device-name".i18n(),
+                  itemPadding: EdgeInsets.only(left: 20),
+                  value: _viewModel.selectedValue,
+                  dropdownItems: _viewModel.deviceList,
+                  onChanged: (value) {
+                    _viewModel.updateSelectedValue(value);
+
+                    setState(() {});
+                  });
+            }),
           ),
         )
       ],
