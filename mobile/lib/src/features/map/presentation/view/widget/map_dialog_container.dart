@@ -51,7 +51,7 @@ class MapDialogContainer extends StatelessWidget {
                           TextButton(
                             child: Text(buttonText),
                             onPressed: onClick,
-                          )
+                          ),
                         ],
                       ))),
                 ),

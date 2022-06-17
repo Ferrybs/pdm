@@ -17,7 +17,7 @@ abstract class _MapViewModelBase with Store {
   ObservableList<String> deviceList = ObservableList();
 
   @observable
-  ObservableSet<Set<Marker>> markers = ObservableSet.of([]);
+  ObservableSet<Marker> markers = ObservableSet.of([]);
 
   @observable
   BitmapDescriptor? icon;
@@ -31,6 +31,11 @@ abstract class _MapViewModelBase with Store {
   @action
   updadeDeviceList(ObservableList<String> device) {
     deviceList = device;
+  }
+
+  @action
+  updadeMarkerList(Set<Marker> marks) {
+    markers = ObservableSet.of(marks);
   }
 
   @action
@@ -56,7 +61,14 @@ abstract class _MapViewModelBase with Store {
     List<DeviceDTO>? devices = await _usecase.getDevices();
     if (devices != null) {
       //updateSelectedValue(devices.first.name);
-      updadeDeviceList(devices.map((e) => e.name).toList().asObservable());
+      if (devices.isNotEmpty) {
+        updadeMarkerList(await _usecase.getMarks(devices));
+        updadeDeviceList(devices.map((e) => e.name).toList().asObservable());
+      } else {
+        updateLoadError("no-device-error".i18n());
+      }
+    } else {
+      updateLoadError("session-error-tittle".i18n());
     }
   }
 }

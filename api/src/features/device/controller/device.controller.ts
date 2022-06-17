@@ -81,6 +81,31 @@ export default class DeviceController extends Controller{
         }
       }
     }
+    public async getLocalization(request: RequestWithToken, response: Response){
+      if (request.error) {
+        const httpData: HttpData = { ok: false, message: request.error};
+        response.status(400).send(httpData);
+      }else{
+        try {
+          const dataStoreToken = request.dataStoreToken;
+          const deviceId= request.params.id;
+          const localizationDTO = await this.deviceService.getLocalization(deviceId,dataStoreToken);
+          if (localizationDTO) {
+            response.status(200).send({ok: true,localizationDTO});
+          }else{
+            response.status(400).send({ok: false});
+          }
+        } catch (error) {
+          if(error instanceof(HttpException)){
+            response.status(error.status).send(error.data);
+          }else{
+            const httpData: HttpData = { ok: false, message: error.message};
+            response.status(500).send(httpData);
+          }
+        
+        }
+      }
+    }
     public async getMapLocalizations(request: RequestWithToken, response: Response){
       if (request.error) {
         const httpData: HttpData = { ok: false, message: request.error};

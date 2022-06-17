@@ -69,5 +69,6 @@
     "yes": "Sim",
     "not": "Não",
     "select-device-name":"Selecione o Nome do Dispositivo",
-    "search-distance": "Distancia Procurada: "
+    "search-distance": "Distancia Procurada: ",
+    "no-device-error": "O usuário não tem dispositivos, por favor registre um para usar o mapa"
 }

@@ -47,6 +47,18 @@ export default class DevicePostgresDatabase implements DeviceDatabase{
             throw( new DatabaseHttpException(error.message));
         }
     }
+    public async findDeviceLocalizationByDeviceId(deviceId: string): Promise<DeviceLocalization> {
+        try {
+            const device = new Device();
+            device.id = deviceId
+            return await this._appDataSource.manager.findOne(
+                DeviceLocalization,
+                {where: {device}}
+            );
+        } catch (error) {
+            throw( new DatabaseHttpException(error.message));
+        }
+    }
     public async findDeviceLocalizationsByLocalization(x: Localization, y: Localization): Promise<DeviceLocalization[]> {
         try {
             return await this._appDataSource.manager.find(

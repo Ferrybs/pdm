@@ -43,14 +43,12 @@ class MapUsecase {
     }
   }
 
-  Future<Set<Marker>?> getMarks() async {
+  Future<Set<Marker>> getMarks(List<DeviceDTO> devices) async {
     Set<Marker> markers = {};
-    List<DeviceDTO>? devices = await getDevices();
-    if (devices != null) {
-      for (var element in devices) {
-        Marker marker =
-            Marker(markerId: MarkerId(element.id), icon: await loadIcon());
-      }
+    for (var element in devices) {
+      Marker marker =
+          Marker(markerId: MarkerId(element.id), icon: await loadIcon());
     }
+    return markers;
   }
 }

@@ -12,6 +12,7 @@ export default interface DeviceDatabase{
     findDevicesBySessionId(sessionId: string): Promise<Device[]>;
     findDevicePreferencesByDevice(device: Device): Promise<DevicePreferences>;
     findDeviceLocalizationsByLocalization(x: Localization, y: Localization): Promise<DeviceLocalization[]>;
+    findDeviceLocalizationByDeviceId(deviceId: string): Promise<DeviceLocalization>;
     findPreferencesAndLocalizationByDeviceIdList(idList: string[]): Promise<Device[]>
 
     insertDevice(device: Device): Promise<Device>;

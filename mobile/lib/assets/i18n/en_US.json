@@ -68,5 +68,6 @@
     "yes": "Yes",
     "not": "No",
     "select-device-name":"Select Device Name",
-    "search-distance": "Search Distance: "
+    "search-distance": "Search Distance: ",
+    "no-device-error": "User has no devices, please register one to use the map"
 }

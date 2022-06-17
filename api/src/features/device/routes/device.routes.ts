@@ -62,6 +62,11 @@ export default class DeviceRoutes {
             this._controller.getMapLocalizations.bind(this._controller)
             );
         this.router.get(
+            `${this.path}/localization/:id`,
+            this._authMiddleware.verifyAccessToken(),
+            this._controller.getLocalization.bind(this._controller)
+            );
+        this.router.get(
             `${this.path}/configs`,
             this._authMiddleware.verifyAccessToken(),
             this._controller.getConfigs.bind(this._controller)

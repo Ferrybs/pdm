@@ -139,6 +139,19 @@ export default class DeviceService extends Services{
             throw new NotFoundHttpException("MEASURES");
         }
     }
+
+    public async getLocalization(deviceId: string,dataStoreToken: DataStoreToken): Promise<LocalizationDTO>{
+        const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceId);
+        if(device){
+            const localizationDTO = new LocalizationDTO;
+            const deviceLocalization = await this._deviceDatabase.findDeviceLocalizationByDeviceId(device.id);
+            localizationDTO.latitude = deviceLocalization.latitude;
+            localizationDTO.longitude = deviceLocalization.longitude;
+            return localizationDTO;
+        }else{
+            throw new NotFoundHttpException("MEASURES");
+        }
+    }
     public async getMapLocalization(deviceQueryLocDTO: DeviceQueryLocalizationDTO,dataStoreToken: DataStoreToken): Promise<DeviceMapDTO[]>{
         const device = await this.isMatchSessionDevice(dataStoreToken.id,deviceQueryLocDTO.id);
         const km = 0.009009009;
