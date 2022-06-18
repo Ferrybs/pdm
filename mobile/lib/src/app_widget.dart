@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:localization/localization.dart';
 
 class AppWidget extends StatelessWidget {
@@ -11,8 +12,8 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LocalJsonLocalization.delegate.directories = ['lib/assets/i18n'];
-
     return MaterialApp.router(
+      builder: FlutterSmartDialog.init(),
       scrollBehavior: AppScrollBehavior(),
       title: 'app_name'.i18n(),
       theme: AppTheme.light,

@@ -7,15 +7,16 @@ class ThemeBuilder {
   ThemeBuilder(this._baseTheme, this._colorScheme);
   getTheme() {
     return _baseTheme.copyWith(
-      colorScheme: _colorScheme,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      appBarTheme: appBarTheme,
-      textSelectionTheme: textSelectionTheme,
-      inputDecorationTheme: inputDecorationTheme,
-      elevatedButtonTheme: elevatedButtonTheme,
-      textTheme: textTheme,
-      textButtonTheme: textButtonTheme,
-    )..setOnboardingTheme(onboardingThemeData);
+        colorScheme: _colorScheme,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        appBarTheme: appBarTheme,
+        textSelectionTheme: textSelectionTheme,
+        inputDecorationTheme: inputDecorationTheme,
+        elevatedButtonTheme: elevatedButtonTheme,
+        textTheme: textTheme,
+        textButtonTheme: textButtonTheme,
+        scaffoldBackgroundColor: _colorScheme.background)
+      ..setOnboardingTheme(onboardingThemeData);
   }
 
   get onboardingThemeData {
@@ -99,6 +100,7 @@ class ThemeBuilder {
   get appBarTheme {
     return _baseTheme.appBarTheme.copyWith(
       backgroundColor: _colorScheme.background,
+      elevation: 0,
       iconTheme: IconThemeData(
         color: _colorScheme.tertiary,
       ),
@@ -107,6 +109,8 @@ class ThemeBuilder {
 
   get bodyLarge {
     return _baseTheme.textTheme.bodyLarge?.copyWith(
+      color: _colorScheme.tertiary,
+      fontSize: 20,
       fontFamily: "Poppins",
     );
   }
@@ -150,24 +154,30 @@ class ThemeBuilder {
 
   get headlineMedium {
     return _baseTheme.textTheme.headlineMedium?.copyWith(
+      fontSize: 30,
+      fontStyle: FontStyle.normal,
+      color: _colorScheme.tertiary,
       fontFamily: "Poppins",
     );
   }
 
   get headlineSmall {
     return _baseTheme.textTheme.headlineSmall?.copyWith(
+      color: _colorScheme.onPrimary,
       fontFamily: "Poppins",
     );
   }
 
   get labelLarge {
     return _baseTheme.textTheme.labelLarge?.copyWith(
+      color: _colorScheme.onPrimary,
       fontFamily: "Poppins",
     );
   }
 
   get labelMedium {
     return _baseTheme.textTheme.labelMedium?.copyWith(
+      color: _colorScheme.tertiary,
       fontFamily: "Poppins",
     );
   }
@@ -235,24 +245,6 @@ class ThemeBuilder {
       // button = LabelLarge
       // overline = LabelMedium
       // N/A = LabelSmall
-    );
-  }
-
-  MaterialColor _material_color() {
-    return const MaterialColor(
-      0xffc5d8a4, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
-      <int, Color>{
-        50: Color(0xffcbdcad), //10%
-        100: Color(0xffd1e0b6), //20%
-        200: Color(0xffd6e4bf), //30%
-        300: Color(0xffdce8c8), //40%
-        400: Color(0xffe2ecd2), //50%
-        500: Color(0xffe8efdb), //60%
-        600: Color(0xffeef3e4), //70%
-        700: Color(0xfff3f7ed), //80%
-        800: Color(0xfff9fbf6), //90%
-        900: Color(0xffffffff), //100%
-      },
     );
   }
 }

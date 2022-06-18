@@ -21,17 +21,27 @@ class OnboardingNavigation extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          createIconButton(onPreviousClicked),
-          createIconButton(onNextClicked),
+          createBackIconButton(onPreviousClicked),
+          createNextIconButton(onNextClicked),
         ],
       ),
     );
   }
 
-  IconButton createIconButton(void Function()? onPreviousClicked) {
+  IconButton createBackIconButton(void Function()? onPreviousClicked) {
     return IconButton(
       icon: Icon(
         onPreviousClicked == null ? null : Icons.arrow_back_ios,
+        color: _themeData.iconColor,
+      ),
+      onPressed: onPreviousClicked,
+    );
+  }
+
+  IconButton createNextIconButton(void Function()? onPreviousClicked) {
+    return IconButton(
+      icon: Icon(
+        onPreviousClicked == null ? null : Icons.arrow_forward_ios,
         color: _themeData.iconColor,
       ),
       onPressed: onPreviousClicked,

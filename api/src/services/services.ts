@@ -1,54 +1,71 @@
-import PostgresDataSource from "../configs/data.source.postgres";
-import User from "../entity/client.entity";
-import DataSourceDB from "../interfaces/data.source.interface";
-import UserDTO from "../dto/client.dto";
-import Person from "../entity/person.entity";
-import PersonDTO from "../dto/person.dto";
-import CredentialsDTO from "../dto/credentials.dto";
-import Credentials from "../entity/credentials.entity";
-import ClientDTO from "../dto/client.dto";
-import SendEmail from "../utils/sendEmail";
+import AuthJwt from "../features/jwt/auth/auth.jwt";
+import Crypto from "crypto";
+import TypeSession from "../features/auth/entities/type.session.entity";
+import ChatbotTypeMessage from "../features/chatbot/entities/chatbot.type.message.entity";
+import Email from "../features/email/interfaces/email.interface";
+import NodeMail from "../features/email/node.email";
+import AuthDatabase from "../features/auth/interfaces/auth.database.interface";
+import AuthPostgresDatabase from "../features/auth/database/auth.postgres.database";
+import { DataSource } from "typeorm";
+import DeviceDatabase from "../features/device/interfaces/device.database.interface";
+import ClientDatabase from "../features/client/interface/client.database.interface";
+import DevicePostgresDatabase from "../features/device/database/device.postgres.database";
+import ClientPostgresDatabase from "../features/client/database/client.postgres.database";
+import ChatbotPostgresDatabase from "../features/chatbot/database/chatbot.postgres.database";
+import ChatbotDatabase from "../features/chatbot/interfaces/chatbot.database.interface";
 export default class Services {
-    private dataSource: DataSourceDB;
-    private email: SendEmail;
-    constructor() {
-        this.email = new SendEmail();
-        this.dataSource = new PostgresDataSource();
+    private _jwt = new AuthJwt();
+    private _email: Email = new NodeMail();;
+    _authDatabase: AuthDatabase;
+    _deviceDatabase: DeviceDatabase;
+    _clientDatabase: ClientDatabase;
+    _chatbotDatabase: ChatbotDatabase
+    constructor(appDataSource: DataSource){
+        this._authDatabase = new AuthPostgresDatabase(appDataSource);
+        this._deviceDatabase = new DevicePostgresDatabase(appDataSource);
+        this._clientDatabase = new ClientPostgresDatabase(appDataSource);
+        this._chatbotDatabase = new ChatbotPostgresDatabase(appDataSource);
     }
 
-    getAppDataSource(){
-        return this.dataSource.appDataSource;
+    public get jwt(){
+        return this._jwt;
     }
 
-    getEmail(){
-        return this.email;
+    public get email(){
+        return this._email;
     }
-    createUser(userData: UserDTO){
-        const userRepository = this.getAppDataSource().getRepository(User);
-        return userRepository.create({
-            person: userData.personDTO,
-            credentials: userData.credentialsDTO
-        })
+    public generateSessionId(): string{
+        const buffer = Crypto.randomBytes(64);
+        return buffer.toString('hex');
+      }
+    public getLoginTypesession(){
+        const typeSession = new TypeSession();
+        typeSession.id ='1';
+        typeSession.type = 'LOGIN';
+        return typeSession;
     }
-    clientFromDTO(clientData: ClientDTO){
-        const person = this.personFromDTO(clientData.personDTO);
-        const credentials = this.credentialFromDTO(clientData.credentialsDTO);
-        const user = new User();
-        user.person = person;
-        user.credentials = credentials;
-        return user;
+    public getRefreshTokenTypesession(){
+        const typeSession = new TypeSession();
+        typeSession.id ='3';
+        typeSession.type = 'REFRESH_TOKEN';
+        return typeSession;
     }
-    credentialFromDTO(credentialsDTO: CredentialsDTO){
-        const credentials = new Credentials()
-        credentials.email = credentialsDTO.email
-        credentials.password = credentialsDTO.password
-        return credentials;
+    public getResetPasswordTypesession(){
+        const typeSession = new TypeSession();
+        typeSession.id ='2';
+        typeSession.type = 'RESET_PASSWORD';
+        return typeSession;
     }
-
-    personFromDTO(personDTO: PersonDTO){
-        const person = new Person();
-        person.name = personDTO.name;
-        person.lastName = personDTO.lastName;
-        return person;
+    public getClientTypeMessage(){
+        const typeSession = new ChatbotTypeMessage();
+        typeSession.id ='1';
+        typeSession.type = 'CLIENT_MESSAGE';
+        return typeSession;
+    }
+    public getBotTypeMessage(){
+        const typeSession = new ChatbotTypeMessage();
+        typeSession.id ='2';
+        typeSession.type = 'BOT_MESSAGE';
+        return typeSession;
     }
 }

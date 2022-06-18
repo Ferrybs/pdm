@@ -4,8 +4,8 @@ const seed = Color(0xFF6750A4);
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF009407),
-  onPrimary: Color(0xFFC5D8A4),
+  primary: Color(0xE59FC088),
+  onPrimary: Color.fromARGB(255, 255, 255, 255),
   primaryContainer: Color(0xFFC8F089),
   onPrimaryContainer: Color(0xFF112000),
   secondary: Color(0xFF625B71),
@@ -36,7 +36,7 @@ const lightColorScheme = ColorScheme(
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
   primary: Color(0xFFACD370),
-  onPrimary: Color(0xFF203600),
+  onPrimary: Color(0xFFFFE2A4),
   primaryContainer: Color(0xFF314F00),
   onPrimaryContainer: Color(0xFFC8F089),
   secondary: Color(0xFFCCC2DC),
