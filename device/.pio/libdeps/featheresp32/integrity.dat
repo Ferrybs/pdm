@@ -1,0 +1,6 @@
+gmag11/WifiLocation@^1.2.9
+ropg/ezTime@^0.8.3
+bblanchon/ArduinoJson@^6.19.4
+adafruit/Adafruit Unified Sensor@^1.1.5
+knolleary/PubSubClient@^2.8
+adafruit/DHT sensor library@^1.4.3

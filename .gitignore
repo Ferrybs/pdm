@@ -8,6 +8,7 @@ mobile/.atom/
 mobile/.buildlog/
 .history
 mobile/.svn/
+mobile/.env
 
 # IntelliJ related
 *.iml
