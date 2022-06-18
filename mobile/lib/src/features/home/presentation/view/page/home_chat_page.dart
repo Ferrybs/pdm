@@ -80,8 +80,8 @@ class _HomeChatPage extends State<HomeChatPage> {
     return ListView.builder(
         itemCount: _viewModel.chatbotSessions.length,
         shrinkWrap: true,
-        padding: EdgeInsets.only(top: 16),
-        physics: NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(top: 16),
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: ((context, index) {
           return ChatbotCard(
               onTap: _viewModel.navigateToChatbot,

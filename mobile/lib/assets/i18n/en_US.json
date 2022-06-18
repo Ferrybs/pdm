@@ -48,8 +48,6 @@
     "session-error-tittle": "Session Expired!",
     "temperature": "Temperature",
     "water_tank": "Water Tank",
-    "moisture": "Moisture",
-    "luminosity": "Luminosity",
     "map-title": "Current location",
     "error-get-client": "User not found!",
     "wireless-SSID": "Your Wireless SSID",
@@ -69,5 +67,11 @@
     "not": "No",
     "select-device-name":"Select Device Name",
     "search-distance": "Search Distance: ",
-    "no-device-error": "User has no devices, please register one to use the map"
+    "no-device-error": "User has no devices, please register one to use the map",
+    "preferences": "Preferences",
+    "temprerature": "Temprerature",
+    "humidity": "Humidity",
+    "luminosity": "Luminosity",
+    "moisture": "Moisture",
+    "cancel": "Cancel"
 }

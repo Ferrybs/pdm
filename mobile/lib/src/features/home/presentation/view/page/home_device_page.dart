@@ -37,25 +37,21 @@ class _HomeDevicePage extends State<HomeDevicePage> {
                     );
                   } else {
                     return SafeArea(
-                        child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
-                          child: _createTitle(_viewModel.getDevicehomeTittle()),
-                        ),
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [..._deviceList()],
-                            ),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _createTitle(_viewModel.getDevicehomeTittle()),
+                              ..._deviceList(),
+                              _addDeviceButton()
+                            ],
                           ),
                         ),
-                        _addDeviceButton()
-                      ],
-                    ));
+                      ),
+                    );
                   }
                 }
                 return const Center(

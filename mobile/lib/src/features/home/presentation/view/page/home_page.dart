@@ -1,18 +1,14 @@
 import 'package:basearch/src/features/home/presentation/view/page/home_chat_page.dart';
 import 'package:basearch/src/features/home/presentation/view/page/home_device_page.dart';
 import 'package:basearch/src/features/home/presentation/view/page/home_plant_page.dart';
-import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
 import 'package:basearch/src/features/home/presentation/view/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'package:localization/localization.dart';
-import 'package:mobx/mobx.dart';
 
 import '../../viewmodel/home_viewmodel.dart';
-import '../widget/plant_stats_widget.dart';
 
 class HomePage extends StatefulWidget {
   final int idx;
@@ -56,9 +52,10 @@ class _HomePage extends State<HomePage> {
               unSelectedColor: _theme.colorScheme.secondary,
               backgroundColor: _theme.shadowColor,
               items: <CustomNavigationBarItem>[
-                CustomNavigationBarItem(icon: Icon(Icons.developer_board)),
                 CustomNavigationBarItem(
-                  icon: Icon(Icons.home),
+                    icon: const Icon(Icons.developer_board)),
+                CustomNavigationBarItem(
+                  icon: const Icon(Icons.home),
                 ),
                 CustomNavigationBarItem(
                   icon: Icon(FontAwesomeIcons.robot),

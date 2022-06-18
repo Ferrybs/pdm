@@ -14,6 +14,7 @@ class AppModule extends Module {
   List<Bind> get binds => [
         Bind((i) async {
           await FlutterConfig.loadEnvVariables();
+          return null;
         }),
         Bind(((i) => PreferenceUsecase()))
       ];

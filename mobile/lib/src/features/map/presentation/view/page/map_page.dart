@@ -3,8 +3,8 @@ import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:localization/localization.dart';
 
 import '../../viewmodel/map_viewmodel.dart';
@@ -18,15 +18,10 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   late GoogleMapController mapController;
-  late double lat;
-  late double long;
   late ThemeData _theme;
-  late Future<void> result;
+  late Future<Set<Marker>> result;
 
   final _viewModel = Modular.get<MapViewModel>();
-
-  late final LatLng _position =
-      const LatLng(-15.842278224686755, -48.02358141956272);
 
   @override
   void initState() {
@@ -38,7 +33,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     return Observer(builder: (context) {
-      return FutureBuilder(
+      return FutureBuilder<Set<Marker>>(
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (_viewModel.loadError != null) {
@@ -55,7 +50,9 @@ class _MapPageState extends State<MapPage> {
               );
             }
             {
-              return _body();
+              return Observer(builder: (context) {
+                return _body();
+              });
             }
           }
           return const Center(
@@ -75,13 +72,14 @@ class _MapPageState extends State<MapPage> {
           return GoogleMap(
             onMapCreated: onMapCreated,
             initialCameraPosition: CameraPosition(
-              target: _position,
+              target: _viewModel.position,
               zoom: 14.0,
             ),
             myLocationEnabled: false,
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             compassEnabled: false,
+            markers: _viewModel.markers,
           );
         }),
         _appBar(),
@@ -110,13 +108,15 @@ class _MapPageState extends State<MapPage> {
                     style: _theme.textTheme.titleMedium,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 11, 0, 5),
-                  child: Text(
-                    "100 Km",
-                    style: _theme.textTheme.titleMedium,
-                  ),
-                ),
+                Observer(builder: (context) {
+                  return Padding(
+                    padding: EdgeInsets.fromLTRB(10, 11, 0, 5),
+                    child: Text(
+                      _viewModel.slider.toString() + " Km",
+                      style: _theme.textTheme.titleMedium,
+                    ),
+                  );
+                }),
               ],
             ),
             Padding(
@@ -136,24 +136,45 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Row _slider() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Flexible(
-          flex: 3,
-          child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
-              child: Slider(
-                value: 0,
-                max: 100,
-                divisions: 2,
-                onChanged: (double vaule) {},
-              )),
-        )
-      ],
-    );
+  Observer _slider() {
+    return Observer(builder: (context) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Flexible(
+            flex: 3,
+            child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
+                child: Observer(builder: (context) {
+                  return Slider(
+                    value: _viewModel.slider,
+                    min: 1,
+                    max: 100,
+                    divisions: 50,
+                    onChanged: ((double value) {
+                      setState(() {});
+                      _viewModel.updateCurrentSlider(value.floorToDouble());
+                    }),
+                    onChangeEnd: (double value) {
+                      _doSearch();
+                    },
+                  );
+                })),
+          )
+        ],
+      );
+    });
+  }
+
+  _doSearch() async {
+    SmartDialog.showLoading(
+        msg: "loading".i18n(), background: _theme.backgroundColor);
+    await _viewModel.search();
+    setState(() {
+      _viewModel.markers;
+    });
+    SmartDialog.dismiss();
   }
 
   Padding _appBar() {
@@ -200,8 +221,8 @@ class _MapPageState extends State<MapPage> {
                   dropdownItems: _viewModel.deviceList,
                   onChanged: (value) {
                     _viewModel.updateSelectedValue(value);
-
                     setState(() {});
+                    _doSearch();
                   });
             }),
           ),
@@ -210,66 +231,15 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+  _newPositon(LatLng position) {
+    _viewModel.mapController.animateCamera(CameraUpdate.newLatLng(position));
+  }
+
   void onMapCreated(GoogleMapController controller) async {
-    mapController = controller;
-
-    getPosition();
-
+    await _viewModel.onMapCreated(controller);
     String style = await DefaultAssetBundle.of(context)
         .loadString('lib/assets/styles/map_style.json');
-
-    mapController.setMapStyle(style);
-  }
-
-  Future<Position> _currentPosition() async {
-    LocationPermission permission;
-    bool isEnabled;
-
-    isEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isEnabled) {
-      await Geolocator.openLocationSettings();
-
-      isEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!isEnabled) {
-        return Future.error('Location services are disabled.');
-      }
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  getPosition() async {
-    try {
-      final position = await _currentPosition();
-      lat = position.latitude;
-      long = position.longitude;
-
-      mapController.animateCamera(CameraUpdate.newLatLng(LatLng(lat, long)));
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
-  _createTitle(String tittle) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        tittle,
-        style: _theme.textTheme.headlineMedium,
-      ),
-    );
+    _viewModel.mapController.setMapStyle(style);
+    _newPositon(_viewModel.position);
   }
 }

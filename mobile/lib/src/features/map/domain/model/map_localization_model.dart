@@ -1,12 +1,13 @@
 class MapLocalizationModel {
-  final num latitude;
-  final num longitde;
+  final double latitude;
+  final double longitde;
 
   MapLocalizationModel({required this.latitude, required this.longitde});
 
   factory MapLocalizationModel.fromJson(Map<dynamic, dynamic> json) =>
       MapLocalizationModel(
-          latitude: json["latitude"], longitde: json["longitude"]);
+          latitude: double.parse(json["latitude"]),
+          longitde: double.parse(json["longitude"]));
   Map<String, dynamic> toJson() =>
       {"latitude": latitude, "longitude": longitde};
 }

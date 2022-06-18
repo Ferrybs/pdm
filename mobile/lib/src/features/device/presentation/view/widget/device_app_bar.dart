@@ -6,24 +6,13 @@ class DeviceAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return AppBar(
       title: _createTitle(),
-      actions: [],
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  _createLeading(Brightness brightness) {
-    return IconButton(
-      icon: brightness == Brightness.light
-          ? SvgPicture.asset('lib/assets/images/align_right_light.svg')
-          : SvgPicture.asset('lib/assets/images/align_right_dark.svg'),
-      onPressed: () => {},
-    );
-  }
 
   _createTitle() {
     return Center(

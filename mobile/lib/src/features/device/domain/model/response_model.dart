@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-
 class ResponseModel {
   final bool ok;
   final String message;

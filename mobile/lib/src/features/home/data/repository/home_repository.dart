@@ -195,7 +195,7 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   Future<ClientModel> getClient(String token) async {
     try {
       Response response;
-      var dio = Dio(APIoptions);
+      var dio = Dio(apiOptions);
       response = await dio.get("/client/",
           options: Options(headers: {"Authorization": "Bearer " + token}));
       return ClientModel.fromJson(response.data["clientDTO"]);
@@ -208,7 +208,7 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   Future<List<DeviceModel>> getDevices(String token) async {
     try {
       Response response;
-      var dio = Dio(APIoptions);
+      var dio = Dio(apiOptions);
       response = await dio.get("/device",
           options: Options(headers: {"Authorization": "Bearer " + token}));
       return (response.data['deviceDTO'] as List)
@@ -223,7 +223,7 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   Future<List<ChatbotSessionModel>> getChatbotSessions(String token) async {
     try {
       Response response;
-      var dio = Dio(APIoptions);
+      var dio = Dio(apiOptions);
       response = await dio.get("/chatbot",
           options: Options(headers: {"Authorization": "Bearer " + token}));
       return (response.data['chatbotSessionsDTO'] as List)
@@ -238,7 +238,7 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   Future<bool> deleteChatBotSession(String token, String id) async {
     try {
       Response response;
-      var dio = Dio(APIoptions);
+      var dio = Dio(apiOptions);
       response = await dio.delete("/chatbot/" + id,
           options: Options(headers: {"Authorization": "Bearer " + token}));
       return response.data['ok'];
@@ -251,7 +251,7 @@ class HomeRepository extends HomeRepositoryBase implements IHome {
   Future<bool> deleteDevice(String token, String id) async {
     try {
       Response response;
-      var dio = Dio(APIoptions);
+      var dio = Dio(apiOptions);
       response = await dio.delete("/device/" + id,
           options: Options(headers: {"Authorization": "Bearer " + token}));
       return response.data['ok'];

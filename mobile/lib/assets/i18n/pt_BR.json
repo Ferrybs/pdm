@@ -41,8 +41,6 @@
     "loading": "Carregando...",
     "temperature": "Temperatura",
     "water_tank": "Água",
-    "moisture": "Humidade",
-    "luminosity": "Luminosidade",
     "home-tittle": "suas plantas",
     "new-plant-tittle": "Nova Planta",
     "wireless-configuration": "Configuração Wifi",
@@ -70,5 +68,11 @@
     "not": "Não",
     "select-device-name":"Selecione o Nome do Dispositivo",
     "search-distance": "Distancia Procurada: ",
-    "no-device-error": "O usuário não tem dispositivos, por favor registre um para usar o mapa"
+    "no-device-error": "O usuário não tem dispositivos, por favor registre um para usar o mapa",
+    "preferences": "Preferencias",
+    "temprerature": "Tempreratura",
+    "humidity": "Humidade",
+    "luminosity": "Luminosidade",
+    "moisture": "Humidade Solo",
+    "cancel":"Cancelar"
 }

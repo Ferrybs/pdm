@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class BluetoothOffScreen extends StatelessWidget {
@@ -312,7 +311,7 @@ class DeviceScreen extends StatelessWidget {
     });
     while (isConnected) {
       yield await device.readRssi();
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
     subscription.cancel();
     // Device disconnected, stopping RSSI stream

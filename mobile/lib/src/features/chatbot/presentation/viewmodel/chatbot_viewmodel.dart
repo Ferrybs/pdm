@@ -1,11 +1,9 @@
-import 'package:basearch/src/features/home/data/dto/chatbot_message_dto.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../data/dto/person_dto.dart';
-import '../../data/dto/response_dto.dart';
 import '../../domain/usecase/chatbot_usecase.dart';
 
 part 'chatbot_viewmodel.g.dart';

@@ -145,8 +145,8 @@ export default class DeviceService extends Services{
         if(device){
             const localizationDTO = new LocalizationDTO;
             const deviceLocalization = await this._deviceDatabase.findDeviceLocalizationByDeviceId(device.id);
-            localizationDTO.latitude = deviceLocalization.latitude;
-            localizationDTO.longitude = deviceLocalization.longitude;
+            localizationDTO.latitude = parseFloat(deviceLocalization.latitude.toString()) ;
+            localizationDTO.longitude = parseFloat(deviceLocalization.longitude.toString());
             return localizationDTO;
         }else{
             throw new NotFoundHttpException("MEASURES");

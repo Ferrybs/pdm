@@ -3,9 +3,7 @@ import 'package:basearch/src/features/chatbot/domain/model/chatbot_message_model
 import 'package:basearch/src/features/chatbot/domain/model/chatbot_message_response_model.dart';
 import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:localization/localization.dart';
 
 import '../../data/dto/person_dto.dart';
 import '../model/chatbot_message_request_model.dart';
