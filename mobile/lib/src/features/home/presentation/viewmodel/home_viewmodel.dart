@@ -63,6 +63,8 @@ abstract class _HomeViewModelBase with Store {
     updateError(errorLocal);
     String? name = _usecase.getPersonName();
     if (name != null) {
+      await _usecase.getDevicesFromRepository();
+      updateDeviceList(_usecase.getDevices() ?? []);
       updateClientName(name);
     } else {
       updateError("session-error-tittle".i18n());

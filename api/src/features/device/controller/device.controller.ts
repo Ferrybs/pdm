@@ -63,7 +63,9 @@ export default class DeviceController extends Controller{
       }else{
         try {
           const dataStoreToken = request.dataStoreToken;
-          const deviceDTO: DeviceDTO = request.body;
+          const deviceId: string = request.params.id;
+          const deviceDTO = new DeviceDTO()
+          deviceDTO.id = deviceId;
           const devicePreferencesDTO = await this.deviceService.getPreferences(deviceDTO,dataStoreToken);
           if (devicePreferencesDTO) {
             response.status(200).send({ok: true,devicePreferencesDTO});

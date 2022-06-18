@@ -50,9 +50,8 @@ export default class DeviceRoutes {
             this._controller.addPreferences.bind(this._controller)
             );
         this.router.get(
-            `${this.path}/preferences`,
+            `${this.path}/preferences/:id`,
             this._authMiddleware.verifyAccessToken(),
-            this._validationMiddleware.device(),
             this._controller.getPreferences.bind(this._controller)
             );
         this.router.post(

@@ -74,5 +74,6 @@
     "humidity": "Humidade",
     "luminosity": "Luminosidade",
     "moisture": "Humidade Solo",
-    "cancel":"Cancelar"
+    "cancel":"Cancelar",
+    "save": "Salvar"
 }

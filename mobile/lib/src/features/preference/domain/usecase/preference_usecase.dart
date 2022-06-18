@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/preference/data/repository/preference_repository.dart';
 import 'package:basearch/src/features/preference/domain/model/token_data_model.dart';
 import 'package:basearch/src/features/preference/domain/repository/preference_interface.dart';

@@ -1,3 +1,4 @@
+import 'package:basearch/src/features/home/presentation/viewmodel/plant_viewmodel.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'data/repository/home_repository.dart';
@@ -10,6 +11,7 @@ class HomeModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.factory((i) => HomeViewModel()),
+    Bind.factory((i) => PlantViewModel()),
     Bind.factory((i) => HomeUseCase()),
     Bind.factory<IHome>((i) => HomeRepository()),
   ];
