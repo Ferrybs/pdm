@@ -43,13 +43,22 @@ class _HomePlantPage extends State<HomePlantPage> {
         child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
-            children: [
-              _createTitle(_viewModel.gethomeTittle()),
-              PlantCard(seriesList: _createSampleData())
-            ],
+            children: [_createTitle(_viewModel.gethomeTittle())],
           ),
         ),
       ),
+    );
+  }
+
+  ListView _plantCards() {
+    return ListView.builder(
+      itemCount: _viewModel.devicelist.length,
+      shrinkWrap: true,
+      padding: const EdgeInsets.only(top: 16),
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return PlantCard(deviceDTO: _viewModel.devicelist[index]);
+      },
     );
   }
 

@@ -57,12 +57,18 @@ abstract class _HomeViewModelBase with Store {
     chatbotSessions = list;
   }
 
+  getChartMeasure(deviceId, id) {
+    return _usecase.getChartMeasure(deviceId, id);
+  }
+
   getHomeData() async {
     String? errorLocal;
     errorLocal = await _usecase.getClientFromRepository() ?? errorLocal;
     updateError(errorLocal);
     String? name = _usecase.getPersonName();
     if (name != null) {
+      await _usecase.getDevicesFromRepository();
+      updateDeviceList(_usecase.getDevices() ?? []);
       updateClientName(name);
     } else {
       updateError("session-error-tittle".i18n());

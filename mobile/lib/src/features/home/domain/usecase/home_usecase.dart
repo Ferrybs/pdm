@@ -4,12 +4,16 @@ import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/chatbot_session_model.dart';
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/device_model.dart';
+import 'package:basearch/src/features/home/domain/model/measure_model.dart';
+import 'package:basearch/src/features/home/domain/model/measure_model_query.dart';
+import 'package:basearch/src/features/home/domain/model/time_series_measure_model.dart';
 import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import 'package:uuid/uuid.dart';
 import '../repository/home_interface.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class HomeUseCase {
   final repository = Modular.get<IHome>();
@@ -48,6 +52,42 @@ class HomeUseCase {
       return "session-error-tittle".i18n();
     } catch (e) {
       return "session-error-tittle".i18n();
+    }
+  }
+
+  Future<List<MeasureModel>> getMeasures(String deviceId) async {
+    try {
+      final now = DateTime.now();
+      String? token = await _preference.getAccessToken();
+      MeasureQueryModel query = MeasureQueryModel(
+          start: DateTime(now.year, now.month, now.day - 1),
+          end: DateTime(now.year, now.month, now.day),
+          deviceId: deviceId);
+      return await repository.getMeasures(query, token ?? '');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<charts.Series<TimeSeriesMeasureModel, DateTime>>?>
+      getChartMeasure(String deviceId, String id) async {
+    try {
+      final measure = await getMeasures(deviceId);
+      final data = measure
+          .map((e) => TimeSeriesMeasureModel(value: e.value, date: e.date))
+          .toList();
+      return [
+        charts.Series<TimeSeriesMeasureModel, DateTime>(
+          data: data,
+          id: id,
+          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+          domainFn: (TimeSeriesMeasureModel measure, _) => measure.date,
+          measureFn: (TimeSeriesMeasureModel measure, _) =>
+              num.parse(measure.value),
+        )
+      ];
+    } catch (e) {
+      return null;
     }
   }
 
