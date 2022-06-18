@@ -1,11 +1,11 @@
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
+import 'package:basearch/src/features/home/presentation/view/widget/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
-
+import 'package:charts_flutter/flutter.dart' as charts;
 import '../../viewmodel/home_viewmodel.dart';
-import '../widget/plant_stats_widget.dart';
 
 class HomePlantPage extends StatefulWidget {
   const HomePlantPage({Key? key}) : super(key: key);
@@ -45,12 +45,31 @@ class _HomePlantPage extends State<HomePlantPage> {
           child: Column(
             children: [
               _createTitle(_viewModel.gethomeTittle()),
-              ..._createPlantList(),
+              PlantCard(seriesList: _createSampleData())
             ],
           ),
         ),
       ),
     );
+  }
+
+  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
+    final data = [
+      new TimeSeriesSales(new DateTime(2017, 9, 19), 5),
+      new TimeSeriesSales(new DateTime(2017, 9, 26), 25),
+      new TimeSeriesSales(new DateTime(2017, 10, 3), 100),
+      new TimeSeriesSales(new DateTime(2017, 10, 10), 75),
+    ];
+
+    return [
+      new charts.Series<TimeSeriesSales, DateTime>(
+        id: 'Sales',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (TimeSeriesSales sales, _) => sales.time,
+        measureFn: (TimeSeriesSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
   }
 
   Container _loadErrorMessage() {
@@ -75,10 +94,11 @@ class _HomePlantPage extends State<HomePlantPage> {
       ),
     );
   }
+}
 
-  _createPlantList() {
-    return _viewModel.plantList
-        .map((plant) => PlantStatsWidget(plantStats: plant))
-        .toList();
-  }
+class TimeSeriesSales {
+  final DateTime time;
+  final int sales;
+
+  TimeSeriesSales(this.time, this.sales);
 }

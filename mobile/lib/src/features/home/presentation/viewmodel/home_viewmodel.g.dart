@@ -89,6 +89,7 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+<<<<<<< HEAD
   late final _$plantListAtom =
       Atom(name: '_HomeViewModelBase.plantList', context: context);
 
@@ -105,6 +106,8 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
+=======
+>>>>>>> feature/home-plant
   late final _$_HomeViewModelBaseActionController =
       ActionController(name: '_HomeViewModelBase', context: context);
 
@@ -142,6 +145,7 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+<<<<<<< HEAD
   void updatePlantList(List<dynamic> list) {
     final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
         name: '_HomeViewModelBase.updatePlantList');
@@ -153,6 +157,8 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
+=======
+>>>>>>> feature/home-plant
   void updateDeviceList(List<DeviceDTO> list) {
     final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
         name: '_HomeViewModelBase.updateDeviceList');
@@ -181,8 +187,7 @@ personDTO: ${personDTO},
 devicelist: ${devicelist},
 chatbotSessions: ${chatbotSessions},
 currentIndex: ${currentIndex},
-error: ${error},
-plantList: ${plantList}
+error: ${error}
     ''';
   }
 }

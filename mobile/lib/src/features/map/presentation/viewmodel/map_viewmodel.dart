@@ -26,9 +26,6 @@ abstract class _MapViewModelBase with Store {
   LatLng position = LatLng(0, 0);
 
   @observable
-  late GoogleMapController mapController;
-
-  @observable
   String? loadError;
 
   @observable
@@ -45,11 +42,6 @@ abstract class _MapViewModelBase with Store {
   @action
   updatePosition(LatLng value) {
     position = value;
-  }
-
-  @action
-  updateController(GoogleMapController value) {
-    mapController = value;
   }
 
   @action
@@ -80,8 +72,7 @@ abstract class _MapViewModelBase with Store {
     Modular.to.navigate('/home/');
   }
 
-  Future<void> onMapCreated(GoogleMapController controller) async {
-    updateController(controller);
+  Future<void> onMapCreated() async {
     DeviceLocalizationDTO? deviceLoc =
         await _usecase.getDeviceLocalization(selectedValue ?? '');
     if (deviceLoc != null) {
@@ -90,7 +81,7 @@ abstract class _MapViewModelBase with Store {
     }
   }
 
-  search() async {
+  search(GoogleMapController mapController) async {
     DeviceLocalizationDTO? deviceLocalizationDTO =
         await _usecase.getDeviceLocalization(selectedValue ?? '');
     if (deviceLocalizationDTO != null) {

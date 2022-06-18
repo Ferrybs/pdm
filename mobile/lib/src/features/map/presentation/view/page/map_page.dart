@@ -170,7 +170,7 @@ class _MapPageState extends State<MapPage> {
   _doSearch() async {
     SmartDialog.showLoading(
         msg: "loading".i18n(), background: _theme.backgroundColor);
-    await _viewModel.search();
+    await _viewModel.search(mapController);
     setState(() {
       _viewModel.markers;
     });
@@ -232,14 +232,15 @@ class _MapPageState extends State<MapPage> {
   }
 
   _newPositon(LatLng position) {
-    _viewModel.mapController.animateCamera(CameraUpdate.newLatLng(position));
+    mapController.animateCamera(CameraUpdate.newLatLng(position));
   }
 
   void onMapCreated(GoogleMapController controller) async {
-    await _viewModel.onMapCreated(controller);
+    mapController = controller;
+    await _viewModel.onMapCreated();
     String style = await DefaultAssetBundle.of(context)
         .loadString('lib/assets/styles/map_style.json');
-    _viewModel.mapController.setMapStyle(style);
+    mapController.setMapStyle(style);
     _newPositon(_viewModel.position);
   }
 }

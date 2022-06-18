@@ -95,12 +95,11 @@ export default class DeviceService extends Services{
 
     public async getMeasures(measure_query: MeasureQueryDTO): Promise<MeasureDTO[]>{
         const device = new Device();
+        const measureDTO: MeasureDTO[] = [];
         device.id = measure_query.deviceId;
         const result = await this._deviceDatabase.findMeasuresByDevice(
-            device, new Date(measure_query.start),
-            new Date(measure_query.end));
+            device, new Date(measure_query.end),new Date(measure_query.start),);
         if(result.length >0){   
-            const measureDTO: MeasureDTO[] = [];
             result.forEach((measure)=>{
                 const result = new MeasureDTO();
                 result.date = measure.date;
@@ -109,10 +108,8 @@ export default class DeviceService extends Services{
                 result.typeDTO = plainToInstance(TypeMeasureDTO,measure.type);
                 measureDTO.push(result);
             });
-            return measureDTO;
-        }else{
-            throw new NotFoundHttpException("MEASURES");
         }
+        return measureDTO;
     }
 
     public async addMeasure(measureDTO: MeasureDTO): Promise<boolean>{
