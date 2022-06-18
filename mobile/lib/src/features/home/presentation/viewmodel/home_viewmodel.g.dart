@@ -93,13 +93,13 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
       Atom(name: '_HomeViewModelBase.plantList', context: context);
 
   @override
-  List<PlantStatsModel> get plantList {
+  List<dynamic> get plantList {
     _$plantListAtom.reportRead();
     return super.plantList;
   }
 
   @override
-  set plantList(List<PlantStatsModel> value) {
+  set plantList(List<dynamic> value) {
     _$plantListAtom.reportWrite(value, super.plantList, () {
       super.plantList = value;
     });
@@ -142,7 +142,7 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
-  void updatePlantList(List<PlantStatsModel> list) {
+  void updatePlantList(List<dynamic> list) {
     final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
         name: '_HomeViewModelBase.updatePlantList');
     try {
