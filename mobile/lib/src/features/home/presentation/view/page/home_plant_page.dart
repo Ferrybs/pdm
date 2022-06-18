@@ -1,5 +1,4 @@
 import 'package:basearch/src/features/home/presentation/view/widget/dialog_container.dart';
-import 'package:basearch/src/features/home/presentation/view/widget/plant_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -45,7 +44,6 @@ class _HomePlantPage extends State<HomePlantPage> {
           child: Column(
             children: [
               _createTitle(_viewModel.gethomeTittle()),
-              PlantCard(seriesList: _createSampleData())
             ],
           ),
         ),
