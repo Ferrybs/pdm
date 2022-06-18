@@ -9,83 +9,103 @@ part of 'plant_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$PlantViewModel on _PlantViewModelBase, Store {
-  late final _$currentChartAtom =
-      Atom(name: '_PlantViewModelBase.currentChart', context: context);
+  late final _$temperatureChartAtom =
+      Atom(name: '_PlantViewModelBase.temperatureChart', context: context);
 
   @override
-  int get currentChart {
-    _$currentChartAtom.reportRead();
-    return super.currentChart;
+  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get temperatureChart {
+    _$temperatureChartAtom.reportRead();
+    return super.temperatureChart;
   }
 
   @override
-  set currentChart(int value) {
-    _$currentChartAtom.reportWrite(value, super.currentChart, () {
-      super.currentChart = value;
+  set temperatureChart(
+      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+    _$temperatureChartAtom.reportWrite(value, super.temperatureChart, () {
+      super.temperatureChart = value;
     });
   }
 
-  late final _$temperatureAtom =
-      Atom(name: '_PlantViewModelBase.temperature', context: context);
+  late final _$humidityChartAtom =
+      Atom(name: '_PlantViewModelBase.humidityChart', context: context);
 
   @override
-  double get temperature {
-    _$temperatureAtom.reportRead();
-    return super.temperature;
+  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get humidityChart {
+    _$humidityChartAtom.reportRead();
+    return super.humidityChart;
   }
 
   @override
-  set temperature(double value) {
-    _$temperatureAtom.reportWrite(value, super.temperature, () {
-      super.temperature = value;
+  set humidityChart(
+      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+    _$humidityChartAtom.reportWrite(value, super.humidityChart, () {
+      super.humidityChart = value;
     });
   }
 
-  late final _$humidityAtom =
-      Atom(name: '_PlantViewModelBase.humidity', context: context);
+  late final _$luminosotyChartAtom =
+      Atom(name: '_PlantViewModelBase.luminosotyChart', context: context);
 
   @override
-  double get humidity {
-    _$humidityAtom.reportRead();
-    return super.humidity;
+  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get luminosotyChart {
+    _$luminosotyChartAtom.reportRead();
+    return super.luminosotyChart;
   }
 
   @override
-  set humidity(double value) {
-    _$humidityAtom.reportWrite(value, super.humidity, () {
-      super.humidity = value;
+  set luminosotyChart(
+      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+    _$luminosotyChartAtom.reportWrite(value, super.luminosotyChart, () {
+      super.luminosotyChart = value;
     });
   }
 
-  late final _$luminosityAtom =
-      Atom(name: '_PlantViewModelBase.luminosity', context: context);
+  late final _$moistureChartAtom =
+      Atom(name: '_PlantViewModelBase.moistureChart', context: context);
 
   @override
-  double get luminosity {
-    _$luminosityAtom.reportRead();
-    return super.luminosity;
+  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get moistureChart {
+    _$moistureChartAtom.reportRead();
+    return super.moistureChart;
   }
 
   @override
-  set luminosity(double value) {
-    _$luminosityAtom.reportWrite(value, super.luminosity, () {
-      super.luminosity = value;
+  set moistureChart(
+      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+    _$moistureChartAtom.reportWrite(value, super.moistureChart, () {
+      super.moistureChart = value;
     });
   }
 
-  late final _$moistureAtom =
-      Atom(name: '_PlantViewModelBase.moisture', context: context);
+  late final _$activeChartAtom =
+      Atom(name: '_PlantViewModelBase.activeChart', context: context);
 
   @override
-  double get moisture {
-    _$moistureAtom.reportRead();
-    return super.moisture;
+  List<bool> get activeChart {
+    _$activeChartAtom.reportRead();
+    return super.activeChart;
   }
 
   @override
-  set moisture(double value) {
-    _$moistureAtom.reportWrite(value, super.moisture, () {
-      super.moisture = value;
+  set activeChart(List<bool> value) {
+    _$activeChartAtom.reportWrite(value, super.activeChart, () {
+      super.activeChart = value;
+    });
+  }
+
+  late final _$measureValuesAtom =
+      Atom(name: '_PlantViewModelBase.measureValues', context: context);
+
+  @override
+  ObservableList<double> get measureValues {
+    _$measureValuesAtom.reportRead();
+    return super.measureValues;
+  }
+
+  @override
+  set measureValues(ObservableList<double> value) {
+    _$measureValuesAtom.reportWrite(value, super.measureValues, () {
+      super.measureValues = value;
     });
   }
 
@@ -93,44 +113,45 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
       ActionController(name: '_PlantViewModelBase', context: context);
 
   @override
-  dynamic updateTemperature(double value) {
+  dynamic updateMeasure(int index, double value) {
     final _$actionInfo = _$_PlantViewModelBaseActionController.startAction(
-        name: '_PlantViewModelBase.updateTemperature');
+        name: '_PlantViewModelBase.updateMeasure');
     try {
-      return super.updateTemperature(value);
+      return super.updateMeasure(index, value);
     } finally {
       _$_PlantViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic updateHumidity(double value) {
+  dynamic updateMeasureList(List<double> value) {
     final _$actionInfo = _$_PlantViewModelBaseActionController.startAction(
-        name: '_PlantViewModelBase.updateHumidity');
+        name: '_PlantViewModelBase.updateMeasureList');
     try {
-      return super.updateHumidity(value);
+      return super.updateMeasureList(value);
     } finally {
       _$_PlantViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic updateLuminosity(double value) {
+  dynamic updateChartList(
+      int index, List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
     final _$actionInfo = _$_PlantViewModelBaseActionController.startAction(
-        name: '_PlantViewModelBase.updateLuminosity');
+        name: '_PlantViewModelBase.updateChartList');
     try {
-      return super.updateLuminosity(value);
+      return super.updateChartList(index, value);
     } finally {
       _$_PlantViewModelBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic updateMoisture(double value) {
+  dynamic updateActiveChart(List<bool> value) {
     final _$actionInfo = _$_PlantViewModelBaseActionController.startAction(
-        name: '_PlantViewModelBase.updateMoisture');
+        name: '_PlantViewModelBase.updateActiveChart');
     try {
-      return super.updateMoisture(value);
+      return super.updateActiveChart(value);
     } finally {
       _$_PlantViewModelBaseActionController.endAction(_$actionInfo);
     }
@@ -139,11 +160,12 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
   @override
   String toString() {
     return '''
-currentChart: ${currentChart},
-temperature: ${temperature},
-humidity: ${humidity},
-luminosity: ${luminosity},
-moisture: ${moisture}
+temperatureChart: ${temperatureChart},
+humidityChart: ${humidityChart},
+luminosotyChart: ${luminosotyChart},
+moistureChart: ${moistureChart},
+activeChart: ${activeChart},
+measureValues: ${measureValues}
     ''';
   }
 }

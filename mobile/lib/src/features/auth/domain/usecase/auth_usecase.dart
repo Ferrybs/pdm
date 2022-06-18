@@ -83,12 +83,6 @@ class AuthUseCase {
           case 404:
             return "server-error".i18n();
           default:
-            if (e.response?.data != null) {
-              var data = e.response?.data;
-              if (data["message"] != null) {
-                return data["message"];
-              }
-            }
         }
       }
       return "server-error".i18n();

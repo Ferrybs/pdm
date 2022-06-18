@@ -6,6 +6,7 @@ import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/device_model.dart';
 import 'package:basearch/src/features/home/domain/model/measure_model.dart';
 import 'package:basearch/src/features/home/domain/model/measure_model_query.dart';
+import 'package:basearch/src/features/home/domain/model/measure_preferences_model.dart';
 import 'package:basearch/src/features/home/domain/model/time_series_measure_model.dart';
 import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:dio/dio.dart';
@@ -31,8 +32,51 @@ class HomeUseCase {
     Modular.to.navigate('/auth/');
   }
 
+  List<bool> selectChart(index, List<bool> activeChart) {
+    for (var i = 0; i < 4; i++) {
+      if (i == index) {
+        activeChart[i] = true;
+      } else {
+        activeChart[i] = false;
+      }
+    }
+    return activeChart;
+  }
+
   String? getPersonName() {
     return _clientModel?.person.name;
+  }
+
+  Future<void> setPreferences(
+      List<double> measurePreference, DeviceDTO deviceDTO) async {
+    try {
+      String? token = await _preference.getAccessToken();
+      final measurePrefs = MeasurePreferencesModel(
+          temperature: measurePreference[0].toString(),
+          humidity: measurePreference[1].toString(),
+          luminosity: measurePreference[2].toString(),
+          moisture: measurePreference[3].toString(),
+          device: DeviceModel(id: deviceDTO.id, name: deviceDTO.name));
+      repository.setMeasurePreferences(measurePrefs, token ?? '');
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future<List<double>> getMeasureValues(DeviceDTO deviceDTO) async {
+    List<double> measurePreferences = [0, 0, 0, 0];
+    try {
+      String? token = await _preference.getAccessToken();
+      final deviceMeasure = await repository.getMeasureValues(
+          DeviceModel(id: deviceDTO.id, name: deviceDTO.name), token ?? "");
+      measurePreferences[0] = double.parse(deviceMeasure.temperature);
+      measurePreferences[1] = double.parse(deviceMeasure.humidity);
+      measurePreferences[2] = double.parse(deviceMeasure.luminosity);
+      measurePreferences[3] = double.parse(deviceMeasure.moisture);
+    } catch (e) {
+      return measurePreferences;
+    }
+    return measurePreferences;
   }
 
   Future<String?> getClientFromRepository() async {
@@ -60,35 +104,40 @@ class HomeUseCase {
       final now = DateTime.now();
       String? token = await _preference.getAccessToken();
       MeasureQueryModel query = MeasureQueryModel(
-          start: DateTime(now.year, now.month, now.day - 1),
+          start: DateTime(now.year, now.month, now.day - 5),
           end: DateTime(now.year, now.month, now.day),
           deviceId: deviceId);
-      return await repository.getMeasures(query, token ?? '');
+      final measures = await repository.getMeasures(query, token ?? '');
+      return measures;
     } catch (e) {
       return [];
     }
   }
 
-  Future<List<charts.Series<TimeSeriesMeasureModel, DateTime>>?>
-      getChartMeasure(String deviceId, String id) async {
+  Future<List<charts.Series<TimeSeriesMeasureModel, DateTime>>> getChartMeasure(
+      String deviceId, String chartName, String index) async {
+    List<MeasureModel> measures = [];
+    final List<TimeSeriesMeasureModel> data = [];
     try {
-      final measure = await getMeasures(deviceId);
-      final data = measure
-          .map((e) => TimeSeriesMeasureModel(value: e.value, date: e.date))
-          .toList();
-      return [
-        charts.Series<TimeSeriesMeasureModel, DateTime>(
-          data: data,
-          id: id,
-          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          domainFn: (TimeSeriesMeasureModel measure, _) => measure.date,
-          measureFn: (TimeSeriesMeasureModel measure, _) =>
-              num.parse(measure.value),
-        )
-      ];
+      measures = await getMeasures(deviceId);
     } catch (e) {
-      return null;
+      return [];
     }
+    for (var e in measures) {
+      if (e.type.id.trim() == index.trim()) {
+        data.add(TimeSeriesMeasureModel(value: e.value, date: e.date));
+      }
+    }
+    return [
+      charts.Series<TimeSeriesMeasureModel, DateTime>(
+        data: data,
+        id: chartName,
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (TimeSeriesMeasureModel measure, _) => measure.date,
+        measureFn: (TimeSeriesMeasureModel measure, _) =>
+            num.parse(measure.value),
+      )
+    ];
   }
 
   Future<String?> getDevicesFromRepository() async {

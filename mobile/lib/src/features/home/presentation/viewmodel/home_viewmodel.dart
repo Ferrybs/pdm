@@ -57,10 +57,6 @@ abstract class _HomeViewModelBase with Store {
     chatbotSessions = list;
   }
 
-  getChartMeasure(deviceId, id) {
-    return _usecase.getChartMeasure(deviceId, id);
-  }
-
   getHomeData() async {
     String? errorLocal;
     errorLocal = await _usecase.getClientFromRepository() ?? errorLocal;

@@ -43,7 +43,7 @@ class _HomePlantPage extends State<HomePlantPage> {
         child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
-            children: [_createTitle(_viewModel.gethomeTittle())],
+            children: [_createTitle(_viewModel.gethomeTittle()), _plantCards()],
           ),
         ),
       ),
@@ -60,25 +60,6 @@ class _HomePlantPage extends State<HomePlantPage> {
         return PlantCard(deviceDTO: _viewModel.devicelist[index]);
       },
     );
-  }
-
-  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
-    final data = [
-      new TimeSeriesSales(new DateTime(2017, 9, 19), 5),
-      new TimeSeriesSales(new DateTime(2017, 9, 26), 25),
-      new TimeSeriesSales(new DateTime(2017, 10, 3), 100),
-      new TimeSeriesSales(new DateTime(2017, 10, 10), 75),
-    ];
-
-    return [
-      new charts.Series<TimeSeriesSales, DateTime>(
-        id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (TimeSeriesSales sales, _) => sales.time,
-        measureFn: (TimeSeriesSales sales, _) => sales.sales,
-        data: data,
-      )
-    ];
   }
 
   Container _loadErrorMessage() {
@@ -103,11 +84,4 @@ class _HomePlantPage extends State<HomePlantPage> {
       ),
     );
   }
-}
-
-class TimeSeriesSales {
-  final DateTime time;
-  final int sales;
-
-  TimeSeriesSales(this.time, this.sales);
 }

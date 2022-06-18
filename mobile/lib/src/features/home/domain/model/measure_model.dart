@@ -9,6 +9,6 @@ class MeasureModel {
   factory MeasureModel.fromJson(Map<dynamic, dynamic> json) => MeasureModel(
       value: json["value"],
       date: DateTime.parse(json['date']),
-      type: TypeMeasureModel.fromJson(json["type"]));
+      type: TypeMeasureModel.fromJson(json["typeDTO"]));
   Map<String, dynamic> toJson() => {"date": date, "value": value, "type": type};
 }
