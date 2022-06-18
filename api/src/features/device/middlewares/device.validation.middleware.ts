@@ -51,7 +51,11 @@ export default class DeviceValidationMiddleware implements DeviceValidation {
             await transformAndValidate(DeviceDTO,devicePreferencesDTO.deviceDTO);
             await transformAndValidate(DevicePreferencesDTO,devicePreferencesDTO);
           } catch (err) {
-            message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+            try {
+              message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+            } catch (error) {
+              message = "Server Error!";
+            }
           }
           if(message){
             request.error = message;
@@ -83,7 +87,11 @@ export default class DeviceValidationMiddleware implements DeviceValidation {
             const deviceDTO: DeviceDTO = request.body;
             await transformAndValidate(DeviceDTO,deviceDTO);
           } catch (err) {
-            message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+              try {
+                message = err.map((err: ValidationError) => Object.values(err.constraints)).join(', ');
+              } catch (error) {
+                message = "Server Error";
+              }
           }
           if(message){
             request.error = message;
