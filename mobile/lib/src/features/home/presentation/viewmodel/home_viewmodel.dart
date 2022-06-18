@@ -1,6 +1,5 @@
 import 'package:basearch/src/features/home/data/dto/chatbot_session_dto.dart';
 import 'package:basearch/src/features/home/data/dto/device_dto.dart';
-import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/home/data/dto/person_dto.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -29,9 +28,6 @@ abstract class _HomeViewModelBase with Store {
   @observable
   String? error;
 
-  @observable
-  List<PlantStatsModel> plantList = [];
-
   @action
   void updateClientName(String name) {
     personDTO.name = name;
@@ -49,11 +45,6 @@ abstract class _HomeViewModelBase with Store {
   @action
   void updateError(String? value) {
     error = value;
-  }
-
-  @action
-  void updatePlantList(List<PlantStatsModel> list) {
-    plantList = list;
   }
 
   @action
@@ -76,10 +67,6 @@ abstract class _HomeViewModelBase with Store {
     } else {
       updateError("session-error-tittle".i18n());
       return;
-    }
-    List<PlantStatsModel>? list = await _usecase.getPlantList();
-    if (list != null) {
-      updatePlantList(list);
     }
   }
 

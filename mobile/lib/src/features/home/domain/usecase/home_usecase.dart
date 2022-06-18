@@ -4,7 +4,6 @@ import 'package:basearch/src/features/home/data/dto/device_dto.dart';
 import 'package:basearch/src/features/home/domain/model/chatbot_session_model.dart';
 import 'package:basearch/src/features/home/domain/model/client_model.dart';
 import 'package:basearch/src/features/home/domain/model/device_model.dart';
-import 'package:basearch/src/features/home/domain/model/plant_stats_model.dart';
 import 'package:basearch/src/features/preference/domain/usecase/preference_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -122,9 +121,5 @@ class HomeUseCase {
     } catch (e) {
       return "server-error".i18n();
     }
-  }
-
-  Future<List<PlantStatsModel>?> getPlantList() async {
-    return await repository.getPlantStats();
   }
 }

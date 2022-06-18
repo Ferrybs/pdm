@@ -89,22 +89,6 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
-  late final _$plantListAtom =
-      Atom(name: '_HomeViewModelBase.plantList', context: context);
-
-  @override
-  List<PlantStatsModel> get plantList {
-    _$plantListAtom.reportRead();
-    return super.plantList;
-  }
-
-  @override
-  set plantList(List<PlantStatsModel> value) {
-    _$plantListAtom.reportWrite(value, super.plantList, () {
-      super.plantList = value;
-    });
-  }
-
   late final _$_HomeViewModelBaseActionController =
       ActionController(name: '_HomeViewModelBase', context: context);
 
@@ -142,17 +126,6 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
-  void updatePlantList(List<PlantStatsModel> list) {
-    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
-        name: '_HomeViewModelBase.updatePlantList');
-    try {
-      return super.updatePlantList(list);
-    } finally {
-      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void updateDeviceList(List<DeviceDTO> list) {
     final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
         name: '_HomeViewModelBase.updateDeviceList');
@@ -181,8 +154,7 @@ personDTO: ${personDTO},
 devicelist: ${devicelist},
 chatbotSessions: ${chatbotSessions},
 currentIndex: ${currentIndex},
-error: ${error},
-plantList: ${plantList}
+error: ${error}
     ''';
   }
 }
