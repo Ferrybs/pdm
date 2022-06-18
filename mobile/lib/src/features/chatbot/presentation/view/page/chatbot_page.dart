@@ -49,6 +49,11 @@ class _ChatbotPage extends State<ChatbotPage> {
                   } else {
                     return Observer(builder: (_) {
                       return DashChat(
+                        messageOptions: MessageOptions(
+                            currentUserContainerColor:
+                                _theme.colorScheme.secondary,
+                            containerColor:
+                                _theme.colorScheme.primaryContainer),
                         currentUser: _viewModel.chatUser!,
                         onSend: (ChatMessage m) async {
                           _viewModel.insertMessage(m);

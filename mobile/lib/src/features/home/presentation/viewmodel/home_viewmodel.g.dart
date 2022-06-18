@@ -89,25 +89,6 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
     });
   }
 
-<<<<<<< HEAD
-  late final _$plantListAtom =
-      Atom(name: '_HomeViewModelBase.plantList', context: context);
-
-  @override
-  List<dynamic> get plantList {
-    _$plantListAtom.reportRead();
-    return super.plantList;
-  }
-
-  @override
-  set plantList(List<dynamic> value) {
-    _$plantListAtom.reportWrite(value, super.plantList, () {
-      super.plantList = value;
-    });
-  }
-
-=======
->>>>>>> feature/home-plant
   late final _$_HomeViewModelBaseActionController =
       ActionController(name: '_HomeViewModelBase', context: context);
 
@@ -145,20 +126,6 @@ mixin _$HomeViewModel on _HomeViewModelBase, Store {
   }
 
   @override
-<<<<<<< HEAD
-  void updatePlantList(List<dynamic> list) {
-    final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
-        name: '_HomeViewModelBase.updatePlantList');
-    try {
-      return super.updatePlantList(list);
-    } finally {
-      _$_HomeViewModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-=======
->>>>>>> feature/home-plant
   void updateDeviceList(List<DeviceDTO> list) {
     final _$actionInfo = _$_HomeViewModelBaseActionController.startAction(
         name: '_HomeViewModelBase.updateDeviceList');

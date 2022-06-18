@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             }
             return Center(
                 child: CircularProgressIndicator(
-              color: _theme.backgroundColor,
+              color: _theme.colorScheme.primary,
             ));
           }),
           future: _viewModel.loadData()),

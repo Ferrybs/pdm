@@ -57,25 +57,6 @@ mixin _$MapViewModel on _MapViewModelBase, Store {
     });
   }
 
-<<<<<<< HEAD
-  late final _$mapControllerAtom =
-      Atom(name: '_MapViewModelBase.mapController', context: context);
-
-  @override
-  GoogleMapController get mapController {
-    _$mapControllerAtom.reportRead();
-    return super.mapController;
-  }
-
-  @override
-  set mapController(GoogleMapController value) {
-    _$mapControllerAtom.reportWrite(value, super.mapController, () {
-      super.mapController = value;
-    });
-  }
-
-=======
->>>>>>> feature/home-plant
   late final _$loadErrorAtom =
       Atom(name: '_MapViewModelBase.loadError', context: context);
 
@@ -150,20 +131,6 @@ mixin _$MapViewModel on _MapViewModelBase, Store {
   }
 
   @override
-<<<<<<< HEAD
-  dynamic updateController(GoogleMapController value) {
-    final _$actionInfo = _$_MapViewModelBaseActionController.startAction(
-        name: '_MapViewModelBase.updateController');
-    try {
-      return super.updateController(value);
-    } finally {
-      _$_MapViewModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-=======
->>>>>>> feature/home-plant
   dynamic updadeDeviceList(ObservableList<String> device) {
     final _$actionInfo = _$_MapViewModelBaseActionController.startAction(
         name: '_MapViewModelBase.updadeDeviceList');
@@ -213,10 +180,6 @@ mixin _$MapViewModel on _MapViewModelBase, Store {
 deviceList: ${deviceList},
 markers: ${markers},
 position: ${position},
-<<<<<<< HEAD
-mapController: ${mapController},
-=======
->>>>>>> feature/home-plant
 loadError: ${loadError},
 slider: ${slider},
 selectedValue: ${selectedValue}

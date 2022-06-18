@@ -125,7 +125,7 @@ class _MapPageState extends State<MapPage> {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   height: 50,
-                  decoration: BoxDecoration(color: _theme.backgroundColor),
+                  decoration: BoxDecoration(color: _theme.colorScheme.primary),
                   child: _slider(),
                 ),
               ),
@@ -159,6 +159,7 @@ class _MapPageState extends State<MapPage> {
                     onChangeEnd: (double value) {
                       _doSearch();
                     },
+                    activeColor: _theme.colorScheme.onPrimary,
                   );
                 })),
           )
@@ -184,7 +185,7 @@ class _MapPageState extends State<MapPage> {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
-            color: _theme.backgroundColor,
+            color: _theme.colorScheme.primary,
           ),
           child: _barItems(),
         ),
