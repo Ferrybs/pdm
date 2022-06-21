@@ -57,8 +57,8 @@ export default class AuthService extends Services{
 
   public async register(registerDTO: RegisterDTO): Promise<boolean>{
     const credentials = new Credentials();
-    credentials.email = registerDTO.loginDTO.email.toLowerCase();
-    credentials.password = registerDTO.loginDTO.password;
+    credentials.email = registerDTO.loginDTO.email.toLowerCase().trim();
+    credentials.password = registerDTO.loginDTO.password.trim();
     
     if(await this._clientDatabase.findClientByEmail(credentials.email)){
       throw new EmailFoundHttpException(credentials.email);
@@ -198,7 +198,7 @@ export default class AuthService extends Services{
     var sessionId: string;
     var session: Session;
     const credentials = new CredentialsDTO();
-    credentials.email = sendEmailDTO.email;
+    credentials.email = sendEmailDTO.email.toLowerCase().trim();
     const client = await this._clientDatabase.findClientByEmail(credentials.email);
     if(client){
       await this.updateClientSessionsByClientId(client.id);
