@@ -30,7 +30,7 @@ dependencies:
   validators: ^3.0.0
   json_annotation: ^4.4.0
   flutter_smart_dialog: ^3.4.2+2
-  charts_flutter: ^0.12.0
+  syncfusion_flutter_charts: ^20.1.60+1
   geolocator: ^8.2.1
   google_maps_flutter: ^2.1.5
   flutter_blue_plus: ^1.1.3

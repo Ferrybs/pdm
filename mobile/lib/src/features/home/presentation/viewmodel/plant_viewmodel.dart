@@ -1,10 +1,9 @@
 import 'package:basearch/src/features/home/data/dto/device_dto.dart';
-import 'package:basearch/src/features/home/domain/model/measure_model.dart';
 import 'package:basearch/src/features/home/domain/model/time_series_measure_model.dart';
 import 'package:basearch/src/features/home/domain/usecase/home_usecase.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 part 'plant_viewmodel.g.dart';
 
@@ -14,14 +13,14 @@ abstract class _PlantViewModelBase with Store {
   final _usecase = Modular.get<HomeUseCase>();
 
   @observable
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> temperatureChart = [];
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> temperatureChart = [];
 
   @observable
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> humidityChart = [];
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> humidityChart = [];
   @observable
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> luminosotyChart = [];
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> luminosotyChart = [];
   @observable
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> moistureChart = [];
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> moistureChart = [];
 
   @observable
   List<bool> activeChart = [true, false, false, false];
@@ -41,7 +40,7 @@ abstract class _PlantViewModelBase with Store {
 
   @action
   updateChartList(
-      int index, List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+      int index, List<LineSeries<TimeSeriesMeasureModel, DateTime>> value) {
     switch (index) {
       case 0:
         temperatureChart = value;

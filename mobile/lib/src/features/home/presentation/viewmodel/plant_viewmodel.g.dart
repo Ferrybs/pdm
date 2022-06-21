@@ -13,14 +13,14 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
       Atom(name: '_PlantViewModelBase.temperatureChart', context: context);
 
   @override
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get temperatureChart {
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> get temperatureChart {
     _$temperatureChartAtom.reportRead();
     return super.temperatureChart;
   }
 
   @override
   set temperatureChart(
-      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+      List<LineSeries<TimeSeriesMeasureModel, DateTime>> value) {
     _$temperatureChartAtom.reportWrite(value, super.temperatureChart, () {
       super.temperatureChart = value;
     });
@@ -30,14 +30,13 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
       Atom(name: '_PlantViewModelBase.humidityChart', context: context);
 
   @override
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get humidityChart {
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> get humidityChart {
     _$humidityChartAtom.reportRead();
     return super.humidityChart;
   }
 
   @override
-  set humidityChart(
-      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+  set humidityChart(List<LineSeries<TimeSeriesMeasureModel, DateTime>> value) {
     _$humidityChartAtom.reportWrite(value, super.humidityChart, () {
       super.humidityChart = value;
     });
@@ -47,14 +46,14 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
       Atom(name: '_PlantViewModelBase.luminosotyChart', context: context);
 
   @override
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get luminosotyChart {
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> get luminosotyChart {
     _$luminosotyChartAtom.reportRead();
     return super.luminosotyChart;
   }
 
   @override
   set luminosotyChart(
-      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+      List<LineSeries<TimeSeriesMeasureModel, DateTime>> value) {
     _$luminosotyChartAtom.reportWrite(value, super.luminosotyChart, () {
       super.luminosotyChart = value;
     });
@@ -64,14 +63,13 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
       Atom(name: '_PlantViewModelBase.moistureChart', context: context);
 
   @override
-  List<charts.Series<TimeSeriesMeasureModel, DateTime>> get moistureChart {
+  List<LineSeries<TimeSeriesMeasureModel, DateTime>> get moistureChart {
     _$moistureChartAtom.reportRead();
     return super.moistureChart;
   }
 
   @override
-  set moistureChart(
-      List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+  set moistureChart(List<LineSeries<TimeSeriesMeasureModel, DateTime>> value) {
     _$moistureChartAtom.reportWrite(value, super.moistureChart, () {
       super.moistureChart = value;
     });
@@ -136,7 +134,7 @@ mixin _$PlantViewModel on _PlantViewModelBase, Store {
 
   @override
   dynamic updateChartList(
-      int index, List<charts.Series<TimeSeriesMeasureModel, DateTime>> value) {
+      int index, List<LineSeries<TimeSeriesMeasureModel, DateTime>> value) {
     final _$actionInfo = _$_PlantViewModelBaseActionController.startAction(
         name: '_PlantViewModelBase.updateChartList');
     try {

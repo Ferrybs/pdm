@@ -14,7 +14,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:localization/localization.dart';
 import 'package:uuid/uuid.dart';
 import '../repository/home_interface.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomeUseCase {
   final repository = Modular.get<IHome>();
@@ -101,11 +101,13 @@ class HomeUseCase {
 
   Future<List<MeasureModel>> getMeasures(String deviceId) async {
     try {
-      final now = DateTime.now();
+      final now = DateTime.now().toUtc();
       String? token = await _preference.getAccessToken();
       MeasureQueryModel query = MeasureQueryModel(
-          start: DateTime(now.year, now.month, now.day - 5),
-          end: DateTime(now.year, now.month, now.day),
+          start: DateTime(now.year, now.month, now.day - 1, now.hour,
+              now.second, now.microsecond),
+          end: DateTime(now.year, now.month, now.day, now.hour + 1, now.second,
+              now.microsecond),
           deviceId: deviceId);
       final measures = await repository.getMeasures(query, token ?? '');
       return measures;
@@ -114,7 +116,7 @@ class HomeUseCase {
     }
   }
 
-  Future<List<charts.Series<TimeSeriesMeasureModel, DateTime>>> getChartMeasure(
+  Future<List<LineSeries<TimeSeriesMeasureModel, DateTime>>> getChartMeasure(
       String deviceId, String chartName, String index) async {
     List<MeasureModel> measures = [];
     final List<TimeSeriesMeasureModel> data = [];
@@ -129,12 +131,11 @@ class HomeUseCase {
       }
     }
     return [
-      charts.Series<TimeSeriesMeasureModel, DateTime>(
-        data: data,
-        id: chartName,
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (TimeSeriesMeasureModel measure, _) => measure.date,
-        measureFn: (TimeSeriesMeasureModel measure, _) =>
+      LineSeries<TimeSeriesMeasureModel, DateTime>(
+        enableTooltip: true,
+        dataSource: data,
+        xValueMapper: (TimeSeriesMeasureModel measure, _) => measure.date,
+        yValueMapper: (TimeSeriesMeasureModel measure, _) =>
             num.parse(measure.value),
       )
     ];
