@@ -64,8 +64,8 @@ export default class DevicePostgresDatabase implements DeviceDatabase{
             return await this._appDataSource.manager.find(
                 DeviceLocalization,
                 {where: {
-                    latitude: Between(y.latitude,x.latitude),
-                    longitude: Between(y.longitude,x.longitude)
+                    latitude: Between(x.latitude,y.latitude),
+                    longitude: Between(x.longitude,y.longitude)
                 },relations: ["device"]}
             );
         } catch (error) {

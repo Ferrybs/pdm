@@ -42,20 +42,24 @@ float Measure::getTemperature(){
 }
 float Measure::getLumiosity(){
     int count = 0;
-    float total = 0;
-    float average = 0;
+    float volts = 0;
+    float volts_average = 0;
     while (count<250)
     {
-        total += analogRead(luminosity);
+        volts += analogRead(luminosity)* 5.0 / 4095.0;
         delay(20);
         count++;
     }
-    average = total/count;
+    volts_average = volts_average/count;
+    float amps = volts / 10000.0;  // across 10,000 Ohms
+    float microamps = amps * 1000000;
+    float lux = microamps * 2.0;
+
     
     // console.log("Luminosity: ",false);
     // Serial.println(total);
     // Serial.println(average);
-    return average;
+    return lux;
 } 
 
 float Measure::getHumidity(){

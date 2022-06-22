@@ -25,6 +25,7 @@ void MeasureController::setup(){
 }
 void MeasureController::setTemperature(float temperature){
     if(!isnan(preferences.getTemperature())){
+        Serial.println("LEITURA: "+String(temperature)+" PREFS: "+String(preferences.getTemperature()));
         if (preferences.getTemperature()< temperature)
         {
             digitalWrite(this->temperature,1);
@@ -37,6 +38,7 @@ void MeasureController::setTemperature(float temperature){
 
 void MeasureController::setHumidity(float humidity){
     if(!isnan(preferences.getHumidity())){
+        Serial.println("LEITURA: "+String(humidity)+" PREFS: "+String(preferences.getHumidity()));
         if (preferences.getHumidity()< humidity)
         {
             digitalWrite(this->humidity,1);
@@ -49,6 +51,7 @@ void MeasureController::setHumidity(float humidity){
 
 void MeasureController::setLuminosity(float luminosity){
     if(!isnan(preferences.getLuminosity())){
+        Serial.println("LEITURA: "+String(luminosity)+" PREFS: "+String(preferences.getLuminosity()));
         if (preferences.getLuminosity()< luminosity)
         {
             digitalWrite(this->luminosity,1);
@@ -61,6 +64,7 @@ void MeasureController::setLuminosity(float luminosity){
 
 void MeasureController::setMoisture(float moisture){
     if(!isnan(preferences.getMoisture())){
+        Serial.println("LEITURA: "+String(moisture)+" PREFS: "+String(preferences.getMoisture()));
         if (preferences.getMoisture()< moisture)
         {
             digitalWrite(this->moisture,1);
